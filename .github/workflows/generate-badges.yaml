@@ -1,0 +1,38 @@
+---
+name: generate-badges
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      # trigger if we modify any options
+      - .github/workflows/generate-badges.yaml
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ChipWolf/generate-badges@main
+        with:
+          format: markdown
+          id: default
+          output: README.md
+          slugs: |
+            osu
+            github
+            americanexpress
+            nodered
+            opensea
+      - uses: ChipWolf/generate-badges@main
+        with:
+          format: html
+          id: foobar
+          output: README.md
+          random: 5
+          sort: false
+          style: flat-square
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions

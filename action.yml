@@ -1,0 +1,42 @@
+name: 'generate-badges'
+description: 'Generate and sort branded Shields.io badges by color'
+branding:
+  icon: 'book-open'
+  color: 'green'
+inputs:
+  slugs:
+    description: 'SimpleIcons.org slugs to use.'
+    required: false
+    default: ''
+  format:
+    description: 'Output format.'
+    required: false
+    default: 'markdown'
+  id:
+    description: 'Badge generation ID.'
+    required: false
+    default: 'default'
+  sort:
+    description: 'Sort badges by color using a Hilbert walk.'
+    required: false
+    default: true
+  style:
+    description: 'Shields.io badge style.'
+    required: false
+    default: 'for-the-badge'
+  random:
+    description: 'Number of random icons to generate.'
+    required: false
+    default: 1
+  verify:
+    description: 'Verify the generated badge is valid by requesting it from Shields.io.'
+    required: false
+    default: false
+    type: boolean
+  output:
+    description: 'Output file name'
+    required: false
+    default: ''
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
