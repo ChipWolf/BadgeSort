@@ -1,0 +1,1 @@
+simpleicons==6.23.0
