@@ -37,29 +37,31 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
 
 ### Generate five specific badges ordered by color:
 
-#### GitHub Action:
+#### _GitHub Action:_
 
 ```yaml
       - uses: ChipWolf/generate-badges@v1
         with:
           format: markdown # default
           id: default # default
+          output: README.md
           slugs: |
             osu
             github
             americanexpress
             nodered
             opensea
-          sort: true # default
+          sort: 'hilbert' # default
+          style: 'for-the-badge' # default
 ```
 
-#### CLI:
+#### _CLI:_
 
 ```bash
 $ python3 icons.py -s osu github americanexpress nodered opensea
 ```
 
-#### Output:
+#### _Output:_
 
 <!-- start chipwolf/generate-badges default -->
 ![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)
@@ -68,63 +70,104 @@ $ python3 icons.py -s osu github americanexpress nodered opensea
 ![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)
 ![American Express](https://img.shields.io/badge/American%20Express-2E77BC.svg?style=for-the-badge&logo=americanexpress&logoColor=white)
 <!-- end chipwolf/generate-badges default -->
-
-#### _Source:_
-
-```markdown
-<!-- start chipwolf/generate-badges default -->
-![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)
-![Node-RED](https://img.shields.io/badge/Node--RED-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)
-![osu!](https://img.shields.io/badge/osu%21-FF66AA.svg?style=for-the-badge&logo=osu&logoColor=white)
-![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)
-![American Express](https://img.shields.io/badge/American%20Express-2E77BC.svg?style=for-the-badge&logo=americanexpress&logoColor=white)
-<!-- end chipwolf/generate-badges default -->
-```
 
 ---
 
 ### Generate five random badges:
 
-#### GitHub Action:
+#### _GitHub Action:_
 
 ```yaml
       - uses: ChipWolf/generate-badges@v1
         with:
           id: foobar
           format: html
+          output: README.md
           random: 5
-          sort: false
+          sort: 'false'
           style: flat-square
 ```
 
-#### CLI:
+#### _CLI:_
 
 ```bash
-$ python3 icons.py -n -r 5 -f html -b flat-square
+$ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 ```
 
-#### Output:
+#### _Output:_
 
 <!-- start chipwolf/generate-badges foobar -->
 <p>
-  <a href="#"><img alt="Apache" src="https://img.shields.io/badge/Apache-D22128.svg?style=flat-square&logo=apache&logoColor=white"></a>
-  <a href="#"><img alt="Roots Bedrock" src="https://img.shields.io/badge/Roots%20Bedrock-525DDC.svg?style=flat-square&logo=rootsbedrock&logoColor=white"></a>
-  <a href="#"><img alt="Realm" src="https://img.shields.io/badge/Realm-39477F.svg?style=flat-square&logo=realm&logoColor=white"></a>
-  <a href="#"><img alt="Microsoft PowerPoint" src="https://img.shields.io/badge/Microsoft%20PowerPoint-B7472A.svg?style=flat-square&logo=microsoftpowerpoint&logoColor=white"></a>
-  <a href="#"><img alt="Octane Render" src="https://img.shields.io/badge/Octane%20Render-000000.svg?style=flat-square&logo=octanerender&logoColor=white"></a>
+  <a href="#"><img alt="Fraunhofer-Gesellschaft" src="https://img.shields.io/badge/Fraunhofer--Gesellschaft-179C7D.svg?style=flat-square&logo=fraunhofergesellschaft&logoColor=white"></a>
+  <a href="#"><img alt="Minds" src="https://img.shields.io/badge/Minds-FED12F.svg?style=flat-square&logo=minds&logoColor=black"></a>
+  <a href="#"><img alt="Dragonframe" src="https://img.shields.io/badge/Dragonframe-D4911E.svg?style=flat-square&logo=dragonframe&logoColor=white"></a>
+  <a href="#"><img alt="ProSieben" src="https://img.shields.io/badge/ProSieben-E6000F.svg?style=flat-square&logo=prosieben&logoColor=white"></a>
+  <a href="#"><img alt="MAN" src="https://img.shields.io/badge/MAN-E40045.svg?style=flat-square&logo=man&logoColor=white"></a>
 </p>
 <!-- end chipwolf/generate-badges foobar -->
 
-#### _Source:_
+---
 
-```html
-<!-- start chipwolf/generate-badges foobar -->
-<p>
-  <a href="#"><img alt="Apache" src="https://img.shields.io/badge/Apache-D22128.svg?style=flat-square&logo=apache&logoColor=white"></a>
-  <a href="#"><img alt="Roots Bedrock" src="https://img.shields.io/badge/Roots%20Bedrock-525DDC.svg?style=flat-square&logo=rootsbedrock&logoColor=white"></a>
-  <a href="#"><img alt="Realm" src="https://img.shields.io/badge/Realm-39477F.svg?style=flat-square&logo=realm&logoColor=white"></a>
-  <a href="#"><img alt="Microsoft PowerPoint" src="https://img.shields.io/badge/Microsoft%20PowerPoint-B7472A.svg?style=flat-square&logo=microsoftpowerpoint&logoColor=white"></a>
-  <a href="#"><img alt="Octane Render" src="https://img.shields.io/badge/Octane%20Render-000000.svg?style=flat-square&logo=octanerender&logoColor=white"></a>
-</p>
-<!-- end chipwolf/generate-badges foobar -->
+### Generate badges from a list of slugs, sorting using an inverted algorithm:
+
+#### _GitHub Action:_
+
+```yaml
+      - uses: ChipWolf/generate-badges@v1
+        with:
+          args: '--hue-rotate 240'
+          id: example
+          format: html
+          output: README.md
+          sort: 'step_invert'
+          style: flat
+          slugs: |
+            angular,apollographql,brave,d3dotjs,docker
+            git,githubactions,googlecloud,graphql,heroku
+            html5,insomnia,mongodb,nestjs,nodedotjs
+            npm,prettier,react,reactivex,redux
+            rollupdotjs,sass,styledcomponents,typescript,webpack
 ```
+
+#### _CLI:_
+
+```bash
+$ python3 icons.py -i example -c step_invert -o README.md -f html -b flat-square --hue-rotate 240 -s \
+    angular,apollographql,brave,d3dotjs,docker, \
+    git,githubactions,googlecloud,graphql,heroku, \
+    html5,insomnia,mongodb,nestjs,nodedotjs, \
+    npm,prettier,react,reactivex,redux, \
+    rollupdotjs,sass,styledcomponents,typescript,webpack
+```
+
+#### _Output:_
+
+<!-- start chipwolf/generate-badges example -->
+<p>
+  <a href="#"><img alt="D3.js" src="https://img.shields.io/badge/D3.js-F9A03C.svg?style=flat-square&logo=d3dotjs&logoColor=white"></a>
+  <a href="#"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E.svg?style=flat-square&logo=prettier&logoColor=black"></a>
+  <a href="#"><img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933.svg?style=flat-square&logo=nodedotjs&logoColor=white"></a>
+  <a href="#"><img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-47A248.svg?style=flat-square&logo=mongodb&logoColor=white"></a>
+  <a href="#"><img alt="Webpack" src="https://img.shields.io/badge/Webpack-8DD6F9.svg?style=flat-square&logo=webpack&logoColor=black"></a>
+  <a href="#"><img alt="React" src="https://img.shields.io/badge/React-61DAFB.svg?style=flat-square&logo=react&logoColor=black"></a>
+  <a href="#"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=flat-square&logo=typescript&logoColor=white"></a>
+  <a href="#"><img alt="GitHub Actions" src="https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=flat-square&logo=githubactions&logoColor=white"></a>
+  <a href="#"><img alt="Google Cloud" src="https://img.shields.io/badge/Google%20Cloud-4285F4.svg?style=flat-square&logo=googlecloud&logoColor=white"></a>
+  <a href="#"><img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED.svg?style=flat-square&logo=docker&logoColor=white"></a>
+  <a href="#"><img alt="Redux" src="https://img.shields.io/badge/Redux-764ABC.svg?style=flat-square&logo=redux&logoColor=white"></a>
+  <a href="#"><img alt="Apollo GraphQL" src="https://img.shields.io/badge/Apollo%20GraphQL-311C87.svg?style=flat-square&logo=apollographql&logoColor=white"></a>
+  <a href="#"><img alt="Insomnia" src="https://img.shields.io/badge/Insomnia-4000BF.svg?style=flat-square&logo=insomnia&logoColor=white"></a>
+  <a href="#"><img alt="Heroku" src="https://img.shields.io/badge/Heroku-430098.svg?style=flat-square&logo=heroku&logoColor=white"></a>
+  <a href="#"><img alt="GraphQL" src="https://img.shields.io/badge/GraphQL-E10098.svg?style=flat-square&logo=graphql&logoColor=white"></a>
+  <a href="#"><img alt="ReactiveX" src="https://img.shields.io/badge/ReactiveX-B7178C.svg?style=flat-square&logo=reactivex&logoColor=white"></a>
+  <a href="#"><img alt="Sass" src="https://img.shields.io/badge/Sass-CC6699.svg?style=flat-square&logo=sass&logoColor=white"></a>
+  <a href="#"><img alt="styled-components" src="https://img.shields.io/badge/styled--components-DB7093.svg?style=flat-square&logo=styledcomponents&logoColor=white"></a>
+  <a href="#"><img alt="Brave" src="https://img.shields.io/badge/Brave-FB542B.svg?style=flat-square&logo=brave&logoColor=white"></a>
+  <a href="#"><img alt="Git" src="https://img.shields.io/badge/Git-F05032.svg?style=flat-square&logo=git&logoColor=white"></a>
+  <a href="#"><img alt="rollup.js" src="https://img.shields.io/badge/rollup.js-EC4A3F.svg?style=flat-square&logo=rollupdotjs&logoColor=white"></a>
+  <a href="#"><img alt="HTML5" src="https://img.shields.io/badge/HTML5-E34F26.svg?style=flat-square&logo=html5&logoColor=white"></a>
+  <a href="#"><img alt="npm" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat-square&logo=npm&logoColor=white"></a>
+  <a href="#"><img alt="NestJS" src="https://img.shields.io/badge/NestJS-E0234E.svg?style=flat-square&logo=nestjs&logoColor=white"></a>
+  <a href="#"><img alt="Angular" src="https://img.shields.io/badge/Angular-DD0031.svg?style=flat-square&logo=angular&logoColor=white"></a>
+</p>
+<!-- end chipwolf/generate-badges example -->

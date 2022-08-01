@@ -23,14 +23,15 @@ async function run() {
 
     // Fetch action inputs
     const inputs = {
+      args: core.getInput("args", { required: false }),
       slugs: core.getMultilineInput("slugs"),
       format: core.getInput("format"),
       output: core.getInput("output"),
       id: core.getInput("id"),
-      sort: core.getBooleanInput("sort"),
+      sort: core.getInput("sort"),
       random: core.getInput("random"),
       style: core.getInput("style"),
-      verify: core.getBooleanInput("verify")
+      verify: core.getBooleanInput("verify"),
     };
     core.debug(`Inputs: ${inspect(inputs)}`);
 
@@ -40,12 +41,13 @@ async function run() {
       // add inputs.slugs if not just whitespace
       /^\s*$/.test(inputs.slugs) ? "" : `--slugs=${inputs.slugs}`,
       /^\s*$/.test(inputs.output) ? "" : `--output=${inputs.output}`,
+      /^\s*$/.test(inputs.args) ? "" : inputs.args,
       `--format=${inputs.format}`,
       `--id=${inputs.id}`,
       `--random=${inputs.random}`,
       `--badge-style=${inputs.style}`,
+      `--color-sort=${inputs.sort}`,
       inputs.verify ? '--verify' : "",
-      inputs.sort ? "" : "--no-hilbert"
     ]);
   } catch (error) {
     core.setFailed(error.message);

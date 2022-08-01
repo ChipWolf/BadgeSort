@@ -4,6 +4,10 @@ branding:
   icon: 'book-open'
   color: 'green'
 inputs:
+  args:
+    description: 'Additional arguments'
+    required: false
+    default: ''
   slugs:
     description: 'SimpleIcons.org slugs to use.'
     required: false
@@ -17,9 +21,9 @@ inputs:
     required: false
     default: 'default'
   sort:
-    description: 'Sort badges by color using a Hilbert walk.'
+    description: 'Color sorting algorithm'
     required: false
-    default: true
+    default: 'hilbert'
   style:
     description: 'Shields.io badge style.'
     required: false
