@@ -34,9 +34,8 @@ logger.debug(args)
 
 # user provided slugs
 if len(args.slugs) > 0:
-    # if args.slugs contains a comma, split it into a list
-    if ',' in args.slugs[0]:
-        args.slugs = args.slugs[0].split(',')
+    slugs = ','.join(args.slugs).split(',')
+    slugs[:] = [slug for slug in slugs if slug != '']
     slugs = args.slugs
     # check if slugs provided exist at SimpleIcons.org
     for slug in list(set(slugs)):
