@@ -10,6 +10,8 @@ jobs:
   release:
     name: Release GitHub Actions
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--openssl-legacy-provider'
     steps:
       - name: Release GitHub Actions
         uses: technote-space/release-github-actions@v7.0.5
