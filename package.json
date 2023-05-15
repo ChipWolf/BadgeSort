@@ -1,6 +1,6 @@
 {
   "name": "generate-badges",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate and sort branded Shields.io badges by color",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/ChipWolf/generate-badges.git"
   },
   "keywords": [],
-  "author": "Peter Evans",
+  "author": "Chip Wolf",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ChipWolf/generate-badges/issues"
