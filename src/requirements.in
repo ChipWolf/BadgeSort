@@ -1,7 +1,3 @@
-certifi
-chardet
-idna
 poetry-core
 requests
 simpleicons
-urllib3
