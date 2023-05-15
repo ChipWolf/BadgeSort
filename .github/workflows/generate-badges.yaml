@@ -8,6 +8,7 @@ on:
     paths:
       # trigger if we modify any options
       - .github/workflows/generate-badges.yaml
+    workflow_dispatch:
 
 jobs:
   generate:
