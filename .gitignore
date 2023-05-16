@@ -1,5 +1,2 @@
 __pycache__
-node_modules
-Lib
-Scripts
-pyvenv.cfg
+.vscode
