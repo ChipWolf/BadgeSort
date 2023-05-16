@@ -28,6 +28,11 @@ inputs:
     description: 'Shields.io badge style.'
     required: false
     default: 'for-the-badge'
+  thanks:
+    description: 'Show the BadgeSort badge.'
+    required: false
+    default: true
+    type: boolean
   random:
     description: 'Number of random icons to generate.'
     required: false

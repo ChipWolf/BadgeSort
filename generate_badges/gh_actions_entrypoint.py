@@ -40,6 +40,9 @@ if __name__ == '__main__':
         elif k == 'verify' or k == 'reverse':
             if v.lower() == 'true':
                 args_list.append(f'--{k}')
+        elif k == 'thanks':
+            if v.lower() == 'false':
+                args_list.append('--no-thanks')
         else:
             args_list.extend([f'--{k}', v])
 

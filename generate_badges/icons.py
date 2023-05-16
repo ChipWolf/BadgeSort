@@ -58,6 +58,11 @@ def run(args):
         icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         icon_list.append({ 'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url })
 
+    if args.no_thanks is True:
+        icon_url = f'{icon_base}/BadgeSort-000000.svg'
+        icon_url += f'?style={args.badge_style}&logo=githubsponsors'
+        icon_list.append({ 'rgb': [0, 0, 0], 'slug': 'badgesort', 'title': 'BadgeSort', 'url': icon_url })
+
     def lum (r,g,b):
         return math.sqrt( .241 * r + .691 * g + .068 * b )
 
@@ -113,9 +118,17 @@ def run(args):
 
             # generate the badge markup depending on the output format
             if args.format == 'markdown':
-                badges += f'![{icon["title"]}]({icon["url"]})\n'
+                md_badge = f'![{icon["title"]}]({icon["url"]})'
+                if icon["slug"] == 'badgesort':
+                    badges += f'[{md_badge}](https://github.com/ChipWolf/generate-badges)\n'
+                else:
+                    badges += md_badge + '\n'
             elif args.format == 'html':
-                badges += f'  <a href="#"><img alt="{icon["title"]}" src="{icon["url"]}"></a>\n'
+                if icon["slug"] == 'badgesort':
+                    badges += '  <a href="https://github.com/ChipWolf/generate-badges">'
+                else:
+                    badges += '  <a href="#">'
+                badges += f'<img alt="{icon["title"]}" src="{icon["url"]}"></a>\n'
             else:
                 logger.fatal('Unknown output format: %s. Exiting.' % args.format)
                 sys.exit(1)
@@ -163,6 +176,7 @@ def main(raw_args=None):
     parser.add_argument('-v', '--verify', action='store_true', help='Verify the generated badge is valid by requesting it from Shields.io.')
     parser.add_argument('-o', '--output', type=str, default='', help='Output file name.')
     parser.add_argument('--hue-rotate', type=int, default=0, help='Rotate the [step] generated icons hue sort by this many degrees.')
+    parser.add_argument('--no-thanks', action='store_false', help='Hide the BadgeSort badge.')
     parser.add_argument('--reverse', action='store_true', help='Reverse the badges sort.')
     args, unknown = parser.parse_known_args(raw_args)
     logger.debug(args)
