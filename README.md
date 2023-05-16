@@ -64,6 +64,7 @@ $ python3 icons.py -s osu github americanexpress nodered opensea
 #### _Output:_
 
 <!-- start chipwolf/generate-badges default -->
+[![BadgeSort](https://img.shields.io/badge/BadgeSort-000000.svg?style=for-the-badge&logo=githubsponsors)](https://github.com/ChipWolf/generate-badges)
 ![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)
 ![Node-RED](https://img.shields.io/badge/Node--RED-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)
 ![osu!](https://img.shields.io/badge/osu%21-FF66AA.svg?style=for-the-badge&logo=osu&logoColor=white)
@@ -98,11 +99,12 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/generate-badges foobar -->
 <p>
-  <a href="#"><img alt="PUBG" src="https://img.shields.io/badge/PUBG-FEAB02.svg?style=flat-square&logo=pubg&logoColor=white"></a>
-  <a href="#"><img alt="mdBook" src="https://img.shields.io/badge/mdBook-000000.svg?style=flat-square&logo=mdbook&logoColor=white"></a>
-  <a href="#"><img alt="NixOS" src="https://img.shields.io/badge/NixOS-5277C3.svg?style=flat-square&logo=nixos&logoColor=white"></a>
-  <a href="#"><img alt="Y Combinator" src="https://img.shields.io/badge/Y%20Combinator-F0652F.svg?style=flat-square&logo=ycombinator&logoColor=white"></a>
-  <a href="#"><img alt="Atari" src="https://img.shields.io/badge/Atari-E4202E.svg?style=flat-square&logo=atari&logoColor=white"></a>
+  <a href="#"><img alt="Pegasus Airlines" src="https://img.shields.io/badge/Pegasus%20Airlines-FDC43E.svg?style=flat-square&logo=pegasusairlines&logoColor=black"></a>
+  <a href="#"><img alt="CBS" src="https://img.shields.io/badge/CBS-033963.svg?style=flat-square&logo=cbs&logoColor=white"></a>
+  <a href="#"><img alt="Snapcraft" src="https://img.shields.io/badge/Snapcraft-82BEA0.svg?style=flat-square&logo=snapcraft&logoColor=white"></a>
+  <a href="#"><img alt="Observable" src="https://img.shields.io/badge/Observable-353E58.svg?style=flat-square&logo=observable&logoColor=white"></a>
+  <a href="#"><img alt="Oh Dear" src="https://img.shields.io/badge/Oh%20Dear-FFFFFF.svg?style=flat-square&logo=ohdear&logoColor=black"></a>
+  <a href="https://github.com/ChipWolf/generate-badges"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/generate-badges foobar -->
 
@@ -169,5 +171,6 @@ $ python3 icons.py -i example -c step_invert -o README.md -f html -b flat-square
   <a href="#"><img alt="npm" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white"></a>
   <a href="#"><img alt="NestJS" src="https://img.shields.io/badge/NestJS-E0234E.svg?style=flat&logo=nestjs&logoColor=white"></a>
   <a href="#"><img alt="Angular" src="https://img.shields.io/badge/Angular-DD0031.svg?style=flat&logo=angular&logoColor=white"></a>
+  <a href="https://github.com/ChipWolf/generate-badges"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/generate-badges example -->
