@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 ### hilbert.py -- Hilbert walk coordinate codec in multiple dimensions.
 #    int_to_Hilbert( i, 3 ) ==> ( x, y, z )
@@ -8,8 +9,6 @@
 # Steve Witham ess doubleyou at tiac remove-this dot net.
 # http://www.tiac.net/~sw/2008/10/Hilbert
 
-
-from sys import argv
 from math import log, ceil
 from functools import reduce
 
@@ -191,8 +190,8 @@ def gray_decode_travel( start, end, mask, g ):
 #    The pattern works for any nD >= 1.
 #
 def child_start_end( parent_start, parent_end, mask, i ):
-   start_i = max( 0,    ( i - 1 ) & ~1 )  # next lower even number, or 0
-   end_i =   min( mask, ( i + 1 ) |  1 )  # next higher odd number, or mask
-   child_start = gray_encode_travel( parent_start, parent_end, mask, start_i )
-   child_end   = gray_encode_travel( parent_start, parent_end, mask, end_i )
-   return child_start, child_end
+    start_i = max( 0,    ( i - 1 ) & ~1 )  # next lower even number, or 0
+    end_i =   min( mask, ( i + 1 ) |  1 )  # next higher odd number, or mask
+    child_start = gray_encode_travel( parent_start, parent_end, mask, start_i )
+    child_end   = gray_encode_travel( parent_start, parent_end, mask, end_i )
+    return child_start, child_end

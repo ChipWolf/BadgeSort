@@ -1,21 +1,21 @@
 ---
-name: generate-badges
+name: Badges
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      # trigger if we modify any options
       - .github/workflows/generate-badges.yaml
-    workflow_dispatch:
 
 jobs:
   generate:
+    name: Generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ChipWolf/generate-badges@main
+      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
         with:
           format: markdown
           id: default
@@ -28,7 +28,7 @@ jobs:
             opensea
           sort: 'hilbert'
           style: 'for-the-badge'
-      - uses: ChipWolf/generate-badges@main
+      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
         with:
           format: html
           id: foobar
@@ -36,9 +36,9 @@ jobs:
           random: 5
           sort: 'false'
           style: flat-square
-      - uses: ChipWolf/generate-badges@main
+      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
         with:
-          args: '--hue-rotate 240'
+          opts: '--hue-rotate 240'
           id: example
           format: html
           output: README.md

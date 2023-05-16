@@ -4,8 +4,8 @@ branding:
   icon: 'book-open'
   color: 'green'
 inputs:
-  args:
-    description: 'Additional arguments'
+  opts:
+    description: 'Additional options'
     required: false
     default: ''
   slugs:
@@ -42,5 +42,5 @@ inputs:
     required: false
     default: ''
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: 'docker'
+  image: 'Dockerfile'

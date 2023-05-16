@@ -40,7 +40,7 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
 #### _GitHub Action:_
 
 ```yaml
-      - uses: ChipWolf/generate-badges@v1
+      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
         with:
           format: markdown # default
           id: default # default
@@ -78,7 +78,7 @@ $ python3 icons.py -s osu github americanexpress nodered opensea
 #### _GitHub Action:_
 
 ```yaml
-      - uses: ChipWolf/generate-badges@v1
+      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
         with:
           id: foobar
           format: html
@@ -113,7 +113,7 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 #### _GitHub Action:_
 
 ```yaml
-      - uses: ChipWolf/generate-badges@v1
+      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
         with:
           args: '--hue-rotate 240'
           id: example

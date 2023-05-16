@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "generate-badges"
+version = "2.0.0"
+description = "Generate and sort branded Shields.io badges by color"
+authors = ["Chip Wolf <github@chipwolf.uk>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "generate_badges"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+certifi = "2022.6.15"
+chardet = "4.0.0"
+idna = "2.10"
+poetry-core = "1.0.8"
+requests = "2.25.1"
+simpleicons = "6.23.0"
+urllib3 = "1.26.11"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
