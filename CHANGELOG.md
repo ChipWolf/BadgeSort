@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/ChipWolf/BadgeSort/compare/v3.1.0...v3.1.1) (2023-11-18)
+
+
+### Bug Fixes
+
+* **ci/release-please:** remove component from tag name ([cd5ad31](https://github.com/ChipWolf/BadgeSort/commit/cd5ad318d7f22c9a0d3b11425c01c3248843798b))
+
 ## [3.1.0](https://github.com/ChipWolf/BadgeSort/compare/badgesort-v3.0.0...badgesort-v3.1.0) (2023-11-18)
 
 
