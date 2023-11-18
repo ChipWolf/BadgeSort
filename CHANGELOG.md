@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.2](https://github.com/ChipWolf/BadgeSort/compare/v3.1.1...3.1.2) (2023-11-18)
+
+
+### Bug Fixes
+
+* **ci/release-please:** exclude v from tag name ([565e451](https://github.com/ChipWolf/BadgeSort/commit/565e45199f88d78c78f04551fe02524563cc36b5))
+
 ## [3.1.1](https://github.com/ChipWolf/BadgeSort/compare/v3.1.0...v3.1.1) (2023-11-18)
 
 
