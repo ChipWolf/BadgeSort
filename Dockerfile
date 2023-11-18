@@ -1,4 +1,4 @@
-FROM duffn/python-poetry:3.9-slim
+FROM duffn/python-poetry:3.11-slim
 
 # Set up entrypoint
 COPY entrypoint.sh /entrypoint.sh
