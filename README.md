@@ -101,11 +101,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Rocket.Chat" src="https://img.shields.io/badge/Rocket.Chat-F5455C.svg?style=flat-square&logo=rocketdotchat&logoColor=white"></a>
-  <a href="#"><img alt="Vuetify" src="https://img.shields.io/badge/Vuetify-1867C0.svg?style=flat-square&logo=vuetify&logoColor=white"></a>
-  <a href="#"><img alt="Intercom" src="https://img.shields.io/badge/Intercom-6AFDEF.svg?style=flat-square&logo=intercom&logoColor=black"></a>
-  <a href="#"><img alt="Corona Renderer" src="https://img.shields.io/badge/Corona%20Renderer-E6502A.svg?style=flat-square&logo=coronarenderer&logoColor=white"></a>
-  <a href="#"><img alt="Azure Functions" src="https://img.shields.io/badge/Azure%20Functions-0062AD.svg?style=flat-square&logo=azurefunctions&logoColor=white"></a>
+  <a href="#"><img alt="TestCafe" src="https://img.shields.io/badge/TestCafe-36B6E5.svg?style=flat-square&logo=testcafe&logoColor=white"></a>
+  <a href="#"><img alt="Palo Alto Software" src="https://img.shields.io/badge/Palo%20Alto%20Software-83DA77.svg?style=flat-square&logo=paloaltosoftware&logoColor=black"></a>
+  <a href="#"><img alt="Julia" src="https://img.shields.io/badge/Julia-9558B2.svg?style=flat-square&logo=julia&logoColor=white"></a>
+  <a href="#"><img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D.svg?style=flat-square&logo=swagger&logoColor=black"></a>
+  <a href="#"><img alt="Engadget" src="https://img.shields.io/badge/Engadget-000000.svg?style=flat-square&logo=engadget&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
