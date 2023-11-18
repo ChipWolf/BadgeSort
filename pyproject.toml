@@ -14,7 +14,7 @@ chardet = "5.2.0"
 idna = "2.10"
 poetry-core = "1.8.1"
 requests = "2.31.0"
-simpleicons = "6.23.0"
+simpleicons = "7.21.0"
 urllib3 = "1.26.11"
 
 [build-system]
