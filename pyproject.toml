@@ -11,7 +11,7 @@ packages = [{include = "badgesort"}]
 python = "^3.9"
 certifi = "2022.6.15"
 chardet = "5.2.0"
-idna = "2.10"
+idna = "3.4"
 poetry-core = "1.8.1"
 requests = "2.31.0"
 simpleicons = "6.23.0"
