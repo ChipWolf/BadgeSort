@@ -1,9 +1,10 @@
 {
-    "last-release-sha": "9353a18507f188683168add3a14b0bb045f94395",
+    "last-release-sha": "e14aa5ab87b89376bacb31fc7ae8e15e20ed4d31",
     "release-type": "python",
 	"packages": {
 		".": {
             "include-component-in-tag": false,
+            "include-v-in-tag": false,
 			"package-name": "badgesort",
             "exclude-paths": [".github", ".gitignore", "README.md"]
 		}
