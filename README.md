@@ -112,7 +112,7 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 ---
 
-### Generate badges from a list of slugs, sorting using an inverted algorithm:
+### Generate badges from a list of slugs, sorting using an inverted step algorithm:
 
 #### _GitHub Action:_
 
