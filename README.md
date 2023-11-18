@@ -1,6 +1,8 @@
+[![BadgeSort](https://img.shields.io/badge/BadgeSort-000000.svg?style=for-the-badge&logo=githubsponsors)](https://github.com/ChipWolf/BadgeSort)
+
 # Generate and Sort Branded [Shields.io](https://shields.io) Badges by Color
 
-**This is a Python 3 command-line tool and [GitHub Action](https://github.com/features/actions) automating the generation and color sorting of badges from [Shields.io](https://shields.io) that contain logos from [Simple Icons](https://simpleicons.org/).**
+**This is a Python 3 command-line tool and [GitHub Action](https://github.com/features/actions) automating the generation and color sorting of badges from [Shields.io](https://shields.io) that contain brand logos from [Simple Icons](https://simpleicons.org/).**
 
 ## Background:
 
@@ -40,7 +42,7 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
 #### _GitHub Action:_
 
 ```yaml
-      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
           format: markdown # default
           id: default # default
@@ -63,14 +65,14 @@ $ python3 icons.py -s osu github americanexpress nodered opensea
 
 #### _Output:_
 
-<!-- start chipwolf/generate-badges default -->
-[![BadgeSort](https://img.shields.io/badge/BadgeSort-000000.svg?style=for-the-badge&logo=githubsponsors)](https://github.com/ChipWolf/generate-badges)
+<!-- start chipwolf/badgesort default -->
+[![BadgeSort](https://img.shields.io/badge/BadgeSort-000000.svg?style=for-the-badge&logo=githubsponsors)](https://github.com/ChipWolf/BadgeSort)
 ![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)
 ![Node-RED](https://img.shields.io/badge/Node--RED-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)
 ![osu!](https://img.shields.io/badge/osu%21-FF66AA.svg?style=for-the-badge&logo=osu&logoColor=white)
 ![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)
 ![American Express](https://img.shields.io/badge/American%20Express-2E77BC.svg?style=for-the-badge&logo=americanexpress&logoColor=white)
-<!-- end chipwolf/generate-badges default -->
+<!-- end chipwolf/badgesort default -->
 
 ---
 
@@ -79,7 +81,7 @@ $ python3 icons.py -s osu github americanexpress nodered opensea
 #### _GitHub Action:_
 
 ```yaml
-      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
           id: foobar
           format: html
@@ -97,16 +99,16 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 
 #### _Output:_
 
-<!-- start chipwolf/generate-badges foobar -->
+<!-- start chipwolf/badgesort foobar -->
 <p>
   <a href="#"><img alt="Pegasus Airlines" src="https://img.shields.io/badge/Pegasus%20Airlines-FDC43E.svg?style=flat-square&logo=pegasusairlines&logoColor=black"></a>
   <a href="#"><img alt="CBS" src="https://img.shields.io/badge/CBS-033963.svg?style=flat-square&logo=cbs&logoColor=white"></a>
   <a href="#"><img alt="Snapcraft" src="https://img.shields.io/badge/Snapcraft-82BEA0.svg?style=flat-square&logo=snapcraft&logoColor=white"></a>
   <a href="#"><img alt="Observable" src="https://img.shields.io/badge/Observable-353E58.svg?style=flat-square&logo=observable&logoColor=white"></a>
   <a href="#"><img alt="Oh Dear" src="https://img.shields.io/badge/Oh%20Dear-FFFFFF.svg?style=flat-square&logo=ohdear&logoColor=black"></a>
-  <a href="https://github.com/ChipWolf/generate-badges"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
+  <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
-<!-- end chipwolf/generate-badges foobar -->
+<!-- end chipwolf/badgesort foobar -->
 
 ---
 
@@ -115,7 +117,7 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 #### _GitHub Action:_
 
 ```yaml
-      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
           args: '--hue-rotate 240'
           id: example
@@ -144,7 +146,7 @@ $ python3 icons.py -i example -c step_invert -o README.md -f html -b flat-square
 
 #### _Output:_
 
-<!-- start chipwolf/generate-badges example -->
+<!-- start chipwolf/badgesort example -->
 <p>
   <a href="#"><img alt="D3.js" src="https://img.shields.io/badge/D3.js-F9A03C.svg?style=flat&logo=d3dotjs&logoColor=white"></a>
   <a href="#"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E.svg?style=flat&logo=prettier&logoColor=black"></a>
@@ -171,6 +173,6 @@ $ python3 icons.py -i example -c step_invert -o README.md -f html -b flat-square
   <a href="#"><img alt="npm" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white"></a>
   <a href="#"><img alt="NestJS" src="https://img.shields.io/badge/NestJS-E0234E.svg?style=flat&logo=nestjs&logoColor=white"></a>
   <a href="#"><img alt="Angular" src="https://img.shields.io/badge/Angular-DD0031.svg?style=flat&logo=angular&logoColor=white"></a>
-  <a href="https://github.com/ChipWolf/generate-badges"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat&logo=githubsponsors"></a>
+  <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat&logo=githubsponsors"></a>
 </p>
-<!-- end chipwolf/generate-badges example -->
+<!-- end chipwolf/badgesort example -->

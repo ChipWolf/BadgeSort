@@ -120,12 +120,12 @@ def run(args):
             if args.format == 'markdown':
                 md_badge = f'![{icon["title"]}]({icon["url"]})'
                 if icon["slug"] == 'badgesort':
-                    badges += f'[{md_badge}](https://github.com/ChipWolf/generate-badges)\n'
+                    badges += f'[{md_badge}](https://github.com/ChipWolf/BadgeSort)\n'
                 else:
                     badges += md_badge + '\n'
             elif args.format == 'html':
                 if icon["slug"] == 'badgesort':
-                    badges += '  <a href="https://github.com/ChipWolf/generate-badges">'
+                    badges += '  <a href="https://github.com/ChipWolf/BadgeSort">'
                 else:
                     badges += '  <a href="#">'
                 badges += f'<img alt="{icon["title"]}" src="{icon["url"]}"></a>\n'
@@ -142,8 +142,8 @@ def run(args):
         badges = '<p>\n' + badges + '</p>\n'
 
     # wrap badges with a header and footer
-    badges_header = f'<!-- start chipwolf/generate-badges {args.id} -->\n'
-    badges_footer = f'<!-- end chipwolf/generate-badges {args.id} -->\n'
+    badges_header = f'<!-- start chipwolf/badgesort {args.id} -->\n'
+    badges_footer = f'<!-- end chipwolf/badgesort {args.id} -->\n'
     badges = badges_header + badges + badges_footer
 
     # if output file is specified, write badges to file

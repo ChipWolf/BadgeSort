@@ -12,7 +12,7 @@ permissions: write-all
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: "chipwolf/generate-badges"
+  IMAGE_NAME: "chipwolf/badgesort"
 
 jobs:
   build:
@@ -40,13 +40,13 @@ jobs:
         tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'latest' }}"
         cache-from: type=gha
         cache-to: type=gha,mode=max
-  generate-badges:
-    name: Generate Badges
+  badgesort:
+    name: Run BadgeSort
     runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v3
-      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
           format: markdown
           id: default
@@ -59,7 +59,7 @@ jobs:
             opensea
           sort: 'hilbert'
           style: 'for-the-badge'
-      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
           format: html
           id: foobar
@@ -67,7 +67,7 @@ jobs:
           random: 5
           sort: 'false'
           style: flat-square
-      - uses: docker://ghcr.io/chipwolf/generate-badges:latest
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
           opts: '--hue-rotate 240'
           id: example

@@ -1,4 +1,4 @@
-name: 'generate-badges'
+name: 'BadgeSort'
 description: 'Generate and sort branded Shields.io badges by color'
 branding:
   icon: 'book-open'
