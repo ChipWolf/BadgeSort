@@ -1,0 +1,29 @@
+---
+name: Release
+
+"on":
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '.gitignore'
+      - '**.md'
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Please
+        uses: GoogleCloudPlatform/release-please-action@v3.7.9
+        with:
+          command: manifest
