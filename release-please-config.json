@@ -1,0 +1,10 @@
+{
+    "release-as": "3.0.1",
+    "release-type": "python",
+	"packages": {
+		".": {
+			"package-name": "badgesort",
+            "exclude-paths": [".github", ".gitignore", "README.md"]
+		}
+	}
+}
