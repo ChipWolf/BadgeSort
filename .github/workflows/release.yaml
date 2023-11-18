@@ -24,6 +24,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Please
-        uses: GoogleCloudPlatform/release-please-action@v3.7.9
+        uses: GoogleCloudPlatform/release-please-action@51ee8ae2605bd5ce1cfdcc5938684908f1cd9f69 # v3.7.9
         with:
           command: manifest
