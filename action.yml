@@ -1,51 +1,48 @@
-name: 'BadgeSort'
-description: 'Generate and sort branded Shields.io badges by color'
+name: BadgeSort
+description: Generate and sort branded Shields.io badges by color
 branding:
-  icon: 'book-open'
-  color: 'green'
+  icon: book-open
+  color: green
 inputs:
   opts:
-    description: 'Additional options'
+    description: Additional options
     required: false
-    default: ''
   slugs:
-    description: 'SimpleIcons.org slugs to use.'
+    description: SimpleIcons.org slugs to use
     required: false
-    default: ''
   format:
-    description: 'Output format.'
+    description: Output format
     required: false
     default: 'markdown'
   id:
-    description: 'Badge generation ID.'
+    description: Badge generation ID
     required: false
-    default: 'default'
+    default: default
   sort:
-    description: 'Color sorting algorithm'
+    description: Color sorting algorithm
     required: false
-    default: 'hilbert'
+    default: hilbert
   style:
-    description: 'Shields.io badge style.'
+    description: Shields.io badge style
     required: false
-    default: 'for-the-badge'
+    default: for-the-badge
   thanks:
-    description: 'Show the BadgeSort badge.'
+    description: Show the BadgeSort badge
     required: false
     default: true
     type: boolean
   random:
-    description: 'Number of random icons to generate.'
+    description: Number of random icons to generate
     required: false
-    default: 1
+    default: 0
   verify:
-    description: 'Verify the generated badge is valid by requesting it from Shields.io.'
+    description: Verify the generated badge is valid by requesting it from Shields.io
     required: false
     default: false
     type: boolean
   output:
-    description: 'Output file name'
+    description: Output file name
     required: false
-    default: ''
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: docker
+  image: Dockerfile
