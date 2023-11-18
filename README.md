@@ -101,11 +101,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Qualys" src="https://img.shields.io/badge/Qualys-ED2E26.svg?style=flat-square&logo=qualys&logoColor=white"></a>
-  <a href="#"><img alt="HEY" src="https://img.shields.io/badge/HEY-5522FA.svg?style=flat-square&logo=hey&logoColor=white"></a>
-  <a href="#"><img alt="PlanGrid" src="https://img.shields.io/badge/PlanGrid-0085DE.svg?style=flat-square&logo=plangrid&logoColor=white"></a>
-  <a href="#"><img alt="SEAT" src="https://img.shields.io/badge/SEAT-33302E.svg?style=flat-square&logo=seat&logoColor=white"></a>
-  <a href="#"><img alt="AppSignal" src="https://img.shields.io/badge/AppSignal-21375A.svg?style=flat-square&logo=appsignal&logoColor=white"></a>
+  <a href="#"><img alt="Brandfolder" src="https://img.shields.io/badge/Brandfolder-40D1F5.svg?style=flat-square&logo=brandfolder&logoColor=white"></a>
+  <a href="#"><img alt="Saturn" src="https://img.shields.io/badge/Saturn-EB680B.svg?style=flat-square&logo=saturn&logoColor=white"></a>
+  <a href="#"><img alt="Vapor" src="https://img.shields.io/badge/Vapor-0D0D0D.svg?style=flat-square&logo=vapor&logoColor=white"></a>
+  <a href="#"><img alt="HackerRank" src="https://img.shields.io/badge/HackerRank-00EA64.svg?style=flat-square&logo=hackerrank&logoColor=white"></a>
+  <a href="#"><img alt="ESLint" src="https://img.shields.io/badge/ESLint-4B32C3.svg?style=flat-square&logo=eslint&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
