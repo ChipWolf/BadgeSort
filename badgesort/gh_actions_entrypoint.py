@@ -31,20 +31,21 @@ if __name__ == '__main__':
     for k, v in inputs.items():
         if k == 'opts':
             args_list.extend(v.split())
-        elif k == 'slugs':
+        elif v and k == 'slugs':
             args_list.extend(['--slugs', ','.join(v.split())])
-        elif k == 'sort':
+        elif v and k == 'sort':
             args_list.extend(['--color-sort', v])
-        elif k == 'style':
+        elif v and k == 'style':
             args_list.extend(['--badge-style', v])
-        elif k == 'verify' or k == 'reverse':
+        elif v and k == 'verify' or k == 'reverse':
             if v.lower() == 'true':
                 args_list.append(f'--{k}')
-        elif k == 'thanks':
+        elif v and k == 'thanks':
             if v.lower() == 'false':
                 args_list.append('--no-thanks')
         else:
-            args_list.extend([f'--{k}', v])
+            if v:
+                args_list.extend([f'--{k}', v])
 
     logger.debug(args_list)
 

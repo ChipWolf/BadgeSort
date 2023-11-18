@@ -53,14 +53,14 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
             americanexpress
             nodered
             opensea
-          sort: 'hilbert' # default
-          style: 'for-the-badge' # default
+          sort: hilbert # default
+          style: for-the-badge # default
 ```
 
 #### _CLI:_
 
 ```bash
-$ python3 icons.py -s osu github americanexpress nodered opensea
+$ python -m badgesort.icons -s osu github americanexpress nodered opensea
 ```
 
 #### _Output:_
@@ -87,14 +87,14 @@ $ python3 icons.py -s osu github americanexpress nodered opensea
           format: html
           output: README.md
           random: 5
-          sort: 'false'
+          sort: false
           style: flat-square
 ```
 
 #### _CLI:_
 
 ```bash
-$ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
+$ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 ```
 
 #### _Output:_
@@ -119,11 +119,12 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 ```yaml
       - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
-          args: '--hue-rotate 240'
+          args: |
+            --hue-rotate 240
           id: example
           format: html
           output: README.md
-          sort: 'step_invert'
+          sort: step_invert
           style: flat
           slugs: |
             angular,apollographql,brave,d3dotjs,docker
@@ -136,7 +137,7 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 #### _CLI:_
 
 ```bash
-$ python3 icons.py -i example -c step_invert -o README.md -f html -b flat-square --hue-rotate 240 -s \
+$ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b flat-square --hue-rotate 240 -s \
     angular,apollographql,brave,d3dotjs,docker, \
     git,githubactions,googlecloud,graphql,heroku, \
     html5,insomnia,mongodb,nestjs,nodedotjs, \

@@ -1,5 +1,5 @@
 ---
-name: Image
+name: Build and Test
 
 "on":
   workflow_dispatch:
@@ -20,8 +20,8 @@ env:
   IMAGE_NAME: chipwolf/badgesort
 
 jobs:
-  build:
-    name: Build
+  image:
+    name: Build Image
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -45,13 +45,16 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
   badgesort:
-    if: startsWith(github.ref, 'refs/tags/') || github.event_name != 'push'
     name: Run BadgeSort
-    needs: [build]
+    needs: [image]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: docker://ghcr.io/chipwolf/badgesort:latest
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          fetch-depth: 1
+      - name: Demo 1
+        uses: ./
         with:
           format: markdown
           id: default
@@ -64,17 +67,20 @@ jobs:
             opensea
           sort: hilbert
           style: for-the-badge
-      - uses: docker://ghcr.io/chipwolf/badgesort:latest
+      - name: Demo 2
+        uses: ./
         with:
           format: html
           id: foobar
           output: README.md
           random: 5
-          sort: 'false'
+          sort: false
           style: flat-square
-      - uses: docker://ghcr.io/chipwolf/badgesort:latest
+      - name: Demo 3
+        uses: ./
         with:
-          opts: --hue-rotate 240
+          opts: |
+            --hue-rotate 240
           id: example
           format: html
           output: README.md
@@ -86,7 +92,9 @@ jobs:
             html5,insomnia,mongodb,nestjs,nodedotjs
             npm,prettier,react,reactivex,redux
             rollupdotjs,sass,styledcomponents,typescript,webpack
-      - uses: EndBug/add-and-commit@1bad3abcf0d6ec49a5857d124b0bfb52dc7bb081 # v9
+      - name: Commit and push
+        uses: EndBug/add-and-commit@1bad3abcf0d6ec49a5857d124b0bfb52dc7bb081 # v9
+        if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
         with:
           default_author: github_actions
           message: 'chore(docs): refresh badgesort'
