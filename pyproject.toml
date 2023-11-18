@@ -9,13 +9,13 @@ packages = [{include = "badgesort"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-certifi = "2022.6.15"
+certifi = "2023.11.17"
 chardet = "5.2.0"
-idna = "2.10"
+idna = "3.4"
 poetry-core = "1.8.1"
 requests = "2.31.0"
-simpleicons = "6.23.0"
-urllib3 = "1.26.11"
+simpleicons = "7.21.0"
+urllib3 = "2.1.0"
 
 [build-system]
 requires = ["poetry-core"]
