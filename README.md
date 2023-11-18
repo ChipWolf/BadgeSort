@@ -101,11 +101,11 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Pegasus Airlines" src="https://img.shields.io/badge/Pegasus%20Airlines-FDC43E.svg?style=flat-square&logo=pegasusairlines&logoColor=black"></a>
-  <a href="#"><img alt="CBS" src="https://img.shields.io/badge/CBS-033963.svg?style=flat-square&logo=cbs&logoColor=white"></a>
-  <a href="#"><img alt="Snapcraft" src="https://img.shields.io/badge/Snapcraft-82BEA0.svg?style=flat-square&logo=snapcraft&logoColor=white"></a>
-  <a href="#"><img alt="Observable" src="https://img.shields.io/badge/Observable-353E58.svg?style=flat-square&logo=observable&logoColor=white"></a>
-  <a href="#"><img alt="Oh Dear" src="https://img.shields.io/badge/Oh%20Dear-FFFFFF.svg?style=flat-square&logo=ohdear&logoColor=black"></a>
+  <a href="#"><img alt="Komoot" src="https://img.shields.io/badge/Komoot-6AA127.svg?style=flat-square&logo=komoot&logoColor=white"></a>
+  <a href="#"><img alt="Wolfram Language" src="https://img.shields.io/badge/Wolfram%20Language-DD1100.svg?style=flat-square&logo=wolframlanguage&logoColor=white"></a>
+  <a href="#"><img alt="FreeBSD" src="https://img.shields.io/badge/FreeBSD-AB2B28.svg?style=flat-square&logo=freebsd&logoColor=white"></a>
+  <a href="#"><img alt="Expo" src="https://img.shields.io/badge/Expo-000020.svg?style=flat-square&logo=expo&logoColor=white"></a>
+  <a href="#"><img alt="Probot" src="https://img.shields.io/badge/Probot-00B0D8.svg?style=flat-square&logo=probot&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
