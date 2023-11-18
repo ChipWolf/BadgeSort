@@ -101,11 +101,11 @@ $ python3 icons.py -i foobar -s false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Pegasus Airlines" src="https://img.shields.io/badge/Pegasus%20Airlines-FDC43E.svg?style=flat-square&logo=pegasusairlines&logoColor=black"></a>
-  <a href="#"><img alt="CBS" src="https://img.shields.io/badge/CBS-033963.svg?style=flat-square&logo=cbs&logoColor=white"></a>
-  <a href="#"><img alt="Snapcraft" src="https://img.shields.io/badge/Snapcraft-82BEA0.svg?style=flat-square&logo=snapcraft&logoColor=white"></a>
-  <a href="#"><img alt="Observable" src="https://img.shields.io/badge/Observable-353E58.svg?style=flat-square&logo=observable&logoColor=white"></a>
-  <a href="#"><img alt="Oh Dear" src="https://img.shields.io/badge/Oh%20Dear-FFFFFF.svg?style=flat-square&logo=ohdear&logoColor=black"></a>
+  <a href="#"><img alt="Qualys" src="https://img.shields.io/badge/Qualys-ED2E26.svg?style=flat-square&logo=qualys&logoColor=white"></a>
+  <a href="#"><img alt="HEY" src="https://img.shields.io/badge/HEY-5522FA.svg?style=flat-square&logo=hey&logoColor=white"></a>
+  <a href="#"><img alt="PlanGrid" src="https://img.shields.io/badge/PlanGrid-0085DE.svg?style=flat-square&logo=plangrid&logoColor=white"></a>
+  <a href="#"><img alt="SEAT" src="https://img.shields.io/badge/SEAT-33302E.svg?style=flat-square&logo=seat&logoColor=white"></a>
+  <a href="#"><img alt="AppSignal" src="https://img.shields.io/badge/AppSignal-21375A.svg?style=flat-square&logo=appsignal&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
