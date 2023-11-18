@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "generate-badges"
-version = "2.0.0"
+name = "BadgeSort"
+version = "3.0.0"
 description = "Generate and sort branded Shields.io badges by color"
 authors = ["Chip Wolf <github@chipwolf.uk>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "generate_badges"}]
+packages = [{include = "badgesort"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
