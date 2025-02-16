@@ -2,13 +2,13 @@
 
 [[package]]
 name = "certifi"
-version = "2023.11.17"
+version = "2025.1.31"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "certifi-2023.11.17-py3-none-any.whl", hash = "sha256:e036ab49d5b79556f99cfc2d9320b34cfbe5be05c5871b51de9329f0603b0474"},
-    {file = "certifi-2023.11.17.tar.gz", hash = "sha256:9b469f3a900bf28dc19b8cfbf8019bf47f7fdd1a65a1d4ffb98fc14166beb4d1"},
+    {file = "certifi-2025.1.31-py3-none-any.whl", hash = "sha256:ca78db4565a652026a4db2bcdf68f2fb589ea80d0be70e03929ed730746b84fe"},
+    {file = "certifi-2025.1.31.tar.gz", hash = "sha256:3d5da6925056f6f18f119200434a4780a94263f10d1c21d032a6f6b2baa20651"},
 ]
 
 [[package]]
@@ -134,13 +134,13 @@ files = [
 
 [[package]]
 name = "poetry-core"
-version = "1.8.1"
+version = "2.1.1"
 description = "Poetry PEP 517 Build Backend"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.9"
 files = [
-    {file = "poetry_core-1.8.1-py3-none-any.whl", hash = "sha256:194832b24f3283e01c5402eae71a6aae850ecdfe53f50a979c76bf7aa5010ffa"},
-    {file = "poetry_core-1.8.1.tar.gz", hash = "sha256:67a76c671da2a70e55047cddda83566035b701f7e463b32a2abfeac6e2a16376"},
+    {file = "poetry_core-2.1.1-py3-none-any.whl", hash = "sha256:bc3b0382ab4d00d5d780277fd0aad1580eb4403613b37fc60fec407b5bee1fe6"},
+    {file = "poetry_core-2.1.1.tar.gz", hash = "sha256:c1a1f6f00e4254742f40988a8caf665549101cf9991122cd5de1198897768b1a"},
 ]
 
 [[package]]
@@ -198,4 +198,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9e453eb819ef88814b88caf82f197a00b44cdc29dd4d07782dab54cfb9bcaa58"
+content-hash = "d027a692579195eb1571ef206409250b6046e7d930a7545d216af57a15d5dfb9"
