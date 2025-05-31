@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.3](https://github.com/ChipWolf/BadgeSort/compare/3.1.2...3.1.3) (2025-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update idna to 3.6 ([#42](https://github.com/ChipWolf/BadgeSort/issues/42)) ([f3911d9](https://github.com/ChipWolf/BadgeSort/commit/f3911d959b08ee1ecbacbf95e968f25fb1e6449f))
+* **deps:** update pypi group ([#49](https://github.com/ChipWolf/BadgeSort/issues/49)) ([fadf82b](https://github.com/ChipWolf/BadgeSort/commit/fadf82ba58d8cfd07e3faa358382bffaf7887df2))
+* **deps:** update pypi group ([#50](https://github.com/ChipWolf/BadgeSort/issues/50)) ([ff16e6f](https://github.com/ChipWolf/BadgeSort/commit/ff16e6f49bdca6e6e1f040497344b4124916d09d))
+
 ## [3.1.2](https://github.com/ChipWolf/BadgeSort/compare/v3.1.1...3.1.2) (2023-11-18)
 
 
