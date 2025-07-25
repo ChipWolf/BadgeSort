@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.4](https://github.com/ChipWolf/BadgeSort/compare/3.1.3...3.1.4) (2025-07-25)
+
+
+### Bug Fixes
+
+* allow slugs to be missing in simpleicons package ([#56](https://github.com/ChipWolf/BadgeSort/issues/56)) ([3b5e877](https://github.com/ChipWolf/BadgeSort/commit/3b5e87700eb8e0072c0e722fde4e240b4f4348be))
+
 ## [3.1.3](https://github.com/ChipWolf/BadgeSort/compare/3.1.2...3.1.3) (2025-05-31)
 
 
