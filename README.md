@@ -101,11 +101,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Microsoft OneDrive" src="https://img.shields.io/badge/Microsoft%20OneDrive-0078D4.svg?style=flat-square&logo=microsoftonedrive&logoColor=white"></a>
-  <a href="#"><img alt="Crowdsource" src="https://img.shields.io/badge/Crowdsource-4285F4.svg?style=flat-square&logo=crowdsource&logoColor=white"></a>
-  <a href="#"><img alt="Algolia" src="https://img.shields.io/badge/Algolia-5468FF.svg?style=flat-square&logo=algolia&logoColor=white"></a>
-  <a href="#"><img alt="Poly" src="https://img.shields.io/badge/Poly-EB3C00.svg?style=flat-square&logo=poly&logoColor=white"></a>
-  <a href="#"><img alt="4D" src="https://img.shields.io/badge/4D-004088.svg?style=flat-square&logo=4d&logoColor=white"></a>
+  <a href="#"><img alt="ŠKODA" src="https://img.shields.io/badge/%C5%A0KODA-4BA82E.svg?style=flat-square&logo=skoda&logoColor=white"></a>
+  <a href="#"><img alt="haveibeenpwned" src="https://img.shields.io/badge/haveibeenpwned-2A6379.svg?style=flat-square&logo=haveibeenpwned&logoColor=white"></a>
+  <a href="#"><img alt="SFML" src="https://img.shields.io/badge/SFML-8CC445.svg?style=flat-square&logo=sfml&logoColor=white"></a>
+  <a href="#"><img alt="Socket.io" src="https://img.shields.io/badge/Socket.io-010101.svg?style=flat-square&logo=socketdotio&logoColor=white"></a>
+  <a href="#"><img alt="Elementor" src="https://img.shields.io/badge/Elementor-92003B.svg?style=flat-square&logo=elementor&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
