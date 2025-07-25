@@ -101,11 +101,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Tauri" src="https://img.shields.io/badge/Tauri-FFC131.svg?style=flat-square&logo=tauri&logoColor=black"></a>
-  <a href="#"><img alt="PhpStorm" src="https://img.shields.io/badge/PhpStorm-000000.svg?style=flat-square&logo=phpstorm&logoColor=white"></a>
-  <a href="#"><img alt="Peugeot" src="https://img.shields.io/badge/Peugeot-000000.svg?style=flat-square&logo=peugeot&logoColor=white"></a>
-  <a href="#"><img alt="MediaFire" src="https://img.shields.io/badge/MediaFire-1299F3.svg?style=flat-square&logo=mediafire&logoColor=white"></a>
-  <a href="#"><img alt="Jordan" src="https://img.shields.io/badge/Jordan-000000.svg?style=flat-square&logo=jordan&logoColor=white"></a>
+  <a href="#"><img alt="Cocos" src="https://img.shields.io/badge/Cocos-55C2E1.svg?style=flat-square&logo=cocos&logoColor=white"></a>
+  <a href="#"><img alt="SVG" src="https://img.shields.io/badge/SVG-FFB13B.svg?style=flat-square&logo=svg&logoColor=black"></a>
+  <a href="#"><img alt="FutureLearn" src="https://img.shields.io/badge/FutureLearn-DE00A5.svg?style=flat-square&logo=futurelearn&logoColor=white"></a>
+  <a href="#"><img alt="Bose" src="https://img.shields.io/badge/Bose-000000.svg?style=flat-square&logo=bose&logoColor=white"></a>
+  <a href="#"><img alt="Keystone" src="https://img.shields.io/badge/Keystone-166BFF.svg?style=flat-square&logo=keystone&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
