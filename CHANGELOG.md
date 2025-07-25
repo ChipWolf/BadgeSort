@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.5](https://github.com/ChipWolf/BadgeSort/compare/3.1.4...3.1.5) (2025-07-25)
+
+
+### Bug Fixes
+
+* **deps:** update pypi group ([#54](https://github.com/ChipWolf/BadgeSort/issues/54)) ([a56520b](https://github.com/ChipWolf/BadgeSort/commit/a56520b8207ed3479282830e7fc5e413f36116fa))
+
 ## [3.1.4](https://github.com/ChipWolf/BadgeSort/compare/3.1.3...3.1.4) (2025-07-25)
 
 
