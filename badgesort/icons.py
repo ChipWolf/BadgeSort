@@ -24,11 +24,11 @@ def run(args):
     if len(args.slugs) > 0:
         slugs = ','.join(args.slugs).split(',')
         slugs[:] = [slug for slug in slugs if slug != '']
-        # check if slugs provided exist at SimpleIcons.org
+        # check if slugs provided exist
         for slug in list(set(slugs)):
             if slug not in icons:
-                logger.fatal(f'Slug %s not found at SimpleIcons.org. Exiting.' % slug)
-                sys.exit(1)
+                logger.info(f'Slug %s not found in package simpleicons.' % slug)
+                slugs.remove(slug)
         logger.info('Generating badges from slugs: %s...' % ', '.join(list(set(slugs))))
     # user requested a random list of slugs of length args.random
     elif args.random > 0:
