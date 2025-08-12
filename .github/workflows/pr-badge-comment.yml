@@ -25,10 +25,16 @@ jobs:
           opts: |
             --hue-rotate 180
           output: badges.txt
+      - name: Read badge output for PR comment
+        id: badges-out
+        run: |
+          echo "badges<<EOF" >> $GITHUB_OUTPUT
+          cat badges.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Post PR comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             ## 🏷️ Test Badge Generation
-            $(cat badges.txt)
+            ${{ steps.badges-out.outputs.badges }}
