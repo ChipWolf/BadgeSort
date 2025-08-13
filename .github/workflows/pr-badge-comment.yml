@@ -27,15 +27,6 @@ jobs:
           style: flat
           format: html
 
-      - name: Generate random badges using local Docker action
-        id: random
-        uses: ./
-        with:
-          random: 25
-          sort: random
-          style: flat
-          format: html
-
       - name: Generate step badges using local Docker action
         id: step
         uses: ./
@@ -73,9 +64,6 @@ jobs:
 
             ### hsv
             ${{ steps.hsv.outputs.badges }}
-
-            ### random
-            ${{ steps.random.outputs.badges }}
 
             ### step
             ${{ steps.step.outputs.badges }}
