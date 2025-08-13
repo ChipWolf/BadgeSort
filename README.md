@@ -101,11 +101,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Cocos" src="https://img.shields.io/badge/Cocos-55C2E1.svg?style=flat-square&logo=cocos&logoColor=white"></a>
-  <a href="#"><img alt="SVG" src="https://img.shields.io/badge/SVG-FFB13B.svg?style=flat-square&logo=svg&logoColor=black"></a>
-  <a href="#"><img alt="FutureLearn" src="https://img.shields.io/badge/FutureLearn-DE00A5.svg?style=flat-square&logo=futurelearn&logoColor=white"></a>
-  <a href="#"><img alt="Bose" src="https://img.shields.io/badge/Bose-000000.svg?style=flat-square&logo=bose&logoColor=white"></a>
-  <a href="#"><img alt="Keystone" src="https://img.shields.io/badge/Keystone-166BFF.svg?style=flat-square&logo=keystone&logoColor=white"></a>
+  <a href="#"><img alt="Apollo GraphQL" src="https://img.shields.io/badge/Apollo%20GraphQL-311C87.svg?style=flat-square&logo=apollographql&logoColor=white"></a>
+  <a href="#"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-4169E1.svg?style=flat-square&logo=postgresql&logoColor=white"></a>
+  <a href="#"><img alt="Red Hat Open Shift" src="https://img.shields.io/badge/Red%20Hat%20Open%20Shift-EE0000.svg?style=flat-square&logo=redhatopenshift&logoColor=white"></a>
+  <a href="#"><img alt="byte" src="https://img.shields.io/badge/byte-551DEF.svg?style=flat-square&logo=byte&logoColor=white"></a>
+  <a href="#"><img alt="Monzo" src="https://img.shields.io/badge/Monzo-14233C.svg?style=flat-square&logo=monzo&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
