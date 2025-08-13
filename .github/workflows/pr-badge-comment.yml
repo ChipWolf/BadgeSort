@@ -9,20 +9,79 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Generate hilbert badges using local Docker action
+        id: hilbert
+        uses: ./
+        with:
+          random: 25
+          sort: hilbert
+          style: flat
+          format: html
+
+      - name: Generate hsv badges using local Docker action
+        id: hsv
+        uses: ./
+        with:
+          random: 25
+          sort: hsv
+          style: flat
+          format: html
+
       - name: Generate random badges using local Docker action
-        id: badges
+        id: random
+        uses: ./
+        with:
+          random: 25
+          sort: random
+          style: flat
+          format: html
+
+      - name: Generate step badges using local Docker action
+        id: step
+        uses: ./
+        with:
+          random: 25
+          sort: step
+          style: flat
+          format: html
+
+      - name: Generate step_invert badges using local Docker action
+        id: step_invert
         uses: ./
         with:
           random: 25
           sort: step_invert
           style: flat
           format: html
-          opts: |
-            --hue-rotate 240
+
+      - name: Generate luminance badges using local Docker action
+        id: luminance
+        uses: ./
+        with:
+          random: 25
+          sort: luminance
+          style: flat
+          format: html
       - name: Post PR comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             ## 🏷️ Test Badge Generation
-            ${{ steps.badges.outputs.badges }}
+            ### hilbert
+            ${{ steps.hilbert.outputs.badges }}
+
+            ### hsv
+            ${{ steps.hsv.outputs.badges }}
+
+            ### random
+            ${{ steps.random.outputs.badges }}
+
+            ### step
+            ${{ steps.step.outputs.badges }}
+
+            ### step_invert
+            ${{ steps.step_invert.outputs.badges }}
+
+            ### luminance
+            ${{ steps.luminance.outputs.badges }}
