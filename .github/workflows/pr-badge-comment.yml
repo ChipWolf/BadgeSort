@@ -9,32 +9,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Seed badges.txt with start/end markers
-        run: |
-          echo '<!-- start chipwolf/badgesort pr-comment -->' > badges.txt
-          echo '<!-- end chipwolf/badgesort pr-comment -->' >> badges.txt
       - name: Generate random badges using local Docker action
         id: badges
         uses: ./
         with:
-          format: markdown
-          id: pr-comment
-          random: 7
+          random: 25
           sort: step_invert
-          style: for-the-badge
+          style: flat
+          format: html
           opts: |
-            --hue-rotate 180
-          output: badges.txt
-      - name: Read badge output for PR comment
-        id: badges-out
-        run: |
-          echo "badges<<EOF" >> $GITHUB_OUTPUT
-          cat badges.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+            --hue-rotate 240
       - name: Post PR comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             ## 🏷️ Test Badge Generation
-            ${{ steps.badges-out.outputs.badges }}
+            ${{ steps.badges.outputs.badges }}
