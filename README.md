@@ -101,11 +101,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Apollo GraphQL" src="https://img.shields.io/badge/Apollo%20GraphQL-311C87.svg?style=flat-square&logo=apollographql&logoColor=white"></a>
-  <a href="#"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-4169E1.svg?style=flat-square&logo=postgresql&logoColor=white"></a>
-  <a href="#"><img alt="Red Hat Open Shift" src="https://img.shields.io/badge/Red%20Hat%20Open%20Shift-EE0000.svg?style=flat-square&logo=redhatopenshift&logoColor=white"></a>
-  <a href="#"><img alt="byte" src="https://img.shields.io/badge/byte-551DEF.svg?style=flat-square&logo=byte&logoColor=white"></a>
-  <a href="#"><img alt="Monzo" src="https://img.shields.io/badge/Monzo-14233C.svg?style=flat-square&logo=monzo&logoColor=white"></a>
+  <a href="#"><img alt="Rotten Tomatoes" src="https://img.shields.io/badge/Rotten%20Tomatoes-FA320A.svg?style=flat-square&logo=rottentomatoes&logoColor=white"></a>
+  <a href="#"><img alt="Apache Kylin" src="https://img.shields.io/badge/Apache%20Kylin-F09D13.svg?style=flat-square&logo=apachekylin&logoColor=white"></a>
+  <a href="#"><img alt="KLM" src="https://img.shields.io/badge/KLM-00A1DE.svg?style=flat-square&logo=klm&logoColor=white"></a>
+  <a href="#"><img alt="LabVIEW" src="https://img.shields.io/badge/LabVIEW-FFDB00.svg?style=flat-square&logo=labview&logoColor=black"></a>
+  <a href="#"><img alt="Launchpad" src="https://img.shields.io/badge/Launchpad-F8C300.svg?style=flat-square&logo=launchpad&logoColor=black"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
