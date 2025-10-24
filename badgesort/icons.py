@@ -6,6 +6,7 @@ from urllib.parse import quote
 from colorsys import rgb_to_hsv
 
 import argparse
+import base64
 import logging
 import math
 import random
@@ -18,6 +19,38 @@ from .hilbert import Hilbert_to_int
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+def fetch_badge_as_base64(url):
+    """
+    Fetch a badge from shields.io and convert it to a base64 data URL.
+    
+    Args:
+        url: The shields.io URL to fetch
+    
+    Returns:
+        A data URL string in the format 'data:image/svg+xml;base64,...'
+    """
+    try:
+        logger.debug(f'Fetching badge from {url}')
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        
+        # Convert the SVG content to base64
+        b64_content = base64.b64encode(response.content).decode('utf-8')
+        
+        # Create data URL - shields.io returns SVG images
+        data_url = f'data:image/svg+xml;base64,{b64_content}'
+        logger.debug(f'Successfully converted badge to base64 (length: {len(data_url)})')
+        
+        return data_url
+    except requests.exceptions.RequestException as e:
+        logger.error(f'Failed to fetch badge from {url}: {e}')
+        # Fall back to the original URL if fetching fails
+        logger.warning(f'Falling back to external URL for this badge')
+        return url
+    except Exception as e:
+        logger.error(f'Unexpected error converting badge to base64: {e}')
+        return url
 
 def run(args):
     # user provided slugs
@@ -62,6 +95,11 @@ def run(args):
         icon_url = f'{icon_base}/BadgeSort-000000.svg'
         icon_url += f'?style={args.badge_style}&logo=githubsponsors'
         icon_list.append({ 'rgb': [0, 0, 0], 'slug': 'badgesort', 'title': 'BadgeSort', 'url': icon_url })
+
+    # Convert all badge URLs to base64 data URLs
+    logger.info('Converting badges to base64 data URLs...')
+    for icon in icon_list:
+        icon['url'] = fetch_badge_as_base64(icon['url'])
 
     def lum (r,g,b):
         return math.sqrt( .241 * r + .691 * g + .068 * b )
