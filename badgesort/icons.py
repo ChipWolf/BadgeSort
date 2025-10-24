@@ -147,7 +147,9 @@ def run(args):
             logger.debug(icon)
 
             # verify the badge is valid by requesting it from Shields.io
-            if args.verify:
+            # Note: verification is skipped for base64 data URLs since they were already
+            # validated during the fetch_badge_as_base64 call
+            if args.verify and not icon['url'].startswith('data:'):
                 r = requests.get(icon['url'])
                 if r.status_code != 200:
                     logger.debug(r.text)
