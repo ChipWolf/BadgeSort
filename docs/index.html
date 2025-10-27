@@ -123,7 +123,29 @@
         }
         .badge-preview img {
             display: inline-block;
+            width: auto; /* Maintain aspect ratio */
+            transition: height 0.2s ease, margin 0.2s ease;
+        }
+        .badge-preview.scale-100 {
+            line-height: 1.5; /* Default line height */
+        }
+        .badge-preview.scale-100 img { 
+            height: auto; /* Natural height */
             margin: 0.25rem;
+        }
+        .badge-preview.scale-75 {
+            line-height: 1.125; /* Proportionally smaller line height */
+        }
+        .badge-preview.scale-75 img { 
+            height: 15px; /* Typical badge height * 0.75 */
+            margin: 0.1875rem; /* 0.25rem * 0.75 */
+        }
+        .badge-preview.scale-50 {
+            line-height: 0.75; /* Proportionally smaller line height */
+        }
+        .badge-preview.scale-50 img { 
+            height: 10px; /* Typical badge height * 0.5 */
+            margin: 0.125rem; /* 0.25rem * 0.5 */
         }
         .yaml-output {
             font-family: 'Courier New', monospace;
@@ -423,16 +445,6 @@
                     </label>
                 </div>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="show-badgesort" checked>
-                    <label>Show BadgeSort Badge
-                        <span class="tooltip">
-                            <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Include a BadgeSort badge to show you're using this tool!</span>
-                        </span>
-                    </label>
-                </div>
-
                 <!-- Hue Rotate (conditional for step sort) -->
                 <div class="form-group" id="hue-rotate-group" style="display: none;">
                     <label>Hue Rotate
@@ -608,7 +620,6 @@ def generate_badges():
     # Get settings
     badge_style = document.getElementById("badge-style").value
     color_sort = document.getElementById("sort-algorithm").value
-    show_thanks = document.getElementById("show-badgesort").checked
     reverse = document.getElementById("reverse-sort").checked
     hue_rotate = int(document.getElementById("hue-rotate").value or 0)
     
@@ -625,11 +636,6 @@ def generate_badges():
         icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
         icon_url += f'?style={badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         icon_list.append({'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url})
-    
-    if show_thanks:
-        icon_url = f'{icon_base}/BadgeSort-000000.svg'
-        icon_url += f'?style={badge_style}&logo=githubsponsors'
-        icon_list.append({'rgb': [0, 0, 0], 'slug': 'badgesort', 'title': 'BadgeSort', 'url': icon_url})
     
     # Sorting functions
     def lum(r, g, b):
@@ -695,10 +701,11 @@ def update_yaml():
     badge_id = document.getElementById("badge-id").value
     output_file = document.getElementById("output-file").value
     reverse_sort = document.getElementById("reverse-sort").checked
-    show_badgesort = document.getElementById("show-badgesort").checked
     hue_rotate = document.getElementById("hue-rotate").value
     
-    slugs_yaml = '\n            '.join(selected_slugs)
+    # Sort slugs alphabetically for YAML output
+    sorted_slugs = sorted(selected_slugs)
+    slugs_yaml = '\n            '.join(sorted_slugs)
     
     yaml_content = f"""# Add this to your GitHub Actions workflow
       - uses: docker://ghcr.io/chipwolf/badgesort:latest
@@ -709,8 +716,7 @@ def update_yaml():
           slugs: |
             {slugs_yaml}
           sort: {sort_algo}
-          style: {style}
-          thanks: {str(show_badgesort).lower()}"""
+          style: {style}"""
     
     if reverse_sort or (sort_algo in ['step', 'step_invert'] and hue_rotate != '0'):
         yaml_content += '\n          opts: |'
@@ -814,10 +820,15 @@ def update_hue_value():
 def set_preview_scale(scale):
     """Set the scale of preview badges"""
     preview = document.getElementById("badge-preview")
-    preview.style.transform = f"scale({scale})"
-    preview.style.transformOrigin = "top left"
-    if scale != 1:
-        preview.style.height = f"{100 / scale}%"
+    # Remove existing scale classes
+    preview.classList.remove("scale-100", "scale-75", "scale-50")
+    # Add appropriate scale class
+    if scale == 1:
+        preview.classList.add("scale-100")
+    elif scale == 0.75:
+        preview.classList.add("scale-75")
+    elif scale == 0.5:
+        preview.classList.add("scale-50")
 
 def set_preview_background(bg_type):
     """Set the background of preview area"""
@@ -834,7 +845,6 @@ def set_preview_background(bg_type):
         preview.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
 
 # Setup event listeners
-def setup_event_listeners():
 def setup_event_listeners():
     """Setup all event listeners"""
     # Badge style
@@ -857,9 +867,6 @@ def setup_event_listeners():
     
     # Reverse sort
     document.getElementById("reverse-sort").addEventListener("change", create_proxy(lambda e: update_preview()))
-    
-    # Show badgesort
-    document.getElementById("show-badgesort").addEventListener("change", create_proxy(lambda e: update_preview()))
     
     # Hue rotate slider
     document.getElementById("hue-rotate").addEventListener("input", create_proxy(lambda e: update_hue_value()))
@@ -910,6 +917,7 @@ render_icon_grid()
 update_yaml()
 update_comment_syntax()
 toggle_hue_rotate()
+set_preview_scale(1)  # Set default scale to 100%
 setup_event_listeners()
     </script>
 </body>
