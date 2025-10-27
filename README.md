@@ -4,6 +4,10 @@
 
 **This is a Python 3 command-line tool and [GitHub Action](https://github.com/features/actions) automating the generation and color sorting of badges from [Shields.io](https://shields.io) that contain brand logos from [Simple Icons](https://simpleicons.org/).**
 
+## 🎨 Interactive Generator
+
+**New!** Try the [interactive web-based generator](./docs/) to visually configure and generate your BadgeSort YAML! No installation required - just select your badges, configure the options, and copy the generated GitHub Actions YAML.
+
 ## Background:
 
 Many [awesome GitHub profiles](https://github.com/abhisheknaiidu/awesome-github-profile-readme) contain a series of these badges to clearly indicate which tools, services, or other brands the user is affiliated with. These badge collections usually adopt the brand's color, icon, and name.
