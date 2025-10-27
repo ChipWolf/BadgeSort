@@ -6,6 +6,7 @@ from urllib.parse import quote
 from colorsys import rgb_to_hsv
 
 import argparse
+import base64
 import logging
 import math
 import random
@@ -18,6 +19,19 @@ from .hilbert import Hilbert_to_int
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+def svg_to_base64_data_uri(svg_content, fill_color='white'):
+    """Convert an SVG to a base64-encoded data URI with specified fill color."""
+    # Add fill color to the path element
+    # Simple Icons SVGs typically have a single <path> element
+    svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
+    
+    # Encode to base64
+    svg_bytes = svg_with_fill.encode('utf-8')
+    base64_svg = base64.b64encode(svg_bytes).decode('utf-8')
+    
+    # Return as data URI
+    return f'data:image/svg+xml;base64,{base64_svg}'
 
 def run(args):
     # user provided slugs
@@ -43,10 +57,10 @@ def run(args):
         logger.fatal('No slugs or random icons specified. Exiting.')
         sys.exit(1)
 
-    icon_base = 'https://img.shields.io/badge'
+    icon_base = 'https://img.shields.io/badge' if args.provider == 'shields' else 'https://badgen.net/badge'
     icon_list = []
 
-    # generate Shields.io URLs for each slug
+    # generate badge URLs for each slug
     for slug in slugs:
         logger.debug('slug: %s' % slug)
         icon = icons.get(slug)
@@ -54,13 +68,38 @@ def run(args):
         icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
         icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
         icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
-        icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
-        icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
+        
+        if args.provider == 'shields':
+            # Shields.io format
+            icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+            icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
+        else:
+            # Badgen.net format
+            # Convert SVG to base64 data URI with adaptive color based on background luminosity
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
+            icon_data_uri_encoded = quote(icon_data_uri, safe='')
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
+        
         icon_list.append({ 'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url })
 
     if args.no_thanks is True:
-        icon_url = f'{icon_base}/BadgeSort-000000.svg'
-        icon_url += f'?style={args.badge_style}&logo=githubsponsors'
+        if args.provider == 'shields':
+            icon_url = f'{icon_base}/BadgeSort-000000.svg'
+            icon_url += f'?style={args.badge_style}&logo=githubsponsors'
+        else:
+            # Badgen with githubsponsors heart icon
+            # Use the githubsponsors icon with adaptive color based on luminosity
+            sponsor_icon = icons.get('githubsponsors')
+            # Black background has rgb [0,0,0], brightness = 0
+            # We want white icon on black background
+            badge_rgb = [0, 0, 0]
+            badge_brightness = (badge_rgb[0] * 299 + badge_rgb[1] * 587 + badge_rgb[2] * 114) / 255000
+            icon_color = 'white' if badge_brightness <= 0.7 else 'black'
+            
+            # Convert the githubsponsors SVG to data URI with adaptive color
+            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, icon_color)
+            sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
+            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=000000&labelColor=000000'
         icon_list.append({ 'rgb': [0, 0, 0], 'slug': 'badgesort', 'title': 'BadgeSort', 'url': icon_url })
 
     def lum (r,g,b):
@@ -166,14 +205,15 @@ def run(args):
                 print(badges.encode('utf8'))
 
 def main(raw_args=None):
-    parser = argparse.ArgumentParser(description='Generates branded badges with Shields.io and SimpleIcons.org.')
+    parser = argparse.ArgumentParser(description='Generates branded badges with Shields.io, Badgen.net and SimpleIcons.org.')
     parser.add_argument('-b', '--badge-style', type=str, default='for-the-badge', help='Shields.io badge style.')
     parser.add_argument('-c', '--color-sort', type=str, default='hilbert', help='Choose color sorting algorithm (hilbert/hsv/step/step_invert/luminance/random).')
     parser.add_argument('-f', '--format', type=str, default='markdown', help='Output format (markdown/html).')
     parser.add_argument('-i', '--id', type=str, default='default', help='Badge generation ID.')
+    parser.add_argument('-p', '--provider', type=str, default='shields', help='Badge provider (shields/badgen).')
     parser.add_argument('-r', '--random', type=int, default=1, help='Number of random icons to generate.')
     parser.add_argument('-s', '--slugs', nargs='+', default='', help='SimpleIcons.org slugs to use.')
-    parser.add_argument('-v', '--verify', action='store_true', help='Verify the generated badge is valid by requesting it from Shields.io.')
+    parser.add_argument('-v', '--verify', action='store_true', help='Verify the generated badge is valid by requesting it from the badge provider.')
     parser.add_argument('-o', '--output', type=str, default='', help='Output file name.')
     parser.add_argument('--hue-rotate', type=int, default=0, help='Rotate the [step] generated icons hue sort by this many degrees.')
     parser.add_argument('--no-thanks', action='store_false', help='Hide the BadgeSort badge.')
