@@ -339,6 +339,7 @@ async function loadIcons() {
         renderIconGrid();
         updateYAML();
     } catch (error) {
+        console.error('Failed to load icons data:', error);
         // Fallback: show error message with instructions
         document.getElementById('icon-grid').innerHTML = `
             <div class="loading">
@@ -489,10 +490,23 @@ function updateYAML() {
 
 function copyYAML() {
     const yamlText = document.getElementById('yaml-output').textContent;
+    const button = document.getElementById('copy-yaml');
+    const originalText = button.textContent;
+    
     navigator.clipboard.writeText(yamlText).then(() => {
-        alert('YAML copied to clipboard!');
+        button.textContent = '✓ Copied!';
+        button.style.background = '#10b981';
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '';
+        }, 2000);
     }).catch(() => {
-        alert('Failed to copy. Please copy manually.');
+        button.textContent = '✗ Copy failed';
+        button.style.background = '#ef4444';
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '';
+        }, 2000);
     });
 }
 
