@@ -506,7 +506,7 @@
                     <label>Badge Provider
                         <span class="tooltip">
                             <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Choose between Shields.io or Badgen.net. Both providers embed SVG icons for guaranteed compatibility. Badgen.net automatically caps very bright icons at 70% brightness for visibility.</span>
+                            <span class="tooltiptext">Choose between Shields.io (default) or Badgen.net. Badgen requires base64-encoded SVG icons.</span>
                         </span>
                     </label>
                     <select id="badge-provider">
@@ -642,132 +642,17 @@ from colorsys import rgb_to_hsv
 import math
 import base64
 
-def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=6000):
-    """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
-    
-    Args:
-        svg_content: SVG content as string
-        fill_color: Fill color for the SVG paths ('white', 'black', or None)
-        max_url_length: Maximum URL length before falling back to PNG conversion
-    
-    Includes PNG conversion fallback when SVG data URI is too long for Shields.io.
-    """
-    # Add fill color to the path element if fill_color is not None
-    if fill_color is not None:
-        svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
-    else:
-        svg_with_fill = svg_content
-    
-    # Basic compression for web demo
-    compressed_svg = _compress_svg_for_web(svg_with_fill)
+def svg_to_base64_data_uri(svg_content, fill_color='white'):
+    """Convert an SVG to a base64-encoded data URI with specified fill color."""
+    # Add fill color to the path element
+    svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
     
     # Encode to base64
-    svg_bytes = compressed_svg.encode('utf-8')
+    svg_bytes = svg_with_fill.encode('utf-8')
     base64_svg = base64.b64encode(svg_bytes).decode('utf-8')
-    svg_data_uri = f'data:image/svg+xml;base64,{base64_svg}'
     
-    # Check if SVG data URI is too long for Shields.io
-    test_url = f"https://img.shields.io/badge/Test-Badge?logo={quote(svg_data_uri, safe='')}"
-    if len(test_url) > max_url_length:
-        # Convert to PNG data URI as fallback
-        try:
-            png_data_uri = svg_to_png_data_uri(svg_with_fill, size=14)
-            return png_data_uri
-        except Exception:
-            # If PNG conversion fails, return SVG anyway (will show as broken badge)
-            pass
-    
-    return svg_data_uri
-
-def svg_to_png_data_uri(svg_content, size=14):
-    """Convert SVG to PNG data URI for compatibility with Shields.io URL length limits.
-    
-    Note: This is a simplified version for the web demo. The actual CLI uses 
-    specialized libraries for high-quality SVG to PNG conversion.
-    """
-    # For the web demo, we'll create a simple canvas-based conversion
-    # This is a fallback - the real CLI uses more sophisticated conversion
-    
-    # Create a data URI that indicates PNG conversion was attempted
-    # In a real implementation, this would use proper SVG rendering
-    fallback_message = f"PNG conversion attempted (size: {size}px) - Full CLI supports proper SVG->PNG conversion"
-    fallback_bytes = fallback_message.encode('utf-8')
-    fallback_b64 = base64.b64encode(fallback_bytes).decode('utf-8')
-    
-    # Return a text data URI as fallback (real CLI would return proper PNG)
-    return f'data:text/plain;base64,{fallback_b64}'
-
-def is_logo_missing_from_shields(slug):
-    """Simulate checking if a logo is missing from Shields.io.
-    
-    Based on known cases where Simple Icons exist but Shields.io logos don't.
-    In the real CLI, this makes HTTP requests to test logo availability.
-    """
-    # Known logos that have been removed from Shields.io but exist in Simple Icons
-    known_missing_logos = {
-        'microsoft', 'microsoftoffice', 'microsoftexcel', 'microsoftword', 'microsoftpowerpoint',
-        'microsoftvisio', 'microsoftaccess', 'microsoftonenote', 'microsoftoutlook', 
-        'microsoftteams', 'microsoftsharepoint', 'microsoftonedrive', 'microsoftazure',
-        'githubsponsors', 'githubcopilot', 'githubactions', 'githubpages',
-        'applescript', 'applemusic', 'appletv', 'applearcade', 'applepodcasts',
-        'meta', 'metaquest', 'threads', 'whatsapp', 'instagram',
-        'x', 'twitterx',  # X/Twitter rebranding issues
-        'openai', 'chatgpt', 'midjourney', 'stability', 'anthropic',  # AI companies
-        'bun', 'deno', 'fresh', 'astro', 'solidjs', 'qwik',  # Newer tech
-        'bluesky', 'mastodon', 'lemmy', 'kbin',  # New social platforms
-        'bevy', 'godot', 'unity', 'unrealengine',  # Game engines with licensing issues
-    }
-    
-    # Some logos might be missing due to trademark/licensing issues
-    trademark_sensitive = {
-        'nike', 'adidas', 'mcdonalds', 'cocacola', 'pepsi', 'starbucks',
-        'apple', 'google', 'facebook', 'twitter', 'instagram', 'tiktok'
-    }
-    
-    # Return True if logo is likely missing from Shields.io
-    return slug in known_missing_logos or slug in trademark_sensitive
-
-def should_embed_svg_for_logo(slug, skip_logo_check=False, force_embed=False):
-    """Determine if SVG should be embedded for a given logo slug.
-    
-    This simulates the CLI logic for automatic missing logo detection.
-    """
-    if force_embed:
-        return True
-        
-    if skip_logo_check:
-        return False
-        
-    # Simulate the CLI's automatic detection
-    return is_logo_missing_from_shields(slug)
-
-def _compress_svg_for_web(svg_content):
-    """Basic SVG compression for web demo (simplified version)."""
-    import re
-    
-    try:
-        # Remove XML declaration if present
-        svg_content = re.sub(r'<\?xml[^>]*\?>', '', svg_content)
-        
-        # Remove comments
-        svg_content = re.sub(r'<!--.*?-->', '', svg_content, flags=re.DOTALL)
-        
-        # Remove title element completely (not needed for badges)
-        svg_content = re.sub(r'<title>.*?</title>', '', svg_content, flags=re.DOTALL)
-        
-        # Remove role attribute (not needed for badges)
-        svg_content = re.sub(r'\s*role="[^"]*"', '', svg_content)
-        
-        # Remove extra whitespace
-        svg_content = re.sub(r'>\s+<', '><', svg_content)
-        svg_content = re.sub(r'\s+', ' ', svg_content)
-        svg_content = svg_content.strip()
-        
-        return svg_content
-        
-    except Exception:
-        # Fallback to original SVG if compression fails
-        return svg_content
+    # Return as data URI
+    return f'data:image/svg+xml;base64,{base64_svg}'
 
 # Import hilbert function
 def hilbert_d2xy(n, d):
@@ -974,31 +859,17 @@ def generate_badges():
         icon_title_safe = quote(icon.title.encode('utf8'), safe='').replace('-', '--')
         icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
         icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
-        icon_hex_comp = 'white' if icon_brightness < 0.695 else 'black'
+        icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
         
         if badge_provider == 'shields':
-            # Shields.io format - always embed SVG data URIs
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=6000)
-            icon_data_uri_encoded = quote(icon_data_uri, safe='')
+            # Shields.io format
             icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
-            icon_url += f'?style={badge_style}&logo={icon_data_uri_encoded}'
+            icon_url += f'?style={badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         else:
-            # Badgen.net format - always embed SVG with adaptive color
-            # Cap background brightness at 0.7 since Badgen.net doesn't support black text
-            if icon_brightness > 0.7:
-                # Scale down RGB values to achieve 0.7 brightness for background
-                scale_factor = 0.7 / icon_brightness
-                capped_rgb = [int(c * scale_factor) for c in icon_rgb]
-                capped_hex = f"{capped_rgb[0]:02x}{capped_rgb[1]:02x}{capped_rgb[2]:02x}"
-                background_color = capped_hex
-            else:
-                # Use original color for normal brightness backgrounds
-                background_color = icon.hex
-            
-            # Always use white icons for good contrast against any background
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white')
+            # Badgen.net format with adaptive color
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
         
         icon_list.append({'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url})
     

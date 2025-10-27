@@ -329,13 +329,6 @@ $ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b fl
 $ python -m badgesort.icons -p badgen -s github python docker oxygen
 ```
 
-> **Note on Badgen Icon Visibility**
-> 
-> Unlike Shields.io, Badgen.net doesn't support black text on badges, only white text on colored backgrounds. To ensure icon visibility on bright brand colors, BadgeSort automatically adjusts very bright icons:
-> - **Bright icons** (brightness > 0.7): Scaled down to brightness of 0.7 for optimal visibility
-> 
-> This preserves the icon's hue and saturation while ensuring it remains visible against bright brand color backgrounds.
-
 #### _Output:_
 
 <!-- start chipwolf/badgesort badgen-example -->
