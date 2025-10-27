@@ -170,11 +170,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 ```html
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="LGTM" src="https://img.shields.io/badge/LGTM-FFFFFF.svg?style=flat-square&logo=lgtm&logoColor=black"></a>
-  <a href="#"><img alt="Elasticsearch" src="https://img.shields.io/badge/Elasticsearch-005571.svg?style=flat-square&logo=elasticsearch&logoColor=white"></a>
-  <a href="#"><img alt="Etsy" src="https://img.shields.io/badge/Etsy-F16521.svg?style=flat-square&logo=etsy&logoColor=white"></a>
-  <a href="#"><img alt="Blazemeter" src="https://img.shields.io/badge/Blazemeter-CA2133.svg?style=flat-square&logo=blazemeter&logoColor=white"></a>
-  <a href="#"><img alt="BT" src="https://img.shields.io/badge/BT-6400AA.svg?style=flat-square&logo=bt&logoColor=white"></a>
+  <a href="#"><img alt="StubHub" src="https://img.shields.io/badge/StubHub-003168.svg?style=flat-square&logo=stubhub&logoColor=white"></a>
+  <a href="#"><img alt="Flutter" src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat-square&logo=flutter&logoColor=white"></a>
+  <a href="#"><img alt="haveibeenpwned" src="https://img.shields.io/badge/haveibeenpwned-2A6379.svg?style=flat-square&logo=haveibeenpwned&logoColor=white"></a>
+  <a href="#"><img alt="ReactiveX" src="https://img.shields.io/badge/ReactiveX-B7178C.svg?style=flat-square&logo=reactivex&logoColor=white"></a>
+  <a href="#"><img alt="Embarcadero" src="https://img.shields.io/badge/Embarcadero-ED1F35.svg?style=flat-square&logo=embarcadero&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
@@ -186,11 +186,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="LGTM" src="https://img.shields.io/badge/LGTM-FFFFFF.svg?style=flat-square&logo=lgtm&logoColor=black"></a>
-  <a href="#"><img alt="Elasticsearch" src="https://img.shields.io/badge/Elasticsearch-005571.svg?style=flat-square&logo=elasticsearch&logoColor=white"></a>
-  <a href="#"><img alt="Etsy" src="https://img.shields.io/badge/Etsy-F16521.svg?style=flat-square&logo=etsy&logoColor=white"></a>
-  <a href="#"><img alt="Blazemeter" src="https://img.shields.io/badge/Blazemeter-CA2133.svg?style=flat-square&logo=blazemeter&logoColor=white"></a>
-  <a href="#"><img alt="BT" src="https://img.shields.io/badge/BT-6400AA.svg?style=flat-square&logo=bt&logoColor=white"></a>
+  <a href="#"><img alt="StubHub" src="https://img.shields.io/badge/StubHub-003168.svg?style=flat-square&logo=stubhub&logoColor=white"></a>
+  <a href="#"><img alt="Flutter" src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat-square&logo=flutter&logoColor=white"></a>
+  <a href="#"><img alt="haveibeenpwned" src="https://img.shields.io/badge/haveibeenpwned-2A6379.svg?style=flat-square&logo=haveibeenpwned&logoColor=white"></a>
+  <a href="#"><img alt="ReactiveX" src="https://img.shields.io/badge/ReactiveX-B7178C.svg?style=flat-square&logo=reactivex&logoColor=white"></a>
+  <a href="#"><img alt="Embarcadero" src="https://img.shields.io/badge/Embarcadero-ED1F35.svg?style=flat-square&logo=embarcadero&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
