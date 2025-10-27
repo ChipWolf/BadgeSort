@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BadgeSort - Interactive Badge Generator</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.11.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.11.1/core.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9fafb;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+        .header a {
+            color: #9333ea;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .header a:hover {
+            color: #7e22ce;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+        .panel h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        .panel h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #9333ea;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+        }
+        .checkbox-group label {
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        .badge-preview {
+            min-height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .badge-preview img {
+            display: inline-block;
+            width: auto; /* Maintain aspect ratio */
+            transition: height 0.2s ease, margin 0.2s ease;
+        }
+        .badge-preview.scale-100 {
+            line-height: 1.5; /* Default line height */
+        }
+        .badge-preview.scale-100 img { 
+            height: auto; /* Natural height */
+            margin: 0.25rem;
+        }
+        .badge-preview.scale-75 {
+            line-height: 1.125; /* Proportionally smaller line height */
+        }
+        .badge-preview.scale-75 img { 
+            height: 15px; /* Typical badge height * 0.75 */
+            margin: 0.1875rem; /* 0.25rem * 0.75 */
+        }
+        .badge-preview.scale-50 {
+            line-height: 0.75; /* Proportionally smaller line height */
+        }
+        .badge-preview.scale-50 img { 
+            height: 10px; /* Typical badge height * 0.5 */
+            margin: 0.125rem; /* 0.25rem * 0.5 */
+        }
+        .yaml-output {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .icon-item:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+        .icon-item.selected {
+            border-color: #667eea;
+            background-color: #eef2ff;
+        }
+        .icon-item svg {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 0.25rem;
+        }
+        .icon-item span {
+            font-size: 0.75rem;
+            text-align: center;
+            word-break: break-word;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #9333ea;
+        }
+        .button-group {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #9333ea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            cursor: help;
+            margin-left: 0.25rem;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .slider-container input[type="range"] {
+            flex: 1;
+        }
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .preview-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        .preview-control-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .scale-btn {
+            background: #e5e7eb;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .scale-btn:hover {
+            background: #d1d5db;
+        }
+        .scale-btn.active {
+            background: #9333ea;
+            color: white;
+        }
+        .bg-light {
+            background: #ffffff !important;
+        }
+        .bg-dark {
+            background: #0d1117 !important;
+        }
+        .comment-syntax-box {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            background: #f3f4f6;
+            color: #1f2937;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>BadgeSort</h1>
+            <p>Interactive Badge Generator for GitHub Actions</p>
+            <a href="https://github.com/ChipWolf/BadgeSort" target="_blank">View on GitHub →</a>
+        </div>
+
+        <div class="grid">
+            <!-- Left Panel: Configuration -->
+            <div class="panel">
+                <h2>Configuration</h2>
+                
+                <!-- Badge Style -->
+                <div class="form-group">
+                    <label>Badge Style 
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Choose the visual style of your badges. 'For The Badge' is larger and more prominent, while 'Flat' is minimal and compact.</span>
+                        </span>
+                    </label>
+                    <select id="badge-style">
+                        <option value="for-the-badge">For The Badge</option>
+                        <option value="flat">Flat</option>
+                        <option value="flat-square">Flat Square</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="social">Social</option>
+                    </select>
+                </div>
+
+                <!-- Sort Algorithm -->
+                <div class="form-group">
+                    <label>Sort Algorithm
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Choose how badges are sorted by color. Hilbert uses a space-filling curve for visually appealing gradients. HSV sorts by hue, saturation, and value.</span>
+                        </span>
+                    </label>
+                    <select id="sort-algorithm">
+                        <option value="hilbert">Hilbert (Default)</option>
+                        <option value="hsv">HSV</option>
+                        <option value="step">Step</option>
+                        <option value="step_invert">Step Invert</option>
+                        <option value="luminance">Luminance</option>
+                        <option value="random">Random</option>
+                    </select>
+                </div>
+
+                <!-- Output Format -->
+                <div class="form-group">
+                    <label>Output Format
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Choose between Markdown (for README files) or HTML format for the badge output.</span>
+                        </span>
+                    </label>
+                    <select id="output-format">
+                        <option value="markdown">Markdown</option>
+                        <option value="html">HTML</option>
+                    </select>
+                </div>
+
+                <!-- Badge ID -->
+                <div class="form-group">
+                    <label>Badge ID
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Unique identifier for this badge section. Used in HTML comments to mark where badges should be inserted.</span>
+                        </span>
+                    </label>
+                    <input type="text" id="badge-id" value="default">
+                </div>
+
+                <!-- Output File -->
+                <div class="form-group">
+                    <label>Output File
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">The file where badges will be inserted (e.g., README.md, PROFILE.md).</span>
+                        </span>
+                    </label>
+                    <input type="text" id="output-file" value="README.md">
+                </div>
+
+                <!-- Additional Options -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="reverse-sort">
+                    <label>Reverse Sort Order
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Reverse the order of sorted badges.</span>
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Hue Rotate (conditional for step sort) -->
+                <div class="form-group" id="hue-rotate-group" style="display: none;">
+                    <label>Hue Rotate
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Rotate the hue values for step sorting algorithms (0-360 degrees).</span>
+                        </span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" id="hue-rotate" value="0" min="0" max="360">
+                        <span class="slider-value" id="hue-rotate-value">0°</span>
+                    </div>
+                </div>
+
+                <!-- Random Badges Option -->
+                <div class="form-group">
+                    <label>Add Random Badges
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Add a specified number of random badges to your selection.</span>
+                        </span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="number" id="random-count" value="0" min="0" max="50" style="width: 80px;">
+                        <button id="add-random" class="btn-secondary" style="padding: 0.25rem 0.75rem;">Add Random</button>
+                    </div>
+                </div>
+
+                <!-- Badge Selection -->
+                <h3>Select Badges</h3>
+                <input type="text" id="search-input" class="search-input" placeholder="Search icons...">
+                <div class="button-group">
+                    <button id="select-popular" class="btn-secondary" style="margin-right: 0.5rem;">Popular Tech</button>
+                    <button id="clear-selection" class="btn-secondary">Clear All</button>
+                </div>
+                <div id="icon-grid" class="icon-grid">
+                    <div class="loading">Loading icons...</div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Preview & Output -->
+            <div class="panel">
+                <h2>Preview</h2>
+                <!-- Preview Controls -->
+                <div class="preview-controls">
+                    <span class="preview-control-label">Scale:</span>
+                    <button class="scale-btn active" data-scale="1">100%</button>
+                    <button class="scale-btn" data-scale="0.75">75%</button>
+                    <button class="scale-btn" data-scale="0.5">50%</button>
+                    <span class="preview-control-label" style="margin-left: 1rem;">BG:</span>
+                    <button class="scale-btn active" data-bg="gradient">Gradient</button>
+                    <button class="scale-btn" data-bg="light">Light</button>
+                    <button class="scale-btn" data-bg="dark">Dark</button>
+                </div>
+                <div id="badge-preview" class="badge-preview" style="margin-bottom: 1.5rem;">
+                    <div class="loading">Select badges to see preview</div>
+                </div>
+
+                <h2>Comment Syntax</h2>
+                <div class="comment-syntax-box" id="comment-syntax">
+&lt;!-- start chipwolf/badgesort default --&gt;
+&lt;!-- end chipwolf/badgesort default --&gt;
+                </div>
+
+                <h2>GitHub Actions YAML</h2>
+                <div style="margin-bottom: 1rem;">
+                    <button id="copy-yaml" class="btn-primary" style="width: 100%;">
+                        📋 Copy YAML to Clipboard
+                    </button>
+                </div>
+                <div id="yaml-output" class="yaml-output"># Select badges to generate YAML</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="py" config='{"packages": ["simpleicons==7.21.0"]}'>
+from js import document, navigator
+from pyodide.ffi import create_proxy
+from simpleicons.all import icons
+from urllib.parse import quote
+from colorsys import rgb_to_hsv
+import math
+
+# Import hilbert function
+def hilbert_d2xy(n, d):
+    """Convert d to (x, y)"""
+    t = d
+    x = y = 0
+    s = 1
+    while s < n:
+        rx = 1 & (t // 2)
+        ry = 1 & (t ^ rx)
+        if ry == 0:
+            if rx == 1:
+                x = s - 1 - x
+                y = s - 1 - y
+            x, y = y, x
+        x += s * rx
+        y += s * ry
+        t //= 4
+        s *= 2
+    return x, y
+
+def Hilbert_to_int(rgb):
+    """Convert RGB to Hilbert curve position"""
+    r, g, b = rgb
+    x, y = hilbert_d2xy(256, r)
+    x2, y2 = hilbert_d2xy(256, g)
+    x3, y3 = hilbert_d2xy(256, b)
+    return x + y + x2 + y2 + x3 + y3
+
+# Global state
+selected_slugs = []
+all_icons = sorted(list(icons.keys()))
+
+def render_icon_grid(filter_text=""):
+    """Render the icon grid"""
+    grid = document.getElementById("icon-grid")
+    grid.innerHTML = ""
+    
+    filtered = [slug for slug in all_icons if filter_text.lower() in slug.lower() or 
+                filter_text.lower() in icons.get(slug).title.lower()][:200]
+    
+    for slug in filtered:
+        icon = icons.get(slug)
+        
+        item = document.createElement("div")
+        item.className = "icon-item"
+        if slug in selected_slugs:
+            item.className += " selected"
+        
+        # Create SVG
+        svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+        svg.setAttribute("viewBox", "0 0 24 24")
+        svg.setAttribute("fill", f"#{icon.hex}")
+        svg.style.width = "32px"
+        svg.style.height = "32px"
+        svg.style.marginBottom = "0.25rem"
+        
+        path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+        path.setAttribute("d", icon.path)
+        svg.appendChild(path)
+        
+        label = document.createElement("span")
+        label.textContent = icon.title
+        
+        item.appendChild(svg)
+        item.appendChild(label)
+        
+        # Add click handler
+        def make_click_handler(s):
+            return create_proxy(lambda e: toggle_icon(s))
+        
+        item.onclick = make_click_handler(slug)
+        grid.appendChild(item)
+
+def toggle_icon(slug):
+    """Toggle icon selection"""
+    if slug in selected_slugs:
+        selected_slugs.remove(slug)
+    else:
+        selected_slugs.append(slug)
+    
+    search_val = document.getElementById("search-input").value
+    render_icon_grid(search_val)
+    update_preview()
+
+def generate_badges():
+    """Generate badges using BadgeSort logic"""
+    if not selected_slugs:
+        return []
+    
+    # Get settings
+    badge_style = document.getElementById("badge-style").value
+    color_sort = document.getElementById("sort-algorithm").value
+    reverse = document.getElementById("reverse-sort").checked
+    hue_rotate = int(document.getElementById("hue-rotate").value or 0)
+    
+    # Build icon list
+    icon_base = 'https://img.shields.io/badge'
+    icon_list = []
+    
+    for slug in selected_slugs:
+        icon = icons.get(slug)
+        icon_title_safe = quote(icon.title.encode('utf8'), safe='').replace('-', '--')
+        icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
+        icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
+        icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
+        icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+        icon_url += f'?style={badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
+        icon_list.append({'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url})
+    
+    # Sorting functions
+    def lum(r, g, b):
+        return math.sqrt(.241 * r + .691 * g + .068 * b)
+    
+    def step(r, g, b, repetitions=1, rotate=0, invert=False):
+        l = lum(r, g, b)
+        h, s, v = rgb_to_hsv(r, g, b)
+        h = (h + rotate / 255) % 1
+        h2 = int(h * repetitions)
+        v2 = int(v * repetitions)
+        if h2 % 2 == 1 and invert:
+            v2 = repetitions - v2
+            l = repetitions - l
+        return (h2, l, v2)
+    
+    # Sort icons
+    if color_sort == 'hilbert':
+        icon_list.sort(key=lambda c: Hilbert_to_int(c['rgb']))
+    elif color_sort == 'hsv':
+        icon_list.sort(key=lambda c: rgb_to_hsv(*c['rgb']))
+    elif color_sort == 'step':
+        icon_list.sort(key=lambda c: step(*c['rgb'], 8, hue_rotate))
+    elif color_sort == 'step_invert':
+        icon_list.sort(key=lambda c: step(*c['rgb'], 8, hue_rotate, True))
+    elif color_sort == 'luminance':
+        icon_list.sort(key=lambda c: lum(*c['rgb']))
+    # random - no sort needed
+    
+    if reverse:
+        icon_list.reverse()
+    
+    return icon_list
+
+def update_preview():
+    """Update badge preview"""
+    preview = document.getElementById("badge-preview")
+    
+    badges = generate_badges()
+    if not badges:
+        preview.innerHTML = '<div class="loading">Select badges to see preview</div>'
+        update_yaml()
+        return
+    
+    html = ''
+    for badge in badges:
+        html += f'<img src="{badge["url"]}" alt="{badge["title"]}">'
+    
+    preview.innerHTML = html
+    update_yaml()
+
+def update_yaml():
+    """Update YAML output"""
+    output = document.getElementById("yaml-output")
+    
+    if not selected_slugs:
+        output.textContent = "# Select badges to generate YAML"
+        return
+    
+    style = document.getElementById("badge-style").value
+    sort_algo = document.getElementById("sort-algorithm").value
+    output_format = document.getElementById("output-format").value
+    badge_id = document.getElementById("badge-id").value
+    output_file = document.getElementById("output-file").value
+    reverse_sort = document.getElementById("reverse-sort").checked
+    hue_rotate = document.getElementById("hue-rotate").value
+    
+    # Sort slugs alphabetically for YAML output
+    sorted_slugs = sorted(selected_slugs)
+    slugs_yaml = '\n            '.join(sorted_slugs)
+    
+    yaml_content = f"""# Add this to your GitHub Actions workflow
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
+        with:
+          format: {output_format}
+          id: {badge_id}
+          output: {output_file}
+          slugs: |
+            {slugs_yaml}
+          sort: {sort_algo}
+          style: {style}"""
+    
+    if reverse_sort or (sort_algo in ['step', 'step_invert'] and hue_rotate != '0'):
+        yaml_content += '\n          opts: |'
+        if reverse_sort:
+            yaml_content += '\n            --reverse'
+        if sort_algo in ['step', 'step_invert'] and hue_rotate != '0':
+            yaml_content += f'\n            --hue-rotate {hue_rotate}'
+    
+    output.textContent = yaml_content
+    
+    # Update comment syntax box
+    update_comment_syntax()
+
+def copy_yaml():
+    """Copy YAML to clipboard"""
+    yaml_text = document.getElementById("yaml-output").textContent
+    button = document.getElementById("copy-yaml")
+    original_text = button.textContent
+    
+    try:
+        navigator.clipboard.writeText(yaml_text)
+        button.textContent = '✓ Copied!'
+        button.style.background = '#10b981'
+    except:
+        button.textContent = '✗ Copy failed'
+        button.style.background = '#ef4444'
+    
+    def reset():
+        button.textContent = original_text
+        button.style.background = ''
+    
+    import asyncio
+    asyncio.ensure_future(asyncio.sleep(2)).add_done_callback(lambda x: reset())
+
+def select_popular():
+    """Select popular tech icons"""
+    popular = ['github', 'python', 'docker', 'kubernetes', 'javascript', 'typescript',
+               'react', 'nodedotjs', 'git', 'linux', 'amazonaws', 'microsoftazure', 'googlecloud']
+    selected_slugs.clear()
+    for slug in popular:
+        if slug in all_icons:
+            selected_slugs.append(slug)
+    render_icon_grid()
+    update_preview()
+
+def clear_selection():
+    """Clear all selections"""
+    selected_slugs.clear()
+    render_icon_grid()
+    update_preview()
+
+def filter_icons():
+    """Filter icons by search"""
+    search_val = document.getElementById("search-input").value
+    render_icon_grid(search_val)
+
+def update_comment_syntax():
+    """Update the comment syntax box based on badge ID"""
+    badge_id = document.getElementById("badge-id").value
+    comment_box = document.getElementById("comment-syntax")
+    comment_box.textContent = f"""<!-- start chipwolf/badgesort {badge_id} -->
+<!-- end chipwolf/badgesort {badge_id} -->"""
+
+def add_random_badges():
+    """Add random badges to selection"""
+    count = int(document.getElementById("random-count").value or 0)
+    if count <= 0:
+        return
+    
+    # Get unselected icons
+    available = [slug for slug in all_icons if slug not in selected_slugs]
+    
+    # Add random selection
+    import random
+    to_add = min(count, len(available))
+    random_selection = random.sample(available, to_add)
+    
+    for slug in random_selection:
+        selected_slugs.append(slug)
+    
+    render_icon_grid()
+    update_preview()
+
+def toggle_hue_rotate():
+    """Show/hide hue rotate based on sort algorithm"""
+    sort_algo = document.getElementById("sort-algorithm").value
+    hue_group = document.getElementById("hue-rotate-group")
+    
+    if sort_algo in ['step', 'step_invert']:
+        hue_group.style.display = 'block'
+    else:
+        hue_group.style.display = 'none'
+
+def update_hue_value():
+    """Update the displayed hue rotate value"""
+    slider = document.getElementById("hue-rotate")
+    value_display = document.getElementById("hue-rotate-value")
+    value_display.textContent = f"{slider.value}°"
+    update_preview()
+
+def set_preview_scale(scale):
+    """Set the scale of preview badges"""
+    preview = document.getElementById("badge-preview")
+    # Remove existing scale classes
+    preview.classList.remove("scale-100", "scale-75", "scale-50")
+    # Add appropriate scale class
+    if scale == 1:
+        preview.classList.add("scale-100")
+    elif scale == 0.75:
+        preview.classList.add("scale-75")
+    elif scale == 0.5:
+        preview.classList.add("scale-50")
+
+def set_preview_background(bg_type):
+    """Set the background of preview area"""
+    preview = document.getElementById("badge-preview")
+    preview.classList.remove('bg-light', 'bg-dark')
+    
+    if bg_type == 'light':
+        preview.classList.add('bg-light')
+        preview.style.background = '#ffffff'
+    elif bg_type == 'dark':
+        preview.classList.add('bg-dark')
+        preview.style.background = '#0d1117'
+    else:
+        preview.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+
+# Setup event listeners
+def setup_event_listeners():
+    """Setup all event listeners"""
+    # Badge style
+    document.getElementById("badge-style").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Sort algorithm - also toggle hue rotate visibility
+    def on_sort_change(e):
+        toggle_hue_rotate()
+        update_preview()
+    document.getElementById("sort-algorithm").addEventListener("change", create_proxy(on_sort_change))
+    
+    # Output format
+    document.getElementById("output-format").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Badge ID - also update comment syntax
+    document.getElementById("badge-id").addEventListener("input", create_proxy(lambda e: update_preview()))
+    
+    # Output file
+    document.getElementById("output-file").addEventListener("input", create_proxy(lambda e: update_preview()))
+    
+    # Reverse sort
+    document.getElementById("reverse-sort").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Hue rotate slider
+    document.getElementById("hue-rotate").addEventListener("input", create_proxy(lambda e: update_hue_value()))
+    
+    # Search input
+    document.getElementById("search-input").addEventListener("input", create_proxy(lambda e: filter_icons()))
+    
+    # Copy YAML button
+    document.getElementById("copy-yaml").addEventListener("click", create_proxy(lambda e: copy_yaml()))
+    
+    # Select popular button
+    document.getElementById("select-popular").addEventListener("click", create_proxy(lambda e: select_popular()))
+    
+    # Clear selection button
+    document.getElementById("clear-selection").addEventListener("click", create_proxy(lambda e: clear_selection()))
+    
+    # Add random badges button
+    document.getElementById("add-random").addEventListener("click", create_proxy(lambda e: add_random_badges()))
+    
+    # Preview scale buttons
+    scale_buttons = document.querySelectorAll('.scale-btn[data-scale]')
+    for btn in scale_buttons:
+        def make_scale_handler(button):
+            def handler(e):
+                # Remove active class from all scale buttons
+                for b in document.querySelectorAll('.scale-btn[data-scale]'):
+                    b.classList.remove('active')
+                button.classList.add('active')
+                set_preview_scale(float(button.getAttribute('data-scale')))
+            return handler
+        btn.addEventListener("click", create_proxy(make_scale_handler(btn)))
+    
+    # Preview background buttons
+    bg_buttons = document.querySelectorAll('.scale-btn[data-bg]')
+    for btn in bg_buttons:
+        def make_bg_handler(button):
+            def handler(e):
+                # Remove active class from all bg buttons
+                for b in document.querySelectorAll('.scale-btn[data-bg]'):
+                    b.classList.remove('active')
+                button.classList.add('active')
+                set_preview_background(button.getAttribute('data-bg'))
+            return handler
+        btn.addEventListener("click", create_proxy(make_bg_handler(btn)))
+
+# Initial render
+render_icon_grid()
+update_yaml()
+update_comment_syntax()
+toggle_hue_rotate()
+set_preview_scale(1)  # Set default scale to 100%
+setup_event_listeners()
+    </script>
+</body>
+</html>
