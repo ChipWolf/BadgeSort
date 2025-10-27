@@ -15,7 +15,7 @@ inputs:
     required: false
     default: 'markdown'
   id:
-    description: Badge generation ID
+    description: 'Badge generation ID - must match the ID in comment markers: <!-- start chipwolf/badgesort {id} --> and <!-- end chipwolf/badgesort {id} -->'
     required: false
     default: default
   sort:
@@ -41,7 +41,7 @@ inputs:
     default: false
     type: boolean
   output:
-    description: Output file name
+    description: 'Output file name - requires comment markers in the target file: <!-- start chipwolf/badgesort {id} --> and <!-- end chipwolf/badgesort {id} -->'
     required: false
 runs:
   using: docker
