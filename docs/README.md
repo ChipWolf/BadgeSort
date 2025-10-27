@@ -14,41 +14,20 @@ The interactive generator (`index.html`) provides a user-friendly interface to:
 
 ### Local Development
 
-1. Generate the icons data:
-```bash
-python3 -c "
-import json
-from simpleicons.all import icons
-
-icons_list = []
-for slug in sorted(list(icons.keys())):
-    icon = icons.get(slug)
-    icons_list.append({
-        'slug': slug,
-        'title': icon.title,
-        'hex': icon.hex,
-        'path': icon.path
-    })
-
-print(json.dumps({'icons': icons_list}))
-" > icons_data.json
-```
-
-2. Serve the directory with a web server:
+1. Serve the directory with a web server:
 ```bash
 python3 -m http.server 8000
 ```
 
-3. Open http://localhost:8000/ in your browser
+2. Open http://localhost:8000/ in your browser
 
 ### Deployment
 
 To deploy this microsite:
 
-1. Generate the `icons_data.json` file as shown above
-2. Host the directory on any static web hosting service (GitHub Pages, Netlify, Vercel, etc.)
+1. Host the directory on any static web hosting service (GitHub Pages, Netlify, Vercel, etc.)
 
-The microsite is a single-page application with no backend dependencies.
+The microsite is a single-page application with no backend dependencies. PyScript will automatically download and run the Python code in the browser.
 
 ## Features
 
@@ -62,7 +41,9 @@ The microsite is a single-page application with no backend dependencies.
 
 ## Technical Details
 
-- Pure HTML, CSS, and JavaScript (no build step required)
-- Uses Simple Icons data loaded from `icons_data.json`
+- Uses **PyScript** to run Python code directly in the browser
+- Reuses the existing BadgeSort Python logic (no code duplication)
+- Loads Simple Icons package via PyScript (simpleicons==7.21.0)
 - Shields.io for badge rendering
 - Responsive design for mobile and desktop
+- No build step or backend required

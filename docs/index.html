@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BadgeSort - Interactive Badge Generator</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.11.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.11.1/core.js"></script>
     <style>
         * {
             margin: 0;
@@ -142,7 +144,7 @@
             max-height: 400px;
             overflow-y: auto;
             padding: 1rem;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #e5e7eb;
             border-radius: 0.5rem;
         }
         .icon-item {
@@ -238,7 +240,7 @@
                 <!-- Badge Style -->
                 <div class="form-group">
                     <label>Badge Style</label>
-                    <select id="badge-style">
+                    <select id="badge-style" py-change="update_preview()">
                         <option value="for-the-badge">For The Badge</option>
                         <option value="flat">Flat</option>
                         <option value="flat-square">Flat Square</option>
@@ -250,7 +252,7 @@
                 <!-- Sort Algorithm -->
                 <div class="form-group">
                     <label>Sort Algorithm</label>
-                    <select id="sort-algorithm">
+                    <select id="sort-algorithm" py-change="update_preview()">
                         <option value="hilbert">Hilbert (Default)</option>
                         <option value="hsv">HSV</option>
                         <option value="step">Step</option>
@@ -263,7 +265,7 @@
                 <!-- Output Format -->
                 <div class="form-group">
                     <label>Output Format</label>
-                    <select id="output-format">
+                    <select id="output-format" py-change="update_preview()">
                         <option value="markdown">Markdown</option>
                         <option value="html">HTML</option>
                     </select>
@@ -272,39 +274,41 @@
                 <!-- Badge ID -->
                 <div class="form-group">
                     <label>Badge ID</label>
-                    <input type="text" id="badge-id" value="default">
+                    <input type="text" id="badge-id" value="default" py-input="update_preview()">
                 </div>
 
                 <!-- Output File -->
                 <div class="form-group">
                     <label>Output File</label>
-                    <input type="text" id="output-file" value="README.md">
+                    <input type="text" id="output-file" value="README.md" py-input="update_preview()">
                 </div>
 
                 <!-- Additional Options -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="reverse-sort">
+                    <input type="checkbox" id="reverse-sort" py-change="update_preview()">
                     <label>Reverse Sort Order</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="show-badgesort" checked>
+                    <input type="checkbox" id="show-badgesort" checked py-change="update_preview()">
                     <label>Show BadgeSort Badge</label>
                 </div>
 
                 <div class="form-group">
                     <label>Hue Rotate (for step sort)</label>
-                    <input type="number" id="hue-rotate" value="0" min="0" max="360">
+                    <input type="number" id="hue-rotate" value="0" min="0" max="360" py-input="update_preview()">
                 </div>
 
                 <!-- Badge Selection -->
                 <h3>Select Badges</h3>
-                <input type="text" id="search-input" class="search-input" placeholder="Search icons...">
+                <input type="text" id="search-input" class="search-input" placeholder="Search icons..." py-input="filter_icons()">
                 <div class="button-group">
-                    <button id="select-popular" class="btn-secondary" style="margin-right: 0.5rem;">Popular Tech</button>
-                    <button id="clear-selection" class="btn-secondary">Clear All</button>
+                    <button id="select-popular" class="btn-secondary" style="margin-right: 0.5rem;" py-click="select_popular()">Popular Tech</button>
+                    <button id="clear-selection" class="btn-secondary" py-click="clear_selection()">Clear All</button>
                 </div>
-                <div id="icon-grid" class="icon-grid"></div>
+                <div id="icon-grid" class="icon-grid">
+                    <div class="loading">Loading icons...</div>
+                </div>
             </div>
 
             <!-- Right Panel: Preview & Output -->
@@ -316,237 +320,274 @@
 
                 <h2>GitHub Actions YAML</h2>
                 <div style="margin-bottom: 1rem;">
-                    <button id="copy-yaml" class="btn-primary" style="width: 100%;">
+                    <button id="copy-yaml" class="btn-primary" style="width: 100%;" py-click="copy_yaml()">
                         📋 Copy YAML to Clipboard
                     </button>
                 </div>
-                <div id="yaml-output" class="yaml-output"></div>
+                <div id="yaml-output" class="yaml-output"># Select badges to generate YAML</div>
             </div>
         </div>
     </div>
 
-    <script>
-// Simple Icons data - embedded
-let iconsData = null;
-let selectedSlugs = [];
+    <script type="py" config='{"packages": ["simpleicons==7.21.0"]}'>
+from js import document, navigator
+from pyodide.ffi import create_proxy
+from simpleicons.all import icons
+from urllib.parse import quote
+from colorsys import rgb_to_hsv
+import math
 
-// Load Simple Icons data from embedded data
-async function loadIcons() {
-    try {
-        // Load from external file
-        const response = await fetch('icons_data.json');
-        iconsData = await response.json();
-        renderIconGrid();
-        updateYAML();
-    } catch (error) {
-        console.error('Failed to load icons data:', error);
-        // Fallback: show error message with instructions
-        document.getElementById('icon-grid').innerHTML = `
-            <div class="loading">
-                <p>Loading icons...</p>
-                <p style="font-size: 0.875rem; margin-top: 0.5rem;">If icons don't load, this page requires a web server to function properly.</p>
-            </div>`;
-    }
-}
+# Import hilbert function
+def hilbert_d2xy(n, d):
+    """Convert d to (x, y)"""
+    t = d
+    x = y = 0
+    s = 1
+    while s < n:
+        rx = 1 & (t // 2)
+        ry = 1 & (t ^ rx)
+        if ry == 0:
+            if rx == 1:
+                x = s - 1 - x
+                y = s - 1 - y
+            x, y = y, x
+        x += s * rx
+        y += s * ry
+        t //= 4
+        s *= 2
+    return x, y
 
-function encodeTitle(title) {
-    return encodeURIComponent(title).replace(/-/g, '--');
-}
+def Hilbert_to_int(rgb):
+    """Convert RGB to Hilbert curve position"""
+    r, g, b = rgb
+    x, y = hilbert_d2xy(256, r)
+    x2, y2 = hilbert_d2xy(256, g)
+    x3, y3 = hilbert_d2xy(256, b)
+    return x + y + x2 + y2 + x3 + y3
 
-function calculateBrightness(hexColor) {
-    const r = parseInt(hexColor.substring(0, 2), 16);
-    const g = parseInt(hexColor.substring(2, 4), 16);
-    const b = parseInt(hexColor.substring(4, 6), 16);
-    return (r * 299 + g * 587 + b * 114) / 255000;
-}
+# Global state
+selected_slugs = []
+all_icons = sorted(list(icons.keys()))
 
-function getBadgeURL(icon, style) {
-    const titleSafe = encodeTitle(icon.title);
-    const brightness = calculateBrightness(icon.hex);
-    const logoColor = brightness <= 0.7 ? 'white' : 'black';
-    return `https://img.shields.io/badge/${titleSafe}-${icon.hex}.svg?style=${style}&logo=${icon.slug}&logoColor=${logoColor}`;
-}
-
-function renderIconGrid(filterText = '') {
-    const grid = document.getElementById('icon-grid');
-    if (!iconsData) {
-        grid.innerHTML = '<div class="loading">Loading icons...</div>';
-        return;
-    }
+def render_icon_grid(filter_text=""):
+    """Render the icon grid"""
+    grid = document.getElementById("icon-grid")
+    grid.innerHTML = ""
     
-    grid.innerHTML = '';
-    const icons = iconsData.icons || [];
-    const filtered = icons.filter(icon => 
-        icon.slug.toLowerCase().includes(filterText.toLowerCase()) ||
-        icon.title.toLowerCase().includes(filterText.toLowerCase())
-    ).slice(0, 200); // Limit to 200 for performance
+    filtered = [slug for slug in all_icons if filter_text.lower() in slug.lower() or 
+                filter_text.lower() in icons.get(slug).title.lower()][:200]
     
-    filtered.forEach(icon => {
-        const item = document.createElement('div');
-        item.className = 'icon-item';
-        if (selectedSlugs.includes(icon.slug)) {
-            item.className += ' selected';
-        }
+    for slug in filtered:
+        icon = icons.get(slug)
         
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('fill', `#${icon.hex}`);
-        svg.style.width = '32px';
-        svg.style.height = '32px';
-        svg.style.marginBottom = '0.25rem';
+        item = document.createElement("div")
+        item.className = "icon-item"
+        if slug in selected_slugs:
+            item.className += " selected"
         
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', icon.path);
-        svg.appendChild(path);
+        # Create SVG
+        svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+        svg.setAttribute("viewBox", "0 0 24 24")
+        svg.setAttribute("fill", f"#{icon.hex}")
+        svg.style.width = "32px"
+        svg.style.height = "32px"
+        svg.style.marginBottom = "0.25rem"
         
-        const label = document.createElement('span');
-        label.textContent = icon.title;
+        path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+        path.setAttribute("d", icon.path)
+        svg.appendChild(path)
         
-        item.appendChild(svg);
-        item.appendChild(label);
+        label = document.createElement("span")
+        label.textContent = icon.title
         
-        item.onclick = () => toggleIcon(icon.slug);
-        grid.appendChild(item);
-    });
-}
+        item.appendChild(svg)
+        item.appendChild(label)
+        
+        # Add click handler
+        def make_click_handler(s):
+            return create_proxy(lambda e: toggle_icon(s))
+        
+        item.onclick = make_click_handler(slug)
+        grid.appendChild(item)
 
-function toggleIcon(slug) {
-    const index = selectedSlugs.indexOf(slug);
-    if (index > -1) {
-        selectedSlugs.splice(index, 1);
-    } else {
-        selectedSlugs.push(slug);
-    }
+def toggle_icon(slug):
+    """Toggle icon selection"""
+    if slug in selected_slugs:
+        selected_slugs.remove(slug)
+    else:
+        selected_slugs.append(slug)
     
-    renderIconGrid(document.getElementById('search-input').value);
-    updatePreview();
-    updateYAML();
-}
+    search_val = document.getElementById("search-input").value
+    render_icon_grid(search_val)
+    update_preview()
 
-function updatePreview() {
-    const preview = document.getElementById('badge-preview');
-    const style = document.getElementById('badge-style').value;
+def generate_badges():
+    """Generate badges using BadgeSort logic"""
+    if not selected_slugs:
+        return []
     
-    if (selectedSlugs.length === 0) {
-        preview.innerHTML = '<div class="loading">Select badges to see preview</div>';
-        return;
-    }
+    # Get settings
+    badge_style = document.getElementById("badge-style").value
+    color_sort = document.getElementById("sort-algorithm").value
+    show_thanks = document.getElementById("show-badgesort").checked
+    reverse = document.getElementById("reverse-sort").checked
+    hue_rotate = int(document.getElementById("hue-rotate").value or 0)
     
-    let html = '';
-    selectedSlugs.forEach(slug => {
-        const icon = iconsData.icons.find(i => i.slug === slug);
-        if (icon) {
-            const badgeURL = getBadgeURL(icon, style);
-            html += `<img src="${badgeURL}" alt="${icon.title}">`;
-        }
-    });
+    # Build icon list
+    icon_base = 'https://img.shields.io/badge'
+    icon_list = []
     
-    preview.innerHTML = html;
-}
+    for slug in selected_slugs:
+        icon = icons.get(slug)
+        icon_title_safe = quote(icon.title.encode('utf8'), safe='').replace('-', '--')
+        icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
+        icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
+        icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
+        icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+        icon_url += f'?style={badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
+        icon_list.append({'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url})
+    
+    if show_thanks:
+        icon_url = f'{icon_base}/BadgeSort-000000.svg'
+        icon_url += f'?style={badge_style}&logo=githubsponsors'
+        icon_list.append({'rgb': [0, 0, 0], 'slug': 'badgesort', 'title': 'BadgeSort', 'url': icon_url})
+    
+    # Sorting functions
+    def lum(r, g, b):
+        return math.sqrt(.241 * r + .691 * g + .068 * b)
+    
+    def step(r, g, b, repetitions=1, rotate=0, invert=False):
+        l = lum(r, g, b)
+        h, s, v = rgb_to_hsv(r, g, b)
+        h = (h + rotate / 255) % 1
+        h2 = int(h * repetitions)
+        v2 = int(v * repetitions)
+        if h2 % 2 == 1 and invert:
+            v2 = repetitions - v2
+            l = repetitions - l
+        return (h2, l, v2)
+    
+    # Sort icons
+    if color_sort == 'hilbert':
+        icon_list.sort(key=lambda c: Hilbert_to_int(c['rgb']))
+    elif color_sort == 'hsv':
+        icon_list.sort(key=lambda c: rgb_to_hsv(*c['rgb']))
+    elif color_sort == 'step':
+        icon_list.sort(key=lambda c: step(*c['rgb'], 8, hue_rotate))
+    elif color_sort == 'step_invert':
+        icon_list.sort(key=lambda c: step(*c['rgb'], 8, hue_rotate, True))
+    elif color_sort == 'luminance':
+        icon_list.sort(key=lambda c: lum(*c['rgb']))
+    # random - no sort needed
+    
+    if reverse:
+        icon_list.reverse()
+    
+    return icon_list
 
-function updateYAML() {
-    const output = document.getElementById('yaml-output');
+def update_preview():
+    """Update badge preview"""
+    preview = document.getElementById("badge-preview")
     
-    if (selectedSlugs.length === 0) {
-        output.textContent = '# Select badges to generate YAML';
-        return;
-    }
+    badges = generate_badges()
+    if not badges:
+        preview.innerHTML = '<div class="loading">Select badges to see preview</div>'
+        update_yaml()
+        return
     
-    const style = document.getElementById('badge-style').value;
-    const sortAlgo = document.getElementById('sort-algorithm').value;
-    const outputFormat = document.getElementById('output-format').value;
-    const badgeId = document.getElementById('badge-id').value;
-    const outputFile = document.getElementById('output-file').value;
-    const reverseSort = document.getElementById('reverse-sort').checked;
-    const showBadgesort = document.getElementById('show-badgesort').checked;
-    const hueRotate = document.getElementById('hue-rotate').value;
+    html = ''
+    for badge in badges:
+        html += f'<img src="{badge["url"]}" alt="{badge["title"]}">'
     
-    const slugsYAML = selectedSlugs.join('\n            ');
+    preview.innerHTML = html
+    update_yaml()
+
+def update_yaml():
+    """Update YAML output"""
+    output = document.getElementById("yaml-output")
     
-    let yamlContent = `# Add this to your GitHub Actions workflow
+    if not selected_slugs:
+        output.textContent = "# Select badges to generate YAML"
+        return
+    
+    style = document.getElementById("badge-style").value
+    sort_algo = document.getElementById("sort-algorithm").value
+    output_format = document.getElementById("output-format").value
+    badge_id = document.getElementById("badge-id").value
+    output_file = document.getElementById("output-file").value
+    reverse_sort = document.getElementById("reverse-sort").checked
+    show_badgesort = document.getElementById("show-badgesort").checked
+    hue_rotate = document.getElementById("hue-rotate").value
+    
+    slugs_yaml = '\\n            '.join(selected_slugs)
+    
+    yaml_content = f"""# Add this to your GitHub Actions workflow
       - uses: docker://ghcr.io/chipwolf/badgesort:latest
         with:
-          format: ${outputFormat}
-          id: ${badgeId}
-          output: ${outputFile}
+          format: {output_format}
+          id: {badge_id}
+          output: {output_file}
           slugs: |
-            ${slugsYAML}
-          sort: ${sortAlgo}
-          style: ${style}
-          thanks: ${showBadgesort}`;
+            {slugs_yaml}
+          sort: {sort_algo}
+          style: {style}
+          thanks: {str(show_badgesort).lower()}"""
     
-    if (reverseSort || (['step', 'step_invert'].includes(sortAlgo) && hueRotate !== '0')) {
-        yamlContent += '\n          opts: |';
-        if (reverseSort) {
-            yamlContent += '\n            --reverse';
-        }
-        if (['step', 'step_invert'].includes(sortAlgo) && hueRotate !== '0') {
-            yamlContent += `\n            --hue-rotate ${hueRotate}`;
-        }
-    }
+    if reverse_sort or (sort_algo in ['step', 'step_invert'] and hue_rotate != '0'):
+        yaml_content += '\\n          opts: |'
+        if reverse_sort:
+            yaml_content += '\\n            --reverse'
+        if sort_algo in ['step', 'step_invert'] and hue_rotate != '0':
+            yaml_content += f'\\n            --hue-rotate {hue_rotate}'
     
-    output.textContent = yamlContent;
-}
+    output.textContent = yaml_content
 
-function copyYAML() {
-    const yamlText = document.getElementById('yaml-output').textContent;
-    const button = document.getElementById('copy-yaml');
-    const originalText = button.textContent;
+def copy_yaml():
+    """Copy YAML to clipboard"""
+    yaml_text = document.getElementById("yaml-output").textContent
+    button = document.getElementById("copy-yaml")
+    original_text = button.textContent
     
-    navigator.clipboard.writeText(yamlText).then(() => {
-        button.textContent = '✓ Copied!';
-        button.style.background = '#10b981';
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '';
-        }, 2000);
-    }).catch(() => {
-        button.textContent = '✗ Copy failed';
-        button.style.background = '#ef4444';
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '';
-        }, 2000);
-    });
-}
+    try:
+        navigator.clipboard.writeText(yaml_text)
+        button.textContent = '✓ Copied!'
+        button.style.background = '#10b981'
+    except:
+        button.textContent = '✗ Copy failed'
+        button.style.background = '#ef4444'
+    
+    def reset():
+        button.textContent = original_text
+        button.style.background = ''
+    
+    import asyncio
+    asyncio.ensure_future(asyncio.sleep(2)).add_done_callback(lambda x: reset())
 
-function selectPopular() {
-    const popular = ['github', 'python', 'docker', 'kubernetes', 'javascript', 'typescript', 
-                     'react', 'nodedotjs', 'git', 'linux', 'amazonaws', 'microsoftazure', 'googlecloud'];
-    selectedSlugs = [];
-    popular.forEach(slug => {
-        if (iconsData && iconsData.icons.find(i => i.slug === slug)) {
-            selectedSlugs.push(slug);
-        }
-    });
-    renderIconGrid();
-    updatePreview();
-    updateYAML();
-}
+def select_popular():
+    """Select popular tech icons"""
+    popular = ['github', 'python', 'docker', 'kubernetes', 'javascript', 'typescript',
+               'react', 'nodedotjs', 'git', 'linux', 'amazonaws', 'microsoftazure', 'googlecloud']
+    selected_slugs.clear()
+    for slug in popular:
+        if slug in all_icons:
+            selected_slugs.append(slug)
+    render_icon_grid()
+    update_preview()
 
-function clearSelection() {
-    selectedSlugs = [];
-    renderIconGrid();
-    updatePreview();
-    updateYAML();
-}
+def clear_selection():
+    """Clear all selections"""
+    selected_slugs.clear()
+    render_icon_grid()
+    update_preview()
 
-// Event listeners
-document.getElementById('search-input').addEventListener('input', (e) => renderIconGrid(e.target.value));
-document.getElementById('badge-style').addEventListener('change', () => { updatePreview(); updateYAML(); });
-document.getElementById('sort-algorithm').addEventListener('change', updateYAML);
-document.getElementById('output-format').addEventListener('change', updateYAML);
-document.getElementById('badge-id').addEventListener('input', updateYAML);
-document.getElementById('output-file').addEventListener('input', updateYAML);
-document.getElementById('reverse-sort').addEventListener('change', updateYAML);
-document.getElementById('show-badgesort').addEventListener('change', updateYAML);
-document.getElementById('hue-rotate').addEventListener('input', updateYAML);
-document.getElementById('copy-yaml').addEventListener('click', copyYAML);
-document.getElementById('select-popular').addEventListener('click', selectPopular);
-document.getElementById('clear-selection').addEventListener('click', clearSelection);
+def filter_icons():
+    """Filter icons by search"""
+    search_val = document.getElementById("search-input").value
+    render_icon_grid(search_val)
 
-// Load icons on page load
-loadIcons();
+# Initial render
+render_icon_grid()
+update_yaml()
     </script>
 </body>
 </html>
