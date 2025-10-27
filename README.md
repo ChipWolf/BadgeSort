@@ -35,6 +35,49 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
 > **Note**
 > _Thanks to [this article](https://www.alanzucconi.com/2015/09/30/colour-sorting/) by **Alan Zucconi**, the visually appealing color sort is achived using a Hilbert walk._
 
+## Setup Requirements:
+
+### Comment Markers for Badge Interpolation
+
+When using BadgeSort to update a file (like `README.md`), you **must** include special HTML comment markers in your target file. These markers tell BadgeSort where to insert or update the badges.
+
+#### Required Syntax:
+
+```html
+<!-- start chipwolf/badgesort {id} -->
+<!-- end chipwolf/badgesort {id} -->
+```
+
+- **`{id}`**: A unique identifier that matches the `id` parameter in your GitHub Action or CLI command
+- BadgeSort will replace **everything between** these markers with the generated badges
+- The markers themselves are preserved and remain in your file
+
+#### Default ID:
+
+If you don't specify an `id`, the default value is `default`:
+
+```html
+<!-- start chipwolf/badgesort default -->
+<!-- end chipwolf/badgesort default -->
+```
+
+#### Multiple Badge Sections:
+
+You can have multiple badge sections in the same file by using different IDs:
+
+```html
+<!-- start chipwolf/badgesort section1 -->
+<!-- end chipwolf/badgesort section1 -->
+
+Some other content...
+
+<!-- start chipwolf/badgesort section2 -->
+<!-- end chipwolf/badgesort section2 -->
+```
+
+> **Important**
+> Without these comment markers in your target file, BadgeSort will only output badges to stdout (or the console) rather than updating the file.
+
 ## Examples:
 
 ### Generate five specific badges ordered by color:
@@ -60,8 +103,17 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
 #### _CLI:_
 
 ```bash
-$ python -m badgesort.icons -s osu github americanexpress nodered opensea
+$ python -m badgesort.icons -s osu github americanexpress nodered opensea -o README.md
 ```
+
+#### _Required comment markers in README.md:_
+
+```html
+<!-- start chipwolf/badgesort default -->
+<!-- end chipwolf/badgesort default -->
+```
+
+> **Note**: The `id` value `default` in the comment markers matches the `id` parameter in the GitHub Action (or the default when not specified in CLI).
 
 #### _Output:_
 
@@ -94,8 +146,17 @@ $ python -m badgesort.icons -s osu github americanexpress nodered opensea
 #### _CLI:_
 
 ```bash
-$ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
+$ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o README.md
 ```
+
+#### _Required comment markers in README.md:_
+
+```html
+<!-- start chipwolf/badgesort foobar -->
+<!-- end chipwolf/badgesort foobar -->
+```
+
+> **Note**: The custom `id` value `foobar` must match in both the GitHub Action input (or CLI `-i` parameter) and the comment markers.
 
 #### _Output:_
 
@@ -137,12 +198,19 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square
 #### _CLI:_
 
 ```bash
-$ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b flat-square --hue-rotate 240 -s \
+$ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b flat --hue-rotate 240 -s \
     angular,apollographql,brave,d3dotjs,docker, \
     git,githubactions,googlecloud,graphql,heroku, \
     html5,insomnia,mongodb,nestjs,nodedotjs, \
     npm,prettier,react,reactivex,redux, \
     rollupdotjs,sass,styledcomponents,typescript,webpack
+```
+
+#### _Required comment markers in README.md:_
+
+```html
+<!-- start chipwolf/badgesort example -->
+<!-- end chipwolf/badgesort example -->
 ```
 
 #### _Output:_
