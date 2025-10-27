@@ -53,23 +53,29 @@ jobs:
           sort: luminance
           style: flat
           format: html
+      
+      - name: Create comment body file
+        run: |
+          cat > comment_body.md << 'EOF'
+          ## 🏷️ Test Badge Generation
+          ### hilbert
+          ${{ steps.hilbert.outputs.badges }}
+
+          ### hsv
+          ${{ steps.hsv.outputs.badges }}
+
+          ### step
+          ${{ steps.step.outputs.badges }}
+
+          ### step_invert
+          ${{ steps.step_invert.outputs.badges }}
+
+          ### luminance
+          ${{ steps.luminance.outputs.badges }}
+          EOF
+      
       - name: Post PR comment
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ## 🏷️ Test Badge Generation
-            ### hilbert
-            ${{ steps.hilbert.outputs.badges }}
-
-            ### hsv
-            ${{ steps.hsv.outputs.badges }}
-
-            ### step
-            ${{ steps.step.outputs.badges }}
-
-            ### step_invert
-            ${{ steps.step_invert.outputs.badges }}
-
-            ### luminance
-            ${{ steps.luminance.outputs.badges }}
+          body-path: comment_body.md
