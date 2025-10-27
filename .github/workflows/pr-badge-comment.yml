@@ -18,6 +18,10 @@ jobs:
         run: |
           pip install simpleicons==7.21.0
           SLUGS=$(python3 -c "from simpleicons.all import icons; import random; slugs = random.sample(list(icons), 25); print(' '.join(slugs))")
+          if [ -z "$SLUGS" ]; then
+            echo "Error: Failed to generate random slugs"
+            exit 1
+          fi
           echo "slugs=$SLUGS" >> $GITHUB_OUTPUT
       - name: Generate hilbert badges using local Docker action
         id: hilbert
