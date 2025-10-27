@@ -9,11 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate random slugs
+        id: random_slugs
+        run: |
+          pip install simpleicons==7.21.0
+          SLUGS=$(python3 -c "from simpleicons.all import icons; import random; slugs = random.sample(list(icons), 25); print(' '.join(slugs))")
+          if [ -z "$SLUGS" ]; then
+            echo "Error: Failed to generate random slugs"
+            exit 1
+          fi
+          echo "slugs=$SLUGS" >> $GITHUB_OUTPUT
       - name: Generate hilbert badges using local Docker action
         id: hilbert
         uses: ./
         with:
-          random: 25
+          slugs: ${{ steps.random_slugs.outputs.slugs }}
           sort: hilbert
           style: flat
           format: html
@@ -22,7 +36,7 @@ jobs:
         id: hsv
         uses: ./
         with:
-          random: 25
+          slugs: ${{ steps.random_slugs.outputs.slugs }}
           sort: hsv
           style: flat
           format: html
@@ -31,7 +45,7 @@ jobs:
         id: step
         uses: ./
         with:
-          random: 25
+          slugs: ${{ steps.random_slugs.outputs.slugs }}
           sort: step
           style: flat
           format: html
@@ -40,7 +54,7 @@ jobs:
         id: step_invert
         uses: ./
         with:
-          random: 25
+          slugs: ${{ steps.random_slugs.outputs.slugs }}
           sort: step_invert
           style: flat
           format: html
@@ -49,7 +63,7 @@ jobs:
         id: luminance
         uses: ./
         with:
-          random: 25
+          slugs: ${{ steps.random_slugs.outputs.slugs }}
           sort: luminance
           style: flat
           format: html
