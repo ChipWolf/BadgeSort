@@ -240,7 +240,7 @@
                 <!-- Badge Style -->
                 <div class="form-group">
                     <label>Badge Style</label>
-                    <select id="badge-style" py-change="update_preview()">
+                    <select id="badge-style">
                         <option value="for-the-badge">For The Badge</option>
                         <option value="flat">Flat</option>
                         <option value="flat-square">Flat Square</option>
@@ -252,7 +252,7 @@
                 <!-- Sort Algorithm -->
                 <div class="form-group">
                     <label>Sort Algorithm</label>
-                    <select id="sort-algorithm" py-change="update_preview()">
+                    <select id="sort-algorithm">
                         <option value="hilbert">Hilbert (Default)</option>
                         <option value="hsv">HSV</option>
                         <option value="step">Step</option>
@@ -265,7 +265,7 @@
                 <!-- Output Format -->
                 <div class="form-group">
                     <label>Output Format</label>
-                    <select id="output-format" py-change="update_preview()">
+                    <select id="output-format">
                         <option value="markdown">Markdown</option>
                         <option value="html">HTML</option>
                     </select>
@@ -274,37 +274,37 @@
                 <!-- Badge ID -->
                 <div class="form-group">
                     <label>Badge ID</label>
-                    <input type="text" id="badge-id" value="default" py-input="update_preview()">
+                    <input type="text" id="badge-id" value="default">
                 </div>
 
                 <!-- Output File -->
                 <div class="form-group">
                     <label>Output File</label>
-                    <input type="text" id="output-file" value="README.md" py-input="update_preview()">
+                    <input type="text" id="output-file" value="README.md">
                 </div>
 
                 <!-- Additional Options -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="reverse-sort" py-change="update_preview()">
+                    <input type="checkbox" id="reverse-sort">
                     <label>Reverse Sort Order</label>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="show-badgesort" checked py-change="update_preview()">
+                    <input type="checkbox" id="show-badgesort" checked>
                     <label>Show BadgeSort Badge</label>
                 </div>
 
                 <div class="form-group">
                     <label>Hue Rotate (for step sort)</label>
-                    <input type="number" id="hue-rotate" value="0" min="0" max="360" py-input="update_preview()">
+                    <input type="number" id="hue-rotate" value="0" min="0" max="360">
                 </div>
 
                 <!-- Badge Selection -->
                 <h3>Select Badges</h3>
-                <input type="text" id="search-input" class="search-input" placeholder="Search icons..." py-input="filter_icons()">
+                <input type="text" id="search-input" class="search-input" placeholder="Search icons...">
                 <div class="button-group">
-                    <button id="select-popular" class="btn-secondary" style="margin-right: 0.5rem;" py-click="select_popular()">Popular Tech</button>
-                    <button id="clear-selection" class="btn-secondary" py-click="clear_selection()">Clear All</button>
+                    <button id="select-popular" class="btn-secondary" style="margin-right: 0.5rem;">Popular Tech</button>
+                    <button id="clear-selection" class="btn-secondary">Clear All</button>
                 </div>
                 <div id="icon-grid" class="icon-grid">
                     <div class="loading">Loading icons...</div>
@@ -320,7 +320,7 @@
 
                 <h2>GitHub Actions YAML</h2>
                 <div style="margin-bottom: 1rem;">
-                    <button id="copy-yaml" class="btn-primary" style="width: 100%;" py-click="copy_yaml()">
+                    <button id="copy-yaml" class="btn-primary" style="width: 100%;">
                         📋 Copy YAML to Clipboard
                     </button>
                 </div>
@@ -585,9 +585,49 @@ def filter_icons():
     search_val = document.getElementById("search-input").value
     render_icon_grid(search_val)
 
+# Setup event listeners
+def setup_event_listeners():
+    """Setup all event listeners"""
+    # Badge style
+    document.getElementById("badge-style").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Sort algorithm
+    document.getElementById("sort-algorithm").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Output format
+    document.getElementById("output-format").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Badge ID
+    document.getElementById("badge-id").addEventListener("input", create_proxy(lambda e: update_preview()))
+    
+    # Output file
+    document.getElementById("output-file").addEventListener("input", create_proxy(lambda e: update_preview()))
+    
+    # Reverse sort
+    document.getElementById("reverse-sort").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Show badgesort
+    document.getElementById("show-badgesort").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Hue rotate
+    document.getElementById("hue-rotate").addEventListener("input", create_proxy(lambda e: update_preview()))
+    
+    # Search input
+    document.getElementById("search-input").addEventListener("input", create_proxy(lambda e: filter_icons()))
+    
+    # Copy YAML button
+    document.getElementById("copy-yaml").addEventListener("click", create_proxy(lambda e: copy_yaml()))
+    
+    # Select popular button
+    document.getElementById("select-popular").addEventListener("click", create_proxy(lambda e: select_popular()))
+    
+    # Clear selection button
+    document.getElementById("clear-selection").addEventListener("click", create_proxy(lambda e: clear_selection()))
+
 # Initial render
 render_icon_grid()
 update_yaml()
+setup_event_listeners()
     </script>
 </body>
 </html>
