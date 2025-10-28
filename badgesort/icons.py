@@ -28,9 +28,12 @@ logger = logging.getLogger(__name__)
 
 def svg_to_base64_data_uri(svg_content, fill_color='white'):
     """Convert an SVG to a base64-encoded data URI with specified fill color."""
-    # Add fill color to the path element
+    # Add fill color to the path element if fill_color is not None
     # Simple Icons SVGs typically have a single <path> element
-    svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
+    if fill_color is not None:
+        svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
+    else:
+        svg_with_fill = svg_content
     
     # Encode to base64
     svg_bytes = svg_with_fill.encode('utf-8')
@@ -97,16 +100,11 @@ def run(args):
             icon_url += f'?style={args.badge_style}&logo=githubsponsors'
         elif args.provider == 'badgen':
             # Badgen with githubsponsors heart icon
-            # Use the githubsponsors icon with adaptive color based on luminosity
+            # Preserve the default color of the githubsponsors icon instead of adapting it
             sponsor_icon = icons.get('githubsponsors')
-            # Black background has rgb [0,0,0], brightness = 0
-            # We want white icon on black background
-            badge_rgb = [0, 0, 0]
-            badge_brightness = (badge_rgb[0] * 299 + badge_rgb[1] * 587 + badge_rgb[2] * 114) / 255000
-            icon_color = 'white' if badge_brightness <= 0.7 else 'black'
             
-            # Convert the githubsponsors SVG to data URI with adaptive color
-            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, icon_color)
+            # Convert the githubsponsors SVG to data URI preserving original color
+            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=None)
             sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
             icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=000000&labelColor=000000'
         else:
