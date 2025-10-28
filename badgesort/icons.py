@@ -35,8 +35,10 @@ def svg_to_base64_data_uri(svg_content, fill_color='white'):
     # Add fill color to the path element if fill_color is not None
     # Simple Icons SVGs typically have a single <path> element
     if fill_color is not None:
+
         svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
     else:
+
         svg_with_fill = svg_content
     
     # Compress SVG for optimal badge usage
@@ -191,8 +193,9 @@ def run(args):
             # Preserve the default color of the githubsponsors icon instead of adapting it
             sponsor_icon = icons.get('githubsponsors')
             
-            # Convert the githubsponsors SVG to data URI preserving original color
-            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=None)
+            # Convert the githubsponsors SVG to data URI with explicit pink color
+            # Badgen doesn't preserve original colors in custom SVG data URIs, so we need to specify the color
+            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=f'#{sponsor_icon.hex}')
             sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
             # Use dark gray instead of pure black for better text contrast
             icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=1A1A1A&labelColor=1A1A1A'
