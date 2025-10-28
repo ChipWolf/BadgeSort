@@ -13,9 +13,9 @@ import random
 import sys
 import re
 import requests
+import subprocess
 import tempfile
 import os
-import subprocess
 
 from simpleicons.all import icons
 from .hilbert import Hilbert_to_int
@@ -26,8 +26,11 @@ logger = logging.getLogger(__name__)
 def svg_to_base64_data_uri(svg_content, fill_color='white'):
     """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
     
-    Uses WebP rasterization when possible for ~78% size reduction compared to compressed SVG,
-    with automatic fallback to SVG compression if WebP conversion fails.
+    Args:
+        svg_content: SVG content as string
+        fill_color: Fill color for the SVG paths ('white', 'black', or None)
+    
+    Uses scour-based SVG compression for optimal file size while maintaining perfect vector quality.
     """
     # Add fill color to the path element if fill_color is not None
     # Simple Icons SVGs typically have a single <path> element
@@ -36,12 +39,7 @@ def svg_to_base64_data_uri(svg_content, fill_color='white'):
     else:
         svg_with_fill = svg_content
     
-    # Try WebP rasterization first (much smaller for 14x14px badges: ~78% size reduction)
-    webp_data_uri = _svg_to_webp_data_uri(svg_with_fill, size=14)
-    if webp_data_uri:
-        return webp_data_uri
-    
-    # Fallback to compressed SVG if WebP fails
+    # Compress SVG for optimal badge usage
     compressed_svg = _compress_svg_for_badge(svg_with_fill)
     
     # Encode to base64
@@ -153,71 +151,7 @@ def _compress_svg_for_badge(svg_content):
         logger.debug(f'Scour SVG compression failed, using regex fallback: {e}')
         return _compress_svg_for_badge_regex(svg_content)
 
-def _svg_to_webp_data_uri(svg_content, size=14):
-    """Convert SVG to WebP at specified size and create base64 data URI. Returns None if conversion fails."""
-    try:
-        # Create temporary files
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as svg_file:
-            svg_file.write(svg_content)
-            svg_path = svg_file.name
-        
-        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as png_file:
-            png_path = png_file.name
-            
-        with tempfile.NamedTemporaryFile(suffix='.webp', delete=False) as webp_file:
-            webp_path = webp_file.name
-        
-        try:
-            # Convert SVG to PNG first using ImageMagick
-            cmd1 = [
-                'convert',
-                '-background', 'transparent',
-                '-size', f'{size}x{size}',
-                svg_path,
-                png_path
-            ]
-            
-            result1 = subprocess.run(cmd1, capture_output=True, text=True, timeout=10)
-            if result1.returncode != 0:
-                logger.debug(f'SVG to PNG conversion failed: {result1.stderr}')
-                return None
-            
-            # Convert PNG to WebP with maximum lossless compression
-            cmd2 = [
-                'cwebp',
-                '-lossless',        # Lossless mode for crisp icons
-                '-z', '9',          # Maximum compression effort
-                '-m', '6',          # Maximum compression method
-                '-q', '100',        # Maximum quality (for lossless)
-                png_path,
-                '-o', webp_path
-            ]
-            
-            result2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=10)
-            
-            if result2.returncode == 0:
-                # Read WebP and encode as base64
-                with open(webp_path, 'rb') as f:
-                    webp_bytes = f.read()
-                base64_webp = base64.b64encode(webp_bytes).decode('utf-8')
-                logger.debug(f'WebP conversion successful: {len(webp_bytes)} bytes -> {len(base64_webp)} base64 chars')
-                return f'data:image/webp;base64,{base64_webp}'
-            else:
-                logger.debug(f'PNG to WebP conversion failed: {result2.stderr}')
-                return None
-        
-        finally:
-            # Clean up temporary files
-            try:
-                os.unlink(svg_path)
-                os.unlink(png_path)
-                os.unlink(webp_path)
-            except OSError:
-                pass
-                
-    except Exception as e:
-        logger.debug(f'WebP conversion error: {e}')
-        return None
+
 
 def run(args):
     # user provided slugs
