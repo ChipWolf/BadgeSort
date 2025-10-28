@@ -974,7 +974,7 @@ def generate_badges():
         icon_title_safe = quote(icon.title.encode('utf8'), safe='').replace('-', '--')
         icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
         icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
-        icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
+        icon_hex_comp = 'white' if icon_brightness < 0.695 else 'black'
         
         if badge_provider == 'shields':
             # Shields.io format - always embed SVG data URIs
@@ -984,19 +984,21 @@ def generate_badges():
             icon_url += f'?style={badge_style}&logo={icon_data_uri_encoded}'
         else:
             # Badgen.net format - always embed SVG with adaptive color
-            # Cap icon brightness at 0.7 since Badgen.net doesn't support black text
+            # Cap background brightness at 0.7 since Badgen.net doesn't support black text
             if icon_brightness > 0.7:
-                # Scale down RGB values to achieve 0.7 brightness
+                # Scale down RGB values to achieve 0.7 brightness for background
                 scale_factor = 0.7 / icon_brightness
                 capped_rgb = [int(c * scale_factor) for c in icon_rgb]
                 capped_hex = f"{capped_rgb[0]:02x}{capped_rgb[1]:02x}{capped_rgb[2]:02x}"
-                icon_fill_color = f'#{capped_hex}'
+                background_color = capped_hex
             else:
-                icon_fill_color = 'white'
+                # Use original color for normal brightness backgrounds
+                background_color = icon.hex
             
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_fill_color)
+            # Always use white icons for good contrast against any background
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white')
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
         
         icon_list.append({'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url})
     
