@@ -13,9 +13,9 @@ import random
 import sys
 import re
 import requests
-import subprocess
 import tempfile
 import os
+import subprocess
 
 from simpleicons.all import icons
 from .hilbert import Hilbert_to_int
@@ -26,22 +26,22 @@ logger = logging.getLogger(__name__)
 def svg_to_base64_data_uri(svg_content, fill_color='white'):
     """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
     
-    Args:
-        svg_content: SVG content as string
-        fill_color: Fill color for the SVG paths ('white', 'black', or None)
-    
-    Uses scour-based SVG compression for optimal file size while maintaining perfect vector quality.
+    Uses WebP rasterization when possible for ~78% size reduction compared to compressed SVG,
+    with automatic fallback to SVG compression if WebP conversion fails.
     """
     # Add fill color to the path element if fill_color is not None
     # Simple Icons SVGs typically have a single <path> element
     if fill_color is not None:
-
         svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
     else:
-
         svg_with_fill = svg_content
     
-    # Compress SVG for optimal badge usage
+    # Try WebP rasterization first (much smaller for 14x14px badges: ~78% size reduction)
+    webp_data_uri = _svg_to_webp_data_uri(svg_with_fill, size=14)
+    if webp_data_uri:
+        return webp_data_uri
+    
+    # Fallback to compressed SVG if WebP fails
     compressed_svg = _compress_svg_for_badge(svg_with_fill)
     
     # Encode to base64
@@ -51,7 +51,49 @@ def svg_to_base64_data_uri(svg_content, fill_color='white'):
     # Return as data URI
     return f'data:image/svg+xml;base64,{base64_svg}'
 
-
+def _compress_svg_for_badge_regex(svg_content):
+    """Compress SVG content for small badge usage (14x14px) using regex optimization (for comparison)."""
+    try:
+        # Simple Icons have a very predictable structure, so we can use regex for better compression
+        
+        # Remove XML declaration if present
+        svg_content = re.sub(r'<\?xml[^>]*\?>', '', svg_content)
+        
+        # Remove comments
+        svg_content = re.sub(r'<!--.*?-->', '', svg_content, flags=re.DOTALL)
+        
+        # Remove title element completely (not needed for badges)
+        svg_content = re.sub(r'<title>.*?</title>', '', svg_content, flags=re.DOTALL)
+        
+        # Remove role attribute (not needed for badges)
+        svg_content = re.sub(r'\s*role="[^"]*"', '', svg_content)
+        
+        # Compress path data for 14x14px display
+        def compress_path(match):
+            path_data = match.group(1)
+            # Reduce precision to 1 decimal place for small icons
+            path_data = re.sub(r'(\d+\.\d{2,})', lambda m: f"{float(m.group(1)):.1f}", path_data)
+            # Remove trailing zeros after decimal
+            path_data = re.sub(r'(\d+)\.0\b', r'\1', path_data)  # 1.0 -> 1
+            path_data = re.sub(r'(\.\d*?)0+\b', r'\1', path_data)  # 1.230 -> 1.23
+            # Remove unnecessary spaces around path commands
+            path_data = re.sub(r'\s*([MLHVCSQTAZ])\s*', r'\1', path_data, flags=re.IGNORECASE)
+            path_data = re.sub(r'\s+', ' ', path_data.strip())
+            return f'd="{path_data}"'
+        
+        svg_content = re.sub(r'd="([^"]*)"', compress_path, svg_content)
+        
+        # Remove extra whitespace between tags and attributes
+        svg_content = re.sub(r'>\s+<', '><', svg_content)
+        svg_content = re.sub(r'\s+', ' ', svg_content)
+        svg_content = svg_content.strip()
+        
+        return svg_content
+        
+    except Exception as e:
+        # Fallback to original SVG if optimization fails
+        logger.debug(f'Regex SVG compression failed, using original: {e}')
+        return svg_content
 
 def _compress_svg_for_badge(svg_content):
     """Compress SVG content for small badge usage (14x14px) using scour with aggressive optimization."""
@@ -95,8 +137,8 @@ def _compress_svg_for_badge(svg_content):
                 return optimized_svg
             else:
                 logger.debug(f'Scour failed with return code {result.returncode}: {result.stderr}')
-                # Fallback to original SVG if scour fails
-                return svg_content
+                # Fallback to regex compression
+                return _compress_svg_for_badge_regex(svg_content)
         
         finally:
             # Clean up temporary files
@@ -107,11 +149,75 @@ def _compress_svg_for_badge(svg_content):
                 pass
                 
     except Exception as e:
-        # Fallback to original SVG if scour fails
-        logger.debug(f'Scour SVG compression failed, using original: {e}')
-        return svg_content
+        # Fallback to regex compression if scour fails
+        logger.debug(f'Scour SVG compression failed, using regex fallback: {e}')
+        return _compress_svg_for_badge_regex(svg_content)
 
-
+def _svg_to_webp_data_uri(svg_content, size=14):
+    """Convert SVG to WebP at specified size and create base64 data URI. Returns None if conversion fails."""
+    try:
+        # Create temporary files
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as svg_file:
+            svg_file.write(svg_content)
+            svg_path = svg_file.name
+        
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as png_file:
+            png_path = png_file.name
+            
+        with tempfile.NamedTemporaryFile(suffix='.webp', delete=False) as webp_file:
+            webp_path = webp_file.name
+        
+        try:
+            # Convert SVG to PNG first using ImageMagick
+            cmd1 = [
+                'convert',
+                '-background', 'transparent',
+                '-size', f'{size}x{size}',
+                svg_path,
+                png_path
+            ]
+            
+            result1 = subprocess.run(cmd1, capture_output=True, text=True, timeout=10)
+            if result1.returncode != 0:
+                logger.debug(f'SVG to PNG conversion failed: {result1.stderr}')
+                return None
+            
+            # Convert PNG to WebP with maximum lossless compression
+            cmd2 = [
+                'cwebp',
+                '-lossless',        # Lossless mode for crisp icons
+                '-z', '9',          # Maximum compression effort
+                '-m', '6',          # Maximum compression method
+                '-q', '100',        # Maximum quality (for lossless)
+                png_path,
+                '-o', webp_path
+            ]
+            
+            result2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=10)
+            
+            if result2.returncode == 0:
+                # Read WebP and encode as base64
+                with open(webp_path, 'rb') as f:
+                    webp_bytes = f.read()
+                base64_webp = base64.b64encode(webp_bytes).decode('utf-8')
+                logger.debug(f'WebP conversion successful: {len(webp_bytes)} bytes -> {len(base64_webp)} base64 chars')
+                return f'data:image/webp;base64,{base64_webp}'
+            else:
+                logger.debug(f'PNG to WebP conversion failed: {result2.stderr}')
+                return None
+        
+        finally:
+            # Clean up temporary files
+            try:
+                os.unlink(svg_path)
+                os.unlink(png_path)
+                os.unlink(webp_path)
+            except OSError:
+                pass
+                
+    except Exception as e:
+        logger.debug(f'WebP conversion error: {e}')
+        return None
 
 def run(args):
     # user provided slugs
@@ -155,29 +261,10 @@ def run(args):
             icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         elif args.provider == 'badgen':
             # Badgen.net format
-            # Use original icon colors instead of forcing black/white for better visual appeal
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, f'#{icon.hex}')
+            # Convert SVG to base64 data URI with adaptive color based on background luminosity
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
-            
-            # Badgen does not choose text color based on background luminosity, so sometimes
-            # this results in poor contrast. Adjust colors that are too extreme to ensure good text contrast.
-            badge_color = icon.hex
-            
-            # If luminosity is too high (> 0.7), scale it down to exactly 0.7 for black text
-            if icon_brightness > 0.7:
-                # Scale RGB values down proportionally to reach luminosity of 0.7
-                scale_factor = 0.7 / icon_brightness
-                adjusted_rgb = [int(rgb * scale_factor) for rgb in icon_rgb]
-                badge_color = f'{adjusted_rgb[0]:02x}{adjusted_rgb[1]:02x}{adjusted_rgb[2]:02x}'
-            
-            # If luminosity is too low (< 0.3), scale it up to exactly 0.3 for white text
-            elif icon_brightness < 0.3:
-                # Scale RGB values up proportionally to reach luminosity of 0.3
-                scale_factor = 0.3 / icon_brightness if icon_brightness > 0 else 1
-                adjusted_rgb = [min(255, int(rgb * scale_factor)) for rgb in icon_rgb]
-                badge_color = f'{adjusted_rgb[0]:02x}{adjusted_rgb[1]:02x}{adjusted_rgb[2]:02x}'
-            
-            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={badge_color}&labelColor={badge_color}'
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
@@ -193,12 +280,10 @@ def run(args):
             # Preserve the default color of the githubsponsors icon instead of adapting it
             sponsor_icon = icons.get('githubsponsors')
             
-            # Convert the githubsponsors SVG to data URI with explicit pink color
-            # Badgen doesn't preserve original colors in custom SVG data URIs, so we need to specify the color
-            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=f'#{sponsor_icon.hex}')
+            # Convert the githubsponsors SVG to data URI preserving original color
+            sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=None)
             sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
-            # Use dark gray instead of pure black for better text contrast
-            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=1A1A1A&labelColor=1A1A1A'
+            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=000000&labelColor=000000'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
