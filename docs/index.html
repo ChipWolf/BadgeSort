@@ -506,7 +506,7 @@
                     <label>Badge Provider
                         <span class="tooltip">
                             <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Choose between Shields.io or Badgen.net. Both providers embed SVG icons for guaranteed compatibility and consistent display.</span>
+                            <span class="tooltiptext">Choose between Shields.io or Badgen.net. Both providers embed SVG icons for guaranteed compatibility. Badgen.net automatically caps very bright icons at 70% brightness for visibility.</span>
                         </span>
                     </label>
                     <select id="badge-provider">
@@ -984,7 +984,17 @@ def generate_badges():
             icon_url += f'?style={badge_style}&logo={icon_data_uri_encoded}'
         else:
             # Badgen.net format - always embed SVG with adaptive color
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white')  # Always white for Badgen
+            # Cap icon brightness at 0.7 since Badgen.net doesn't support black text
+            if icon_brightness > 0.7:
+                # Scale down RGB values to achieve 0.7 brightness
+                scale_factor = 0.7 / icon_brightness
+                capped_rgb = [int(c * scale_factor) for c in icon_rgb]
+                capped_hex = f"{capped_rgb[0]:02x}{capped_rgb[1]:02x}{capped_rgb[2]:02x}"
+                icon_fill_color = f'#{capped_hex}'
+            else:
+                icon_fill_color = 'white'
+            
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_fill_color)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
         
