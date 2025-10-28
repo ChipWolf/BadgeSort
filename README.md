@@ -174,11 +174,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 ```html
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="StubHub" src="https://img.shields.io/badge/StubHub-003168.svg?style=flat-square&logo=stubhub&logoColor=white"></a>
-  <a href="#"><img alt="Flutter" src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat-square&logo=flutter&logoColor=white"></a>
-  <a href="#"><img alt="haveibeenpwned" src="https://img.shields.io/badge/haveibeenpwned-2A6379.svg?style=flat-square&logo=haveibeenpwned&logoColor=white"></a>
-  <a href="#"><img alt="ReactiveX" src="https://img.shields.io/badge/ReactiveX-B7178C.svg?style=flat-square&logo=reactivex&logoColor=white"></a>
-  <a href="#"><img alt="Embarcadero" src="https://img.shields.io/badge/Embarcadero-ED1F35.svg?style=flat-square&logo=embarcadero&logoColor=white"></a>
+  <a href="#"><img alt="Qt" src="https://img.shields.io/badge/Qt-41CD52.svg?style=flat-square&logo=qt&logoColor=white"></a>
+  <a href="#"><img alt="500px" src="https://img.shields.io/badge/500px-0099E5.svg?style=flat-square&logo=500px&logoColor=white"></a>
+  <a href="#"><img alt="BMC Software" src="https://img.shields.io/badge/BMC%20Software-FE5000.svg?style=flat-square&logo=bmcsoftware&logoColor=white"></a>
+  <a href="#"><img alt="Threadless" src="https://img.shields.io/badge/Threadless-0099FF.svg?style=flat-square&logo=threadless&logoColor=white"></a>
+  <a href="#"><img alt="Riot Games" src="https://img.shields.io/badge/Riot%20Games-D32936.svg?style=flat-square&logo=riotgames&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
@@ -190,11 +190,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="StubHub" src="https://img.shields.io/badge/StubHub-003168.svg?style=flat-square&logo=stubhub&logoColor=white"></a>
-  <a href="#"><img alt="Flutter" src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat-square&logo=flutter&logoColor=white"></a>
-  <a href="#"><img alt="haveibeenpwned" src="https://img.shields.io/badge/haveibeenpwned-2A6379.svg?style=flat-square&logo=haveibeenpwned&logoColor=white"></a>
-  <a href="#"><img alt="ReactiveX" src="https://img.shields.io/badge/ReactiveX-B7178C.svg?style=flat-square&logo=reactivex&logoColor=white"></a>
-  <a href="#"><img alt="Embarcadero" src="https://img.shields.io/badge/Embarcadero-ED1F35.svg?style=flat-square&logo=embarcadero&logoColor=white"></a>
+  <a href="#"><img alt="Qt" src="https://img.shields.io/badge/Qt-41CD52.svg?style=flat-square&logo=qt&logoColor=white"></a>
+  <a href="#"><img alt="500px" src="https://img.shields.io/badge/500px-0099E5.svg?style=flat-square&logo=500px&logoColor=white"></a>
+  <a href="#"><img alt="BMC Software" src="https://img.shields.io/badge/BMC%20Software-FE5000.svg?style=flat-square&logo=bmcsoftware&logoColor=white"></a>
+  <a href="#"><img alt="Threadless" src="https://img.shields.io/badge/Threadless-0099FF.svg?style=flat-square&logo=threadless&logoColor=white"></a>
+  <a href="#"><img alt="Riot Games" src="https://img.shields.io/badge/Riot%20Games-D32936.svg?style=flat-square&logo=riotgames&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
@@ -239,7 +239,7 @@ $ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b fl
 ```html
 <!-- start chipwolf/badgesort example -->
 <p>
-  <a href="#"><img alt="D3.js" src="https://img.shields.io/badge/D3.js-F9A03C.svg?style=flat&logo=d3dotjs&logoColor=white"></a>
+  <a href="#"><img alt="D3.js" src="https://img.shields.io/badge/D3.js-F9A03C.svg?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTMuMzEyIDEyQzEzLjMxMiA1LjcxOCA4LjIyLjYyNSAxLjkzNy42MjVIMHY1aDEuOTM4YzMuNTIxIDAgNi4zNzUgMi44NTQgNi4zNzUgNi4zNzVzLTIuODU0IDYuMzc1LTYuMzc1IDYuMzc1SDB2NWgxLjkzOGM2LjI4MSAwIDExLjM3NC01LjA5MyAxMS4zNzQtMTEuMzc1ek0yNCA3LjU2M0MyNCAzLjczMSAyMC44OTMuNjI1IDE3LjA2Mi42MjVoLThhMTMuNDE1NCAxMy40MTU0IDAgMCAxIDQuNjg2IDVoMy4zMTRjMS4wNjkgMCAxLjkzOC44NjggMS45MzggMS45MzggMCAxLjA3LS44NjkgMS45MzgtMS45MzggMS45MzhoLTEuOTM4Yy4zMTMgMS42NTIuMzEzIDMuMzQ4IDAgNWgxLjkzOGMxLjA2OCAwIDEuOTM4Ljg2NyAxLjkzOCAxLjkzOHMtLjg2OSAxLjkzOC0xLjkzOCAxLjkzOGgtMy4zMTRhMTMuNDE1NCAxMy40MTU0IDAgMCAxLTQuNjg2IDVoOGMxLjYyMSAwIDMuMTkxLS41NjggNC40MzgtMS42MDUgMi45NDMtMi40NSAzLjM0Ni02LjgyNC44OTUtOS43N0E2Ljk0NTkgNi45NDU5IDAgMCAwIDI0IDcuNTYzeiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg%3D%3D"></a>
   <a href="#"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E.svg?style=flat&logo=prettier&logoColor=black"></a>
   <a href="#"><img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933.svg?style=flat&logo=nodedotjs&logoColor=white"></a>
   <a href="#"><img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-47A248.svg?style=flat&logo=mongodb&logoColor=white"></a>
@@ -273,7 +273,7 @@ $ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b fl
 
 <!-- start chipwolf/badgesort example -->
 <p>
-  <a href="#"><img alt="D3.js" src="https://img.shields.io/badge/D3.js-F9A03C.svg?style=flat&logo=d3dotjs&logoColor=white"></a>
+  <a href="#"><img alt="D3.js" src="https://img.shields.io/badge/D3.js-F9A03C.svg?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTMuMzEyIDEyQzEzLjMxMiA1LjcxOCA4LjIyLjYyNSAxLjkzNy42MjVIMHY1aDEuOTM4YzMuNTIxIDAgNi4zNzUgMi44NTQgNi4zNzUgNi4zNzVzLTIuODU0IDYuMzc1LTYuMzc1IDYuMzc1SDB2NWgxLjkzOGM2LjI4MSAwIDExLjM3NC01LjA5MyAxMS4zNzQtMTEuMzc1ek0yNCA3LjU2M0MyNCAzLjczMSAyMC44OTMuNjI1IDE3LjA2Mi42MjVoLThhMTMuNDE1NCAxMy40MTU0IDAgMCAxIDQuNjg2IDVoMy4zMTRjMS4wNjkgMCAxLjkzOC44NjggMS45MzggMS45MzggMCAxLjA3LS44NjkgMS45MzgtMS45MzggMS45MzhoLTEuOTM4Yy4zMTMgMS42NTIuMzEzIDMuMzQ4IDAgNWgxLjkzOGMxLjA2OCAwIDEuOTM4Ljg2NyAxLjkzOCAxLjkzOHMtLjg2OSAxLjkzOC0xLjkzOCAxLjkzOGgtMy4zMTRhMTMuNDE1NCAxMy40MTU0IDAgMCAxLTQuNjg2IDVoOGMxLjYyMSAwIDMuMTkxLS41NjggNC40MzgtMS42MDUgMi45NDMtMi40NSAzLjM0Ni02LjgyNC44OTUtOS43N0E2Ljk0NTkgNi45NDU5IDAgMCAwIDI0IDcuNTYzeiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg%3D%3D"></a>
   <a href="#"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E.svg?style=flat&logo=prettier&logoColor=black"></a>
   <a href="#"><img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933.svg?style=flat&logo=nodedotjs&logoColor=white"></a>
   <a href="#"><img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-47A248.svg?style=flat&logo=mongodb&logoColor=white"></a>
