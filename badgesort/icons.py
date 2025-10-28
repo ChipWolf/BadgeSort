@@ -292,7 +292,7 @@ def run(args):
         icon_title_safe = quote(icon.title.encode('utf8'), safe='').replace('-', '--')
         icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
         icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
-        icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
+        icon_hex_comp = 'white' if icon_brightness < 0.695 else 'black'
         
         if args.provider == 'shields':
             # Shields.io format - check if logo is missing and embed SVG if needed
