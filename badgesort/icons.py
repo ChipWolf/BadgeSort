@@ -125,7 +125,7 @@ def _compress_svg_for_badge(svg_content):
             # Run scour with aggressive optimization settings for 14x14px badges
             cmd = [
                 'python', '-m', 'scour.scour',
-                '--set-precision=5',              # Very low precision for 14x14px (1 decimal place)
+                '--set-precision=5',              # Low precision (5 significant digits) for 14x14px badges
                 '--set-c-precision=5',            # Low precision for control points too
                 '--strip-xml-prolog',             # Remove XML declaration
                 '--remove-descriptive-elements',  # Remove title, desc, and metadata elements (not needed for badges)
