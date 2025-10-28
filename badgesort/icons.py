@@ -58,6 +58,8 @@ def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=6000)
             return png_data_uri
         else:
             logger.debug('PNG fallback failed, using original SVG despite size')
+            # For now, return the original SVG data URI even if it's too long
+            # This is better than skipping the icon entirely
     
     return svg_data_uri
 
@@ -175,16 +177,17 @@ def _svg_to_png_data_uri(svg_content, size=14):
             png_path = png_file.name
         
         try:
-            # Convert SVG to PNG using ImageMagick
+            # Use rsvg-convert directly for better SVG support than ImageMagick's internal parser
             cmd = [
-                'convert',
-                '-background', 'transparent',
-                '-size', f'{size}x{size}',
-                svg_path,
-                png_path
+                'rsvg-convert',
+                f'--width={size}',
+                f'--height={size}',
+                '--format=png',
+                f'--output={png_path}',
+                svg_path
             ]
             
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
             if result.returncode == 0:
                 # Read PNG and encode as base64
                 with open(png_path, 'rb') as f:

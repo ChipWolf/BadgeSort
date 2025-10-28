@@ -4,6 +4,7 @@ FROM duffn/python-poetry:3.11-slim
 # Install system dependencies for PNG fallback support
 RUN apt-get update && apt-get install -y \
     imagemagick \
+    librsvg2-bin \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up entrypoint
