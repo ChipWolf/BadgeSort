@@ -73,12 +73,15 @@ def run(args):
             # Shields.io format
             icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
             icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
-        else:
+        elif args.provider == 'badgen':
             # Badgen.net format
             # Convert SVG to base64 data URI with adaptive color based on background luminosity
             icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
+        else:
+            logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
+            sys.exit(1)
         
         icon_list.append({ 'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url })
 
@@ -86,7 +89,7 @@ def run(args):
         if args.provider == 'shields':
             icon_url = f'{icon_base}/BadgeSort-000000.svg'
             icon_url += f'?style={args.badge_style}&logo=githubsponsors'
-        else:
+        elif args.provider == 'badgen':
             # Badgen with githubsponsors heart icon
             # Use the githubsponsors icon with adaptive color based on luminosity
             sponsor_icon = icons.get('githubsponsors')
@@ -100,6 +103,9 @@ def run(args):
             sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, icon_color)
             sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
             icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=000000&labelColor=000000'
+        else:
+            logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
+            sys.exit(1)
         icon_list.append({ 'rgb': [0, 0, 0], 'slug': 'badgesort', 'title': 'BadgeSort', 'url': icon_url })
 
     def lum (r,g,b):
