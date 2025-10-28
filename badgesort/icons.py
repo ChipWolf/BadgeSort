@@ -267,7 +267,26 @@ def run(args):
             # Convert SVG to base64 data URI with adaptive color based on background luminosity
             icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
+            
+            # Badgen does not choose text color based on background luminosity, so sometimes
+            # this results in poor contrast. Adjust colors that are too extreme to ensure good text contrast.
+            badge_color = icon.hex
+            
+            # If luminosity is too high (> 0.7), scale it down to exactly 0.7 for black text
+            if icon_brightness > 0.7:
+                # Scale RGB values down proportionally to reach luminosity of 0.7
+                scale_factor = 0.7 / icon_brightness
+                adjusted_rgb = [int(rgb * scale_factor) for rgb in icon_rgb]
+                badge_color = f'{adjusted_rgb[0]:02x}{adjusted_rgb[1]:02x}{adjusted_rgb[2]:02x}'
+            
+            # If luminosity is too low (< 0.3), scale it up to exactly 0.3 for white text
+            elif icon_brightness < 0.3:
+                # Scale RGB values up proportionally to reach luminosity of 0.3
+                scale_factor = 0.3 / icon_brightness if icon_brightness > 0 else 1
+                adjusted_rgb = [min(255, int(rgb * scale_factor)) for rgb in icon_rgb]
+                badge_color = f'{adjusted_rgb[0]:02x}{adjusted_rgb[1]:02x}{adjusted_rgb[2]:02x}'
+            
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={badge_color}&labelColor={badge_color}'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
@@ -286,7 +305,8 @@ def run(args):
             # Convert the githubsponsors SVG to data URI preserving original color
             sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=None)
             sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=000000&labelColor=000000'
+            # Use dark gray instead of pure black for better text contrast
+            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=1A1A1A&labelColor=1A1A1A'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
