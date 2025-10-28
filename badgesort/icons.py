@@ -20,6 +20,9 @@ import subprocess
 from simpleicons.all import icons
 from .hilbert import Hilbert_to_int
 
+# Cache for logo availability checks to avoid repeated requests
+_logo_availability_cache = {}
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -212,6 +215,49 @@ def _svg_to_png_data_uri(svg_content, size=14):
         return None
 
 
+def _is_logo_missing_from_shields(icon_slug, icon_hex, badge_style):
+    """Check if a logo is missing from Shields.io by testing a sample badge.
+    
+    Returns True if the logo appears to be missing (no <image> or <use> elements in SVG).
+    Uses caching to avoid repeated HTTP requests for the same icon.
+    """
+    # Check cache first
+    cache_key = f"{icon_slug}_{badge_style}"
+    if cache_key in _logo_availability_cache:
+        return _logo_availability_cache[cache_key]
+    
+    try:
+        # Create a test badge URL
+        test_url = f'https://img.shields.io/badge/Test-{icon_hex}.svg?style={badge_style}&logo={icon_slug}&logoColor=white'
+        
+        # Request the badge SVG
+        resp = requests.get(test_url, timeout=5)
+        if resp.status_code != 200:
+            logger.debug(f'Failed to fetch test badge for {icon_slug}: HTTP {resp.status_code}')
+            _logo_availability_cache[cache_key] = True
+            return True  # Assume missing if we can't fetch it
+        
+        svg_content = resp.text.lower()
+        
+        # Check for indicators that a logo is present
+        has_image = '<image' in svg_content
+        has_use = '<use' in svg_content
+        
+        # A badge with a logo should have image or use elements
+        has_logo = has_image or has_use
+        
+        is_missing = not has_logo
+        logger.debug(f'Logo check for {icon_slug}: has_image={has_image}, has_use={has_use}, has_logo={has_logo}, is_missing={is_missing}')
+        
+        # Cache the result
+        _logo_availability_cache[cache_key] = is_missing
+        return is_missing
+        
+    except Exception as e:
+        logger.debug(f'Error checking logo for {icon_slug}: {e}')
+        _logo_availability_cache[cache_key] = True
+        return True  # Assume missing on error
+
 def run(args):
     # user provided slugs
     if len(args.slugs) > 0:
@@ -249,9 +295,24 @@ def run(args):
         icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
         
         if args.provider == 'shields':
-            # Shields.io format
-            icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
-            icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
+            # Shields.io format - check if logo is missing and embed SVG if needed
+            should_embed_svg = args.embed_svg
+            
+            # Check for missing logos unless explicitly skipped or already embedding
+            if not should_embed_svg and not args.skip_logo_check:
+                should_embed_svg = _is_logo_missing_from_shields(icon.slug, icon.hex, args.badge_style)
+            
+            if should_embed_svg:
+                logger.debug(f'Embedding SVG data URI for {icon.slug}')
+                # Convert SVG to base64 data URI for embedding
+                icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=6000)
+                icon_data_uri_encoded = quote(icon_data_uri, safe='')
+                icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+                icon_url += f'?style={args.badge_style}&logo={icon_data_uri_encoded}'
+            else:
+                # Use standard Shields.io logo parameter
+                icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+                icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         elif args.provider == 'badgen':
             # Badgen.net format
             # Convert SVG to base64 data URI (with automatic PNG fallback for large SVGs)
@@ -399,6 +460,8 @@ def main(raw_args=None):
     parser.add_argument('--hue-rotate', type=int, default=0, help='Rotate the [step] generated icons hue sort by this many degrees.')
     parser.add_argument('--no-thanks', action='store_false', help='Hide the BadgeSort badge.')
     parser.add_argument('--reverse', action='store_true', help='Reverse the badges sort.')
+    parser.add_argument('--embed-svg', action='store_true', help='Always embed SVG data URIs in Shields.io badges instead of using logo slugs.')
+    parser.add_argument('--skip-logo-check', action='store_true', help='Skip checking if logos are missing from Shields.io (faster but may result in badges without icons).')
     args, unknown = parser.parse_known_args(raw_args)
     logger.debug(args)
 

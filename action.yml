@@ -47,6 +47,14 @@ inputs:
   output:
     description: 'Output file name - requires comment markers in the target file: <!-- start chipwolf/badgesort {id} --> and <!-- end chipwolf/badgesort {id} -->. Without markers, outputs to stdout.'
     required: false
+  embed-svg:
+    description: Always embed SVG data URIs in Shields.io badges instead of using logo slugs
+    required: false
+    default: 'false'
+  skip-logo-check:
+    description: Skip checking if logos are missing from Shields.io (faster but may result in badges without icons)
+    required: false
+    default: 'false'
 runs:
   using: docker
   image: Dockerfile
