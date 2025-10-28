@@ -49,49 +49,7 @@ def svg_to_base64_data_uri(svg_content, fill_color='white'):
     # Return as data URI
     return f'data:image/svg+xml;base64,{base64_svg}'
 
-def _compress_svg_for_badge_regex(svg_content):
-    """Compress SVG content for small badge usage (14x14px) using regex optimization (for comparison)."""
-    try:
-        # Simple Icons have a very predictable structure, so we can use regex for better compression
-        
-        # Remove XML declaration if present
-        svg_content = re.sub(r'<\?xml[^>]*\?>', '', svg_content)
-        
-        # Remove comments
-        svg_content = re.sub(r'<!--.*?-->', '', svg_content, flags=re.DOTALL)
-        
-        # Remove title element completely (not needed for badges)
-        svg_content = re.sub(r'<title>.*?</title>', '', svg_content, flags=re.DOTALL)
-        
-        # Remove role attribute (not needed for badges)
-        svg_content = re.sub(r'\s*role="[^"]*"', '', svg_content)
-        
-        # Compress path data for 14x14px display
-        def compress_path(match):
-            path_data = match.group(1)
-            # Reduce precision to 1 decimal place for small icons
-            path_data = re.sub(r'(\d+\.\d{2,})', lambda m: f"{float(m.group(1)):.1f}", path_data)
-            # Remove trailing zeros after decimal
-            path_data = re.sub(r'(\d+)\.0\b', r'\1', path_data)  # 1.0 -> 1
-            path_data = re.sub(r'(\.\d*?)0+\b', r'\1', path_data)  # 1.230 -> 1.23
-            # Remove unnecessary spaces around path commands
-            path_data = re.sub(r'\s*([MLHVCSQTAZ])\s*', r'\1', path_data, flags=re.IGNORECASE)
-            path_data = re.sub(r'\s+', ' ', path_data.strip())
-            return f'd="{path_data}"'
-        
-        svg_content = re.sub(r'd="([^"]*)"', compress_path, svg_content)
-        
-        # Remove extra whitespace between tags and attributes
-        svg_content = re.sub(r'>\s+<', '><', svg_content)
-        svg_content = re.sub(r'\s+', ' ', svg_content)
-        svg_content = svg_content.strip()
-        
-        return svg_content
-        
-    except Exception as e:
-        # Fallback to original SVG if optimization fails
-        logger.debug(f'Regex SVG compression failed, using original: {e}')
-        return svg_content
+
 
 def _compress_svg_for_badge(svg_content):
     """Compress SVG content for small badge usage (14x14px) using scour with aggressive optimization."""
@@ -135,8 +93,8 @@ def _compress_svg_for_badge(svg_content):
                 return optimized_svg
             else:
                 logger.debug(f'Scour failed with return code {result.returncode}: {result.stderr}')
-                # Fallback to regex compression
-                return _compress_svg_for_badge_regex(svg_content)
+                # Fallback to original SVG if scour fails
+                return svg_content
         
         finally:
             # Clean up temporary files
@@ -147,9 +105,9 @@ def _compress_svg_for_badge(svg_content):
                 pass
                 
     except Exception as e:
-        # Fallback to regex compression if scour fails
-        logger.debug(f'Scour SVG compression failed, using regex fallback: {e}')
-        return _compress_svg_for_badge_regex(svg_content)
+        # Fallback to original SVG if scour fails
+        logger.debug(f'Scour SVG compression failed, using original: {e}')
+        return svg_content
 
 
 
