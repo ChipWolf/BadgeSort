@@ -252,7 +252,8 @@ def run(args):
         elif args.provider == 'badgen':
             # Badgen.net format
             # Convert SVG to base64 data URI (with automatic PNG fallback for large SVGs)
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=4000)
+            # Always use white icons for consistent visibility on brand color backgrounds
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=4000)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
         else:
