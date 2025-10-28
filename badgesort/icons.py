@@ -100,7 +100,7 @@ def run(args):
             # Convert the githubsponsors SVG to data URI preserving original color
             sponsor_data_uri = svg_to_base64_data_uri(sponsor_icon.svg, fill_color=None)
             sponsor_data_uri_encoded = quote(sponsor_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&color=000000&labelColor=000000'
+            icon_url = f'{icon_base}/icon/BadgeSort?icon={sponsor_data_uri_encoded}&label&labelColor=000000'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
