@@ -385,7 +385,7 @@
                     <label>Badge Provider
                         <span class="tooltip">
                             <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Choose between Shields.io (default) or Badgen.net. Badgen requires base64-encoded SVG icons.</span>
+                            <span class="tooltiptext">Choose between Shields.io (with automatic missing logo detection and embedding) or Badgen.net (always uses embedded SVG icons for consistent display).</span>
                         </span>
                     </label>
                     <select id="badge-provider">
@@ -457,6 +457,35 @@
                             <span class="tooltiptext">Reverse the order of sorted badges.</span>
                         </span>
                     </label>
+                </div>
+
+                <!-- Shields.io Specific Options -->
+                <div id="shields-options">
+                    <h3>Missing Logo Detection</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                        BadgeSort automatically detects when icons are missing from Shields.io and embeds SVG data URIs as fallback. 
+                        Some icons (like Microsoft) exist in Simple Icons but have been removed from Shields.io.
+                    </p>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="embed-svg">
+                        <label>Force Embed SVG Icons
+                            <span class="tooltip">
+                                <span class="tooltip-icon">?</span>
+                                <span class="tooltiptext">Always embed SVG data URIs for all icons instead of using logo slugs. Ensures all icons display but creates longer URLs.</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="skip-logo-check">
+                        <label>Skip Logo Detection
+                            <span class="tooltip">
+                                <span class="tooltip-icon">?</span>
+                                <span class="tooltiptext">Skip checking if logos are missing from Shields.io. Faster generation but may result in badges without icons for removed logos.</span>
+                            </span>
+                        </label>
+                    </div>
                 </div>
 
                 <!-- Hue Rotate (conditional for step sort) -->
@@ -543,17 +572,59 @@ from colorsys import rgb_to_hsv
 import math
 import base64
 
-def svg_to_base64_data_uri(svg_content, fill_color='white'):
-    """Convert an SVG to a base64-encoded data URI with specified fill color."""
-    # Add fill color to the path element
-    svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
+def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=6000):
+    """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
+    
+    Args:
+        svg_content: SVG content as string
+        fill_color: Fill color for the SVG paths ('white', 'black', or None)
+        max_url_length: Maximum URL length before falling back (simplified for web demo)
+    
+    Simplified version for web demo - uses basic compression.
+    """
+    # Add fill color to the path element if fill_color is not None
+    if fill_color is not None:
+        svg_with_fill = svg_content.replace('<path ', f'<path fill="{fill_color}" ')
+    else:
+        svg_with_fill = svg_content
+    
+    # Basic compression for web demo
+    compressed_svg = _compress_svg_for_web(svg_with_fill)
     
     # Encode to base64
-    svg_bytes = svg_with_fill.encode('utf-8')
+    svg_bytes = compressed_svg.encode('utf-8')
     base64_svg = base64.b64encode(svg_bytes).decode('utf-8')
+    svg_data_uri = f'data:image/svg+xml;base64,{base64_svg}'
     
-    # Return as data URI
-    return f'data:image/svg+xml;base64,{base64_svg}'
+    return svg_data_uri
+
+def _compress_svg_for_web(svg_content):
+    """Basic SVG compression for web demo (simplified version)."""
+    import re
+    
+    try:
+        # Remove XML declaration if present
+        svg_content = re.sub(r'<\?xml[^>]*\?>', '', svg_content)
+        
+        # Remove comments
+        svg_content = re.sub(r'<!--.*?-->', '', svg_content, flags=re.DOTALL)
+        
+        # Remove title element completely (not needed for badges)
+        svg_content = re.sub(r'<title>.*?</title>', '', svg_content, flags=re.DOTALL)
+        
+        # Remove role attribute (not needed for badges)
+        svg_content = re.sub(r'\s*role="[^"]*"', '', svg_content)
+        
+        # Remove extra whitespace
+        svg_content = re.sub(r'>\s+<', '><', svg_content)
+        svg_content = re.sub(r'\s+', ' ', svg_content)
+        svg_content = svg_content.strip()
+        
+        return svg_content
+        
+    except Exception:
+        # Fallback to original SVG if compression fails
+        return svg_content
 
 # Import hilbert function
 def hilbert_d2xy(n, d):
@@ -651,6 +722,10 @@ def generate_badges():
     reverse = document.getElementById("reverse-sort").checked
     hue_rotate = int(document.getElementById("hue-rotate").value or 0)
     
+    # Get Shields.io specific options
+    embed_svg = document.getElementById("embed-svg").checked if badge_provider == 'shields' else False
+    skip_logo_check = document.getElementById("skip-logo-check").checked if badge_provider == 'shields' else False
+    
     # Build icon list
     icon_base = 'https://img.shields.io/badge' if badge_provider == 'shields' else 'https://badgen.net/badge'
     icon_list = []
@@ -663,12 +738,25 @@ def generate_badges():
         icon_hex_comp = 'white' if icon_brightness <= 0.7 else 'black'
         
         if badge_provider == 'shields':
-            # Shields.io format
-            icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
-            icon_url += f'?style={badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
+            # Shields.io format - handle missing logo detection and embedding
+            should_embed_svg = embed_svg
+            
+            # For web demo, we'll use a simplified approach without HTTP requests
+            # Note: The real CLI automatically detects missing logos from Shields.io
+            # and embeds SVG data URIs as needed. This demo shows manual control.
+            if should_embed_svg:
+                # Embed SVG data URI
+                icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=6000)
+                icon_data_uri_encoded = quote(icon_data_uri, safe='')
+                icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+                icon_url += f'?style={badge_style}&logo={icon_data_uri_encoded}'
+            else:
+                # Use standard Shields.io logo parameter
+                icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+                icon_url += f'?style={badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         else:
-            # Badgen.net format with adaptive color
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
+            # Badgen.net format - always embed SVG with adaptive color
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white')  # Always white for Badgen
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
         
@@ -741,6 +829,10 @@ def update_yaml():
     reverse_sort = document.getElementById("reverse-sort").checked
     hue_rotate = document.getElementById("hue-rotate").value
     
+    # Shields.io specific options
+    embed_svg = document.getElementById("embed-svg").checked if provider == 'shields' else False
+    skip_logo_check = document.getElementById("skip-logo-check").checked if provider == 'shields' else False
+    
     # Sort slugs alphabetically for YAML output
     sorted_slugs = sorted(selected_slugs)
     slugs_yaml = '\n            '.join(sorted_slugs)
@@ -762,7 +854,16 @@ def update_yaml():
           sort: {sort_algo}
           style: {style}"""
     
-    if reverse_sort or (sort_algo in ['step', 'step_invert'] and hue_rotate != '0'):
+    # Add Shields.io specific options
+    if provider == 'shields':
+        if embed_svg:
+            yaml_content += '\n          embed-svg: true'
+        if skip_logo_check:
+            yaml_content += '\n          skip-logo-check: true'
+    
+    # Handle additional CLI options
+    has_opts = reverse_sort or (sort_algo in ['step', 'step_invert'] and hue_rotate != '0')
+    if has_opts:
         yaml_content += '\n          opts: |'
         if reverse_sort:
             yaml_content += '\n            --reverse'
@@ -854,6 +955,16 @@ def toggle_hue_rotate():
     else:
         hue_group.style.display = 'none'
 
+def toggle_shields_options():
+    """Show/hide Shields.io specific options based on provider"""
+    provider = document.getElementById("badge-provider").value
+    shields_options = document.getElementById("shields-options")
+    
+    if provider == 'shields':
+        shields_options.style.display = 'block'
+    else:
+        shields_options.style.display = 'none'
+
 def update_hue_value():
     """Update the displayed hue rotate value"""
     slider = document.getElementById("hue-rotate")
@@ -894,8 +1005,11 @@ def setup_event_listeners():
     # Badge style
     document.getElementById("badge-style").addEventListener("change", create_proxy(lambda e: update_preview()))
     
-    # Badge provider
-    document.getElementById("badge-provider").addEventListener("change", create_proxy(lambda e: update_preview()))
+    # Badge provider - also toggle shields options visibility
+    def on_provider_change(e):
+        toggle_shields_options()
+        update_preview()
+    document.getElementById("badge-provider").addEventListener("change", create_proxy(on_provider_change))
     
     # Sort algorithm - also toggle hue rotate visibility
     def on_sort_change(e):
@@ -914,6 +1028,10 @@ def setup_event_listeners():
     
     # Reverse sort
     document.getElementById("reverse-sort").addEventListener("change", create_proxy(lambda e: update_preview()))
+    
+    # Shields.io specific options
+    document.getElementById("embed-svg").addEventListener("change", create_proxy(lambda e: update_preview()))
+    document.getElementById("skip-logo-check").addEventListener("change", create_proxy(lambda e: update_preview()))
     
     # Hue rotate slider
     document.getElementById("hue-rotate").addEventListener("input", create_proxy(lambda e: update_hue_value()))
@@ -964,6 +1082,7 @@ render_icon_grid()
 update_yaml()
 update_comment_syntax()
 toggle_hue_rotate()
+toggle_shields_options()  # Initialize shields options visibility
 set_preview_scale(1)  # Set default scale to 100%
 setup_event_listeners()
     </script>

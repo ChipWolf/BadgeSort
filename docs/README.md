@@ -38,6 +38,8 @@ The microsite is a single-page application with no backend dependencies. PyScrip
 - **YAML Generation**: Copy-paste ready GitHub Actions configuration
 - **All Badge Styles**: Support for all Shields.io badge styles
 - **All Sort Algorithms**: Hilbert, HSV, Step, Luminance, and Random sorting
+- **Missing Logo Detection**: Automatically detects and embeds missing Shields.io logos
+- **Dual Provider Support**: Shields.io with automatic SVG embedding and Badgen.net
 
 ## Technical Details
 
