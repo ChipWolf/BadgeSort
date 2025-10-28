@@ -350,14 +350,11 @@
         /* Visual Sort Selector */
         .sort-selector {
             margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 0.5rem;
-            border: 2px solid #e9ecef;
+            padding: 1rem 0;
         }
         .sort-selector h3 {
             margin: 0 0 1rem 0;
-            color: #495057;
+            color: #212529;
             font-size: 1.1rem;
             font-weight: 600;
         }
@@ -389,18 +386,24 @@
         .sort-dropdown-current {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
+            flex: 1;
         }
         .sort-dropdown-current img {
-            width: 200px;
-            height: 5px;
+            flex: 2;
+            height: 10px;
             border-radius: 0.25rem;
             object-fit: cover;
+            min-width: 0;
         }
         .sort-dropdown-current span {
+            flex: 1;
             font-size: 0.875rem;
             font-weight: 600;
             color: #495057;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .sort-dropdown-arrow {
             font-size: 1rem;
@@ -433,7 +436,7 @@
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             border-bottom: 1px solid #e9ecef;
         }
         .sort-option:last-child {
@@ -446,18 +449,21 @@
             background: #f3e8ff;
         }
         .sort-option img {
-            width: 200px;
-            height: 5px;
+            flex: 2;
+            height: 10px;
             border-radius: 0.25rem;
             object-fit: cover;
-            flex-shrink: 0;
+            min-width: 0;
         }
         .sort-option-label {
+            flex: 1;
             font-size: 0.875rem;
             font-weight: 600;
             color: #495057;
-            min-width: 120px;
             text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .sort-option.selected .sort-option-label {
             color: #9333ea;
@@ -1400,9 +1406,8 @@ def set_preview_background(bg_type):
 
 def detect_and_set_default_theme():
     """Detect system theme and set default preview background"""
-    # For now, default to light mode to ensure buttons work
-    # TODO: Implement proper theme detection later
-    default_bg = 'light'
+    # Default to gradient background for better visual appeal
+    default_bg = 'gradient'
     
     # Set the appropriate background button as active
     bg_buttons = document.querySelectorAll('.scale-btn[data-bg]')
