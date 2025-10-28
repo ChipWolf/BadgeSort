@@ -68,8 +68,8 @@ def _compress_svg_for_badge(svg_content):
             # Run scour with aggressive optimization settings for 14x14px badges
             cmd = [
                 'python', '-m', 'scour.scour',
-                '--set-precision=1',              # Very low precision for 14x14px (1 decimal place)
-                '--set-c-precision=1',            # Low precision for control points too
+                '--set-precision=5',              # Very low precision for 14x14px (1 decimal place)
+                '--set-c-precision=5',            # Low precision for control points too
                 '--strip-xml-prolog',             # Remove XML declaration
                 '--remove-descriptive-elements',  # Remove title, desc, and metadata elements (not needed for badges)
                 '--enable-comment-stripping',     # Remove comments
@@ -155,8 +155,8 @@ def run(args):
             icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         elif args.provider == 'badgen':
             # Badgen.net format
-            # Convert SVG to base64 data URI with adaptive color based on background luminosity
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
+            # Use original icon colors instead of forcing black/white for better visual appeal
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, f'#{icon.hex}')
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             
             # Badgen does not choose text color based on background luminosity, so sometimes
