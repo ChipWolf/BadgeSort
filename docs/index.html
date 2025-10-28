@@ -623,6 +623,30 @@
                     </div>
                 </div>
 
+                <!-- Random Badges Option -->
+                <div class="form-group">
+                    <label>Add Random Badges
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Add a specified number of random badges to your selection.</span>
+                        </span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="number" id="random-count" value="50" min="0" max="100" style="width: 80px;">
+                        <button id="add-random" class="btn-secondary" style="padding: 0.25rem 0.75rem;">Add Random</button>
+                    </div>
+                </div>
+
+                <!-- Badge Selection -->
+                <h3>Select Badges</h3>
+                <input type="text" id="search-input" class="search-input" placeholder="Search icons...">
+                <div class="button-group">
+                    <button id="select-popular" class="btn-secondary" style="margin-right: 0.5rem;">Popular Tech</button>
+                    <button id="clear-selection" class="btn-secondary">Clear All</button>
+                </div>
+                <div id="icon-grid" class="icon-grid">
+                    <div class="loading">Loading icons...</div>
+                </div>
             </div>
 
             <!-- Right Panel: Preview & Output -->
