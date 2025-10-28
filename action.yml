@@ -1,5 +1,5 @@
 name: BadgeSort
-description: Generate and sort branded Shields.io badges by color
+description: Generate and sort branded Shields.io and Badgen.net badges by color
 branding:
   icon: book-open
   color: green
@@ -18,6 +18,10 @@ inputs:
     description: 'Badge generation ID - must match the ID in comment markers: <!-- start chipwolf/badgesort {id} --> and <!-- end chipwolf/badgesort {id} -->'
     required: false
     default: default
+  provider:
+    description: Badge provider (shields/badgen)
+    required: false
+    default: shields
   sort:
     description: Color sorting algorithm
     required: false
@@ -36,13 +40,21 @@ inputs:
     required: false
     default: 0
   verify:
-    description: Verify the generated badge is valid by requesting it from Shields.io
+    description: Verify the generated badge is valid by requesting it from the badge provider
     required: false
     default: false
     type: boolean
   output:
     description: 'Output file name - requires comment markers in the target file: <!-- start chipwolf/badgesort {id} --> and <!-- end chipwolf/badgesort {id} -->. Without markers, outputs to stdout.'
     required: false
+  embed-svg:
+    description: Always embed SVG data URIs in Shields.io badges instead of using logo slugs
+    required: false
+    default: 'false'
+  skip-logo-check:
+    description: Skip checking if logos are missing from Shields.io (faster but may result in badges without icons)
+    required: false
+    default: 'false'
 runs:
   using: docker
   image: Dockerfile

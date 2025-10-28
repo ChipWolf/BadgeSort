@@ -40,7 +40,7 @@ if __name__ == '__main__':
             args_list.extend(['--color-sort', v])
         elif v and k == 'style':
             args_list.extend(['--badge-style', v])
-        elif v and k == 'verify' or k == 'reverse':
+        elif v and k in ['verify', 'reverse', 'embed-svg', 'skip-logo-check']:
             if v.lower() == 'true':
                 args_list.append(f'--{k}')
         elif v and k == 'thanks':

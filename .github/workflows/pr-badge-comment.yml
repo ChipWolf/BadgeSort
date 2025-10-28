@@ -67,12 +67,21 @@ jobs:
           sort: luminance
           style: flat
           format: html
-      - name: Post PR comment
+
+      - name: Generate badgen badges using local Docker action
+        id: badgen
+        uses: ./
+        with:
+          slugs: ${{ steps.random_slugs.outputs.slugs }}
+          sort: hilbert
+          provider: badgen
+          format: html
+      - name: Post PR comment for Shields.io tests
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## 🏷️ Test Badge Generation
+            ## 🏷️ Test Badge Generation (Shields.io)
             ### hilbert
             ${{ steps.hilbert.outputs.badges }}
 
@@ -87,3 +96,12 @@ jobs:
 
             ### luminance
             ${{ steps.luminance.outputs.badges }}
+
+      - name: Post PR comment for Badgen test
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## 🏷️ Test Badge Generation (Badgen.net)
+            ### hilbert
+            ${{ steps.badgen.outputs.badges }}

@@ -16,6 +16,7 @@ poetry-core = "2.2.1"
 requests = "2.32.5"
 simpleicons = "7.21.0"
 urllib3 = "2.5.0"
+scour = "^0.38.2"
 
 [build-system]
 requires = ["poetry-core"]
