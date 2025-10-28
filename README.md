@@ -329,6 +329,14 @@ $ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b fl
 $ python -m badgesort.icons -p badgen -s github python docker oxygen
 ```
 
+> **Note on Badgen Text Contrast**
+> 
+> Badgen.net automatically determines text color based on background luminosity, but this can sometimes result in poor contrast (see [badgen/badgen#67](https://github.com/badgen/badgen/issues/67)). To ensure good text readability, BadgeSort automatically adjusts badge colors that are too extreme:
+> - **Very light colors** (luminosity > 0.7): Scaled down to luminosity of 0.7 to ensure black text
+> - **Very dark colors** (luminosity < 0.3): Scaled up to luminosity of 0.3 to ensure white text
+> 
+> This preserves the brand color's hue and saturation while ensuring optimal text contrast.
+
 #### _Output:_
 
 <!-- start chipwolf/badgesort badgen-example -->
