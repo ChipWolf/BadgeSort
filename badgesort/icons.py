@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def svg_to_base64_data_uri(svg_content, fill_color='white'):
-    """Convert an SVG to a base64-encoded data URI with specified fill color."""
+    """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges."""
     # Add fill color to the path element if fill_color is not None
     # Simple Icons SVGs typically have a single <path> element
     if fill_color is not None:
@@ -35,12 +35,119 @@ def svg_to_base64_data_uri(svg_content, fill_color='white'):
     else:
         svg_with_fill = svg_content
     
+    # Compress SVG using scour for small badge usage
+    compressed_svg = _compress_svg_for_badge(svg_with_fill)
+    
     # Encode to base64
-    svg_bytes = svg_with_fill.encode('utf-8')
+    svg_bytes = compressed_svg.encode('utf-8')
     base64_svg = base64.b64encode(svg_bytes).decode('utf-8')
     
     # Return as data URI
     return f'data:image/svg+xml;base64,{base64_svg}'
+
+def _compress_svg_for_badge_regex(svg_content):
+    """Compress SVG content for small badge usage (14x14px) using regex optimization (for comparison)."""
+    try:
+        # Simple Icons have a very predictable structure, so we can use regex for better compression
+        
+        # Remove XML declaration if present
+        svg_content = re.sub(r'<\?xml[^>]*\?>', '', svg_content)
+        
+        # Remove comments
+        svg_content = re.sub(r'<!--.*?-->', '', svg_content, flags=re.DOTALL)
+        
+        # Remove title element completely (not needed for badges)
+        svg_content = re.sub(r'<title>.*?</title>', '', svg_content, flags=re.DOTALL)
+        
+        # Remove role attribute (not needed for badges)
+        svg_content = re.sub(r'\s*role="[^"]*"', '', svg_content)
+        
+        # Compress path data for 14x14px display
+        def compress_path(match):
+            path_data = match.group(1)
+            # Reduce precision to 1 decimal place for small icons
+            path_data = re.sub(r'(\d+\.\d{2,})', lambda m: f"{float(m.group(1)):.1f}", path_data)
+            # Remove trailing zeros after decimal
+            path_data = re.sub(r'(\d+)\.0\b', r'\1', path_data)  # 1.0 -> 1
+            path_data = re.sub(r'(\.\d*?)0+\b', r'\1', path_data)  # 1.230 -> 1.23
+            # Remove unnecessary spaces around path commands
+            path_data = re.sub(r'\s*([MLHVCSQTAZ])\s*', r'\1', path_data, flags=re.IGNORECASE)
+            path_data = re.sub(r'\s+', ' ', path_data.strip())
+            return f'd="{path_data}"'
+        
+        svg_content = re.sub(r'd="([^"]*)"', compress_path, svg_content)
+        
+        # Remove extra whitespace between tags and attributes
+        svg_content = re.sub(r'>\s+<', '><', svg_content)
+        svg_content = re.sub(r'\s+', ' ', svg_content)
+        svg_content = svg_content.strip()
+        
+        return svg_content
+        
+    except Exception as e:
+        # Fallback to original SVG if optimization fails
+        logger.debug(f'Regex SVG compression failed, using original: {e}')
+        return svg_content
+
+def _compress_svg_for_badge(svg_content):
+    """Compress SVG content for small badge usage (14x14px) using scour with aggressive optimization."""
+    try:
+        # Create temporary files for input and output
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as input_file:
+            input_file.write(svg_content)
+            input_path = input_file.name
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as output_file:
+            output_path = output_file.name
+        
+        try:
+            # Run scour with aggressive optimization settings for 14x14px badges
+            cmd = [
+                'python', '-m', 'scour.scour',
+                '--set-precision=1',              # Very low precision for 14x14px (1 decimal place)
+                '--set-c-precision=1',            # Low precision for control points too
+                '--strip-xml-prolog',             # Remove XML declaration
+                '--remove-titles',                # Remove title elements (not needed for badges)
+                '--remove-descriptions',          # Remove description elements
+                '--remove-metadata',              # Remove metadata
+                '--enable-comment-stripping',     # Remove comments
+                '--enable-viewboxing',            # Optimize viewBox
+                '--enable-id-stripping',          # Remove unreferenced IDs
+                '--shorten-ids',                  # Shorten remaining IDs
+                '--no-line-breaks',               # Minify output
+                '--indent=none',                  # No indentation
+                '--strip-xml-space',              # Remove xml:space attributes
+                '--disable-embed-rasters',        # Don't embed rasters (not relevant for Simple Icons)
+                '--no-renderer-workaround',       # Skip renderer workarounds for smaller output
+                '-i', input_path,
+                '-o', output_path
+            ]
+            
+            # Run scour
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            
+            if result.returncode == 0:
+                # Read the optimized SVG
+                with open(output_path, 'r') as f:
+                    optimized_svg = f.read().strip()
+                return optimized_svg
+            else:
+                logger.debug(f'Scour failed with return code {result.returncode}: {result.stderr}')
+                # Fallback to regex compression
+                return _compress_svg_for_badge_regex(svg_content)
+        
+        finally:
+            # Clean up temporary files
+            try:
+                os.unlink(input_path)
+                os.unlink(output_path)
+            except OSError:
+                pass
+                
+    except Exception as e:
+        # Fallback to regex compression if scour fails
+        logger.debug(f'Scour SVG compression failed, using regex fallback: {e}')
+        return _compress_svg_for_badge_regex(svg_content)
 
 def run(args):
     # user provided slugs
