@@ -26,14 +26,16 @@ _logo_availability_cache = {}
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def svg_to_base64_data_uri(svg_content, fill_color='white'):
+def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=6000):
     """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
     
     Args:
         svg_content: SVG content as string
         fill_color: Fill color for the SVG paths ('white', 'black', or None)
+        max_url_length: Maximum URL length before falling back to PNG rasterization
     
-    Uses scour-based SVG compression for optimal file size while maintaining perfect vector quality.
+    Uses scour-based SVG compression for optimal file size. For very large SVGs that would exceed
+    URL length limits, falls back to PNG rasterization at 14x14px.
     """
     # Add fill color to the path element if fill_color is not None
     # Simple Icons SVGs typically have a single <path> element
@@ -48,9 +50,19 @@ def svg_to_base64_data_uri(svg_content, fill_color='white'):
     # Encode to base64
     svg_bytes = compressed_svg.encode('utf-8')
     base64_svg = base64.b64encode(svg_bytes).decode('utf-8')
+    svg_data_uri = f'data:image/svg+xml;base64,{base64_svg}'
     
-    # Return as data URI
-    return f'data:image/svg+xml;base64,{base64_svg}'
+    # Check if SVG data URI would be too long for URL limits
+    if len(svg_data_uri) > max_url_length:
+        logger.debug(f'SVG data URI too long ({len(svg_data_uri)} chars), falling back to PNG')
+        # Fall back to PNG rasterization for oversized SVGs
+        png_data_uri = _svg_to_png_data_uri(svg_with_fill, size=14)
+        if png_data_uri:
+            return png_data_uri
+        else:
+            logger.debug('PNG fallback failed, using original SVG despite size')
+    
+    return svg_data_uri
 
 def _compress_svg_for_badge_regex(svg_content):
     """Compress SVG content for small badge usage (14x14px) using regex optimization (for comparison)."""
@@ -154,6 +166,51 @@ def _compress_svg_for_badge(svg_content):
         logger.debug(f'Scour SVG compression failed, using regex fallback: {e}')
         return _compress_svg_for_badge_regex(svg_content)
 
+def _svg_to_png_data_uri(svg_content, size=14):
+    """Convert SVG to PNG at specified size and create base64 data URI. Returns None if conversion fails."""
+    try:
+        # Create temporary files
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as svg_file:
+            svg_file.write(svg_content)
+            svg_path = svg_file.name
+        
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as png_file:
+            png_path = png_file.name
+        
+        try:
+            # Convert SVG to PNG using ImageMagick
+            cmd = [
+                'convert',
+                '-background', 'transparent',
+                '-size', f'{size}x{size}',
+                svg_path,
+                png_path
+            ]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            if result.returncode == 0:
+                # Read PNG and encode as base64
+                with open(png_path, 'rb') as f:
+                    png_bytes = f.read()
+                base64_png = base64.b64encode(png_bytes).decode('utf-8')
+                logger.debug(f'PNG conversion successful: {len(png_bytes)} bytes -> {len(base64_png)} base64 chars')
+                return f'data:image/png;base64,{base64_png}'
+            else:
+                logger.debug(f'SVG to PNG conversion failed: {result.stderr}')
+                return None
+        
+        finally:
+            # Clean up temporary files
+            try:
+                os.unlink(svg_path)
+                os.unlink(png_path)
+            except OSError:
+                pass
+                
+    except Exception as e:
+        logger.debug(f'PNG conversion error: {e}')
+        return None
+
 
 def run(args):
     # user provided slugs
@@ -197,8 +254,8 @@ def run(args):
             icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         elif args.provider == 'badgen':
             # Badgen.net format
-            # Convert SVG to base64 data URI with adaptive color based on background luminosity
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp)
+            # Convert SVG to base64 data URI (with automatic PNG fallback for large SVGs)
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=4000)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
         else:
