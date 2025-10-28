@@ -316,21 +316,22 @@ def run(args):
         elif args.provider == 'badgen':
             # Badgen.net format
             # Convert SVG to base64 data URI (with automatic PNG fallback for large SVGs)
-            # Cap icon brightness at 0.7 since Badgen.net doesn't support black text
+            # Cap background brightness at 0.7 since Badgen.net doesn't support black text
             if icon_brightness > 0.7:
-                # Scale down RGB values to achieve 0.7 brightness
+                # Scale down RGB values to achieve 0.7 brightness for background
                 scale_factor = 0.7 / icon_brightness
                 capped_rgb = [int(c * scale_factor) for c in icon_rgb]
                 capped_hex = f"{capped_rgb[0]:02x}{capped_rgb[1]:02x}{capped_rgb[2]:02x}"
-                icon_fill_color = f'#{capped_hex}'
-                logger.debug(f'Capping bright icon {icon.slug} from #{icon.hex} (brightness {icon_brightness:.3f}) to {icon_fill_color} (brightness 0.7) for Badgen visibility')
+                background_color = capped_hex
+                logger.debug(f'Capping bright background {icon.slug} from #{icon.hex} (brightness {icon_brightness:.3f}) to #{background_color} (brightness 0.7) for Badgen visibility')
             else:
-                # Use white for normal brightness icons
-                icon_fill_color = 'white'
+                # Use original color for normal brightness backgrounds
+                background_color = icon.hex
             
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_fill_color, max_url_length=4000)
+            # Always use white icons for good contrast against any background
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=4000)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={icon.hex}&labelColor={icon.hex}'
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
