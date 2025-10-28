@@ -235,8 +235,9 @@ python3 scripts/build_microsite.py
 
 Possible future improvements:
 
-1. **Minification**: Add HTML/CSS/JS minification to reduce file size
-2. **Asset optimization**: Optimize any images or assets
-3. **Build caching**: Cache build artifacts for faster deployments
-4. **Preview deployments**: Deploy PR previews for testing changes
-5. **Code extraction**: Extract shared algorithm logic into a common module that both CLI and microsite can import (would require PyScript package support)
+1. **Automated sync testing**: Add tests that compare CLI and microsite outputs for identical inputs to catch synchronization drift automatically
+2. **Minification**: Add HTML/CSS/JS minification to reduce file size
+3. **Asset optimization**: Optimize any images or assets
+4. **Build caching**: Cache build artifacts for faster deployments
+5. **Preview deployments**: Deploy PR previews for testing changes
+6. **Code extraction**: Extract shared algorithm logic into a common module that both CLI and microsite can import (would require PyScript package support)
