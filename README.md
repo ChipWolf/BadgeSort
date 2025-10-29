@@ -174,11 +174,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 ```html
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Qt" src="https://img.shields.io/badge/Qt-41CD52.svg?style=flat-square&logo=qt&logoColor=white"></a>
-  <a href="#"><img alt="500px" src="https://img.shields.io/badge/500px-0099E5.svg?style=flat-square&logo=500px&logoColor=white"></a>
-  <a href="#"><img alt="BMC Software" src="https://img.shields.io/badge/BMC%20Software-FE5000.svg?style=flat-square&logo=bmcsoftware&logoColor=white"></a>
-  <a href="#"><img alt="Threadless" src="https://img.shields.io/badge/Threadless-0099FF.svg?style=flat-square&logo=threadless&logoColor=white"></a>
-  <a href="#"><img alt="Riot Games" src="https://img.shields.io/badge/Riot%20Games-D32936.svg?style=flat-square&logo=riotgames&logoColor=white"></a>
+  <a href="#"><img alt="Aeroflot" src="https://img.shields.io/badge/Aeroflot-02458D.svg?style=flat-square&logo=aeroflot&logoColor=white"></a>
+  <a href="#"><img alt="Dropbox" src="https://img.shields.io/badge/Dropbox-0061FF.svg?style=flat-square&logo=dropbox&logoColor=white"></a>
+  <a href="#"><img alt="OpenCV" src="https://img.shields.io/badge/OpenCV-5C3EE8.svg?style=flat-square&logo=opencv&logoColor=white"></a>
+  <a href="#"><img alt="OpenGL" src="https://img.shields.io/badge/OpenGL-5586A4.svg?style=flat-square&logo=opengl&logoColor=white"></a>
+  <a href="#"><img alt="MSI" src="https://img.shields.io/badge/MSI-FF0000.svg?style=flat-square&logo=msi&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
@@ -190,11 +190,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Qt" src="https://img.shields.io/badge/Qt-41CD52.svg?style=flat-square&logo=qt&logoColor=white"></a>
-  <a href="#"><img alt="500px" src="https://img.shields.io/badge/500px-0099E5.svg?style=flat-square&logo=500px&logoColor=white"></a>
-  <a href="#"><img alt="BMC Software" src="https://img.shields.io/badge/BMC%20Software-FE5000.svg?style=flat-square&logo=bmcsoftware&logoColor=white"></a>
-  <a href="#"><img alt="Threadless" src="https://img.shields.io/badge/Threadless-0099FF.svg?style=flat-square&logo=threadless&logoColor=white"></a>
-  <a href="#"><img alt="Riot Games" src="https://img.shields.io/badge/Riot%20Games-D32936.svg?style=flat-square&logo=riotgames&logoColor=white"></a>
+  <a href="#"><img alt="Aeroflot" src="https://img.shields.io/badge/Aeroflot-02458D.svg?style=flat-square&logo=aeroflot&logoColor=white"></a>
+  <a href="#"><img alt="Dropbox" src="https://img.shields.io/badge/Dropbox-0061FF.svg?style=flat-square&logo=dropbox&logoColor=white"></a>
+  <a href="#"><img alt="OpenCV" src="https://img.shields.io/badge/OpenCV-5C3EE8.svg?style=flat-square&logo=opencv&logoColor=white"></a>
+  <a href="#"><img alt="OpenGL" src="https://img.shields.io/badge/OpenGL-5586A4.svg?style=flat-square&logo=opengl&logoColor=white"></a>
+  <a href="#"><img alt="MSI" src="https://img.shields.io/badge/MSI-FF0000.svg?style=flat-square&logo=msi&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
