@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/ChipWolf/BadgeSort/compare/3.1.5...3.2.0) (2025-10-29)
+
+
+### Features
+
+* add Badgen.net support with adaptive SVG icon colors ([#79](https://github.com/ChipWolf/BadgeSort/issues/79)) ([0caff0c](https://github.com/ChipWolf/BadgeSort/commit/0caff0c223ce54b9d6d2127e7593a7fc67513c36))
+
+
+### Bug Fixes
+
+* **deps:** update pypi group ([#60](https://github.com/ChipWolf/BadgeSort/issues/60)) ([a2d34f1](https://github.com/ChipWolf/BadgeSort/commit/a2d34f16d84645f00307cb0df3fd397b2922713c))
+
 ## [3.1.5](https://github.com/ChipWolf/BadgeSort/compare/3.1.4...3.1.5) (2025-07-25)
 
 
