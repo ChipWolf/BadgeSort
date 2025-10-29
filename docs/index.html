@@ -346,6 +346,128 @@
         .bg-dark {
             background: #0d1117 !important;
         }
+        
+        /* Visual Sort Selector */
+        .sort-selector {
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+        }
+        .sort-selector h3 {
+            margin: 0 0 1rem 0;
+            color: #212529;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .sort-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .sort-dropdown-header {
+            cursor: pointer;
+            border: 2px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            background: white;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        .sort-dropdown-header:hover {
+            border-color: #9333ea;
+            box-shadow: 0 2px 8px rgba(147, 51, 234, 0.15);
+        }
+        .sort-dropdown-header.open {
+            border-color: #9333ea;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .sort-dropdown-current {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        .sort-dropdown-current img {
+            flex: 2;
+            height: 10px;
+            border-radius: 0.25rem;
+            object-fit: cover;
+            min-width: 0;
+        }
+        .sort-dropdown-current span {
+            flex: 1;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #495057;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sort-dropdown-arrow {
+            font-size: 1rem;
+            color: #6c757d;
+            transition: transform 0.2s ease;
+        }
+        .sort-dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+        .sort-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #9333ea;
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+        }
+        .sort-options.hidden {
+            display: none;
+        }
+        .sort-option {
+            cursor: pointer;
+            padding: 0.75rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .sort-option:last-child {
+            border-bottom: none;
+        }
+        .sort-option:hover {
+            background: #f8f9fa;
+        }
+        .sort-option.selected {
+            background: #f3e8ff;
+        }
+        .sort-option img {
+            flex: 2;
+            height: 10px;
+            border-radius: 0.25rem;
+            object-fit: cover;
+            min-width: 0;
+        }
+        .sort-option-label {
+            flex: 1;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #495057;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sort-option.selected .sort-option-label {
+            color: #9333ea;
+        }
         .comment-syntax-box {
             font-family: 'Courier New', monospace;
             font-size: 0.875rem;
@@ -515,23 +637,7 @@
                     </select>
                 </div>
 
-                <!-- Sort Algorithm -->
-                <div class="form-group">
-                    <label>Sort Algorithm
-                        <span class="tooltip">
-                            <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Choose how badges are sorted by color. Hilbert uses a space-filling curve for visually appealing gradients. HSV sorts by hue, saturation, and value.</span>
-                        </span>
-                    </label>
-                    <select id="sort-algorithm">
-                        <option value="hilbert">Hilbert (Default)</option>
-                        <option value="hsv">HSV</option>
-                        <option value="step">Step</option>
-                        <option value="step_invert">Step Invert</option>
-                        <option value="luminance">Luminance</option>
-                        <option value="random">Random</option>
-                    </select>
-                </div>
+
 
                 <!-- Output Format -->
                 <div class="form-group">
@@ -600,6 +706,51 @@
 
             <!-- Right Panel: Preview & Output -->
             <div class="panel">
+                <!-- Visual Sort Selector -->
+                <div class="sort-selector">
+                    <h3>Color Sorting Algorithm
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Choose how badges are sorted by color. Each algorithm creates different visual patterns - from smooth gradients to organized color groups.</span>
+                        </span>
+                    </h3>
+                    <div class="sort-dropdown">
+                        <div class="sort-dropdown-header" id="sort-dropdown-header">
+                            <div class="sort-dropdown-current">
+                                <img src="sort_hilbert-800x20.png" alt="Hilbert curve sort" id="sort-current-image">
+                                <span id="sort-current-label">Hilbert (Default)</span>
+                            </div>
+                            <span class="sort-dropdown-arrow">▼</span>
+                        </div>
+                        <div class="sort-options hidden" id="sort-options">
+                            <div class="sort-option selected" data-sort="hilbert">
+                                <img src="sort_hilbert-800x20.png" alt="Hilbert curve sort">
+                                <div class="sort-option-label">Hilbert (Default)</div>
+                            </div>
+                            <div class="sort-option" data-sort="hsv">
+                                <img src="sort_hsv-800x20.png" alt="HSV sort">
+                                <div class="sort-option-label">HSV</div>
+                            </div>
+                            <div class="sort-option" data-sort="step">
+                                <img src="sort_step-800x20.png" alt="Step sort">
+                                <div class="sort-option-label">Step</div>
+                            </div>
+                            <div class="sort-option" data-sort="step_invert">
+                                <img src="sort_step_invert-800x20.png" alt="Step invert sort">
+                                <div class="sort-option-label">Step Invert</div>
+                            </div>
+                            <div class="sort-option" data-sort="luminance">
+                                <img src="sort_lum-800x20.png" alt="Luminance sort">
+                                <div class="sort-option-label">Luminance</div>
+                            </div>
+                            <div class="sort-option" data-sort="random">
+                                <img src="sort_random-800x20.png" alt="Random sort">
+                                <div class="sort-option-label">Random</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <h2>Preview</h2>
                 <!-- Preview Controls -->
                 <div class="preview-controls">
@@ -961,7 +1112,7 @@ def generate_badges():
     # Get settings
     badge_style = document.getElementById("badge-style").value
     badge_provider = document.getElementById("badge-provider").value
-    color_sort = document.getElementById("sort-algorithm").value
+    color_sort = document.querySelector(".sort-option.selected").dataset.sort
     reverse = document.getElementById("reverse-sort").checked
     hue_rotate = int(document.getElementById("hue-rotate").value or 0)
     
@@ -1062,7 +1213,7 @@ def update_yaml():
     
     style = document.getElementById("badge-style").value
     provider = document.getElementById("badge-provider").value
-    sort_algo = document.getElementById("sort-algorithm").value
+    sort_algo = document.querySelector(".sort-option.selected").dataset.sort
     output_format = document.getElementById("output-format").value
     badge_id = document.getElementById("badge-id").value
     output_file = document.getElementById("output-file").value
@@ -1209,7 +1360,7 @@ def add_50_random_badges():
 
 def toggle_hue_rotate():
     """Show/hide hue rotate based on sort algorithm"""
-    sort_algo = document.getElementById("sort-algorithm").value
+    sort_algo = document.querySelector(".sort-option.selected").dataset.sort
     hue_group = document.getElementById("hue-rotate-group")
     
     if sort_algo in ['step', 'step_invert']:
@@ -1255,9 +1406,8 @@ def set_preview_background(bg_type):
 
 def detect_and_set_default_theme():
     """Detect system theme and set default preview background"""
-    # For now, default to light mode to ensure buttons work
-    # TODO: Implement proper theme detection later
-    default_bg = 'light'
+    # Default to gradient background for better visual appeal
+    default_bg = 'gradient'
     
     # Set the appropriate background button as active
     bg_buttons = document.querySelectorAll('.scale-btn[data-bg]')
@@ -1280,9 +1430,61 @@ def setup_event_listeners():
     
     # Sort algorithm - also toggle hue rotate visibility
     def on_sort_change(e):
+        # Update selected sort option
+        for option in document.querySelectorAll(".sort-option"):
+            option.classList.remove("selected")
+        selected_option = e.target.closest(".sort-option")
+        selected_option.classList.add("selected")
+        
+        # Update dropdown header
+        header_img = document.getElementById("sort-current-image")
+        header_label = document.getElementById("sort-current-label")
+        option_img = selected_option.querySelector("img")
+        option_label = selected_option.querySelector(".sort-option-label")
+        
+        header_img.src = option_img.src
+        header_img.alt = option_img.alt
+        header_label.textContent = option_label.textContent
+        
+        # Close dropdown
+        close_sort_dropdown()
+        
         toggle_hue_rotate()
         update_preview()
-    document.getElementById("sort-algorithm").addEventListener("change", create_proxy(on_sort_change))
+    
+    def toggle_sort_dropdown():
+        options = document.getElementById("sort-options")
+        header = document.getElementById("sort-dropdown-header")
+        arrow = header.querySelector(".sort-dropdown-arrow")
+        
+        if "hidden" in options.classList:
+            options.classList.remove("hidden")
+            header.classList.add("open")
+            arrow.classList.add("open")
+        else:
+            options.classList.add("hidden")
+            header.classList.remove("open")
+            arrow.classList.remove("open")
+    
+    def close_sort_dropdown():
+        options = document.getElementById("sort-options")
+        header = document.getElementById("sort-dropdown-header")
+        arrow = header.querySelector(".sort-dropdown-arrow")
+        
+        options.classList.add("hidden")
+        header.classList.remove("open")
+        arrow.classList.remove("open")
+    
+    # Add click handlers for visual sort dropdown
+    document.getElementById("sort-dropdown-header").addEventListener("click", create_proxy(lambda e: toggle_sort_dropdown()))
+    
+    for option in document.querySelectorAll(".sort-option"):
+        option.addEventListener("click", create_proxy(on_sort_change))
+    
+    # Close dropdown when clicking outside
+    document.addEventListener("click", create_proxy(lambda e: 
+        close_sort_dropdown() if not e.target.closest(".sort-dropdown") else None
+    ))
     
     # Output format
     document.getElementById("output-format").addEventListener("change", create_proxy(lambda e: update_preview()))
