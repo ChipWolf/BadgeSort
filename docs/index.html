@@ -494,6 +494,49 @@
             word-wrap: break-word;
         }
         
+        /* Badge Style Selector */
+        .badge-style-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .badge-style-option {
+            position: relative;
+        }
+        
+        .badge-style-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .badge-style-label {
+            display: block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 0.375rem;
+            padding: 0.25rem;
+            border: 2px solid transparent;
+        }
+        
+        .badge-style-label:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+        }
+        
+        .badge-style-option input[type="radio"]:checked + .badge-style-label {
+            background-color: #f0f4ff;
+            border-color: #9333ea;
+        }
+        
+        .badge-style-label img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        
         /* Dark mode styles */
         @media (prefers-color-scheme: dark) {
             body {
@@ -591,6 +634,16 @@
             .scale-btn:hover {
                 background: #64748b;
             }
+            
+            .badge-style-label:hover {
+                background-color: #1e293b;
+                border-color: #334155;
+            }
+            
+            .badge-style-option input[type="radio"]:checked + .badge-style-label {
+                background-color: #1e1b4b;
+                border-color: #9333ea;
+            }
         }
     </style>
 </head>
@@ -620,23 +673,6 @@
 
                 <h2 style="margin-top: 2rem;">Configuration</h2>
                 
-                <!-- Badge Style -->
-                <div class="form-group">
-                    <label>Badge Style 
-                        <span class="tooltip">
-                            <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Choose the visual style of your badges. 'For The Badge' is larger and more prominent, while 'Flat' is minimal and compact.</span>
-                        </span>
-                    </label>
-                    <select id="badge-style">
-                        <option value="for-the-badge">For The Badge</option>
-                        <option value="flat">Flat</option>
-                        <option value="flat-square">Flat Square</option>
-                        <option value="plastic">Plastic</option>
-                        <option value="social">Social</option>
-                    </select>
-                </div>
-
                 <!-- Badge Provider -->
                 <div class="form-group">
                     <label>Badge Provider
@@ -649,6 +685,48 @@
                         <option value="shields">Shields.io</option>
                         <option value="badgen">Badgen.net</option>
                     </select>
+                </div>
+
+                <!-- Badge Style -->
+                <div class="form-group" id="badge-style-group">
+                    <label>Badge Style 
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Choose the visual style of your badges. Click on any badge example to select that style.</span>
+                        </span>
+                    </label>
+                    <div class="badge-style-selector">
+                        <div class="badge-style-option">
+                            <input type="radio" id="style-for-the-badge" name="badge-style" value="for-the-badge" checked>
+                            <label for="style-for-the-badge" class="badge-style-label">
+                                <img src="https://img.shields.io/badge/For%20The%20Badge-9333EA.svg?style=for-the-badge&logo=github&logoColor=white" alt="For The Badge style">
+                            </label>
+                        </div>
+                        <div class="badge-style-option">
+                            <input type="radio" id="style-flat" name="badge-style" value="flat">
+                            <label for="style-flat" class="badge-style-label">
+                                <img src="https://img.shields.io/badge/Flat-9333EA.svg?style=flat&logo=github&logoColor=white" alt="Flat style">
+                            </label>
+                        </div>
+                        <div class="badge-style-option">
+                            <input type="radio" id="style-flat-square" name="badge-style" value="flat-square">
+                            <label for="style-flat-square" class="badge-style-label">
+                                <img src="https://img.shields.io/badge/Flat%20Square-9333EA.svg?style=flat-square&logo=github&logoColor=white" alt="Flat Square style">
+                            </label>
+                        </div>
+                        <div class="badge-style-option">
+                            <input type="radio" id="style-plastic" name="badge-style" value="plastic">
+                            <label for="style-plastic" class="badge-style-label">
+                                <img src="https://img.shields.io/badge/Plastic-9333EA.svg?style=plastic&logo=github&logoColor=white" alt="Plastic style">
+                            </label>
+                        </div>
+                        <div class="badge-style-option">
+                            <input type="radio" id="style-social" name="badge-style" value="social">
+                            <label for="style-social" class="badge-style-label">
+                                <img src="https://img.shields.io/badge/Social-9333EA.svg?style=social&logo=github&logoColor=white" alt="Social style">
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -750,7 +828,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Hue Rotate (conditional for step sort) -->
                 <div class="form-group" id="hue-rotate-group" style="display: none;">
                     <label>Hue Rotate
@@ -1124,7 +1201,7 @@ def generate_badges():
         return []
     
     # Get settings
-    badge_style = document.getElementById("badge-style").value
+    badge_style = document.querySelector('input[name="badge-style"]:checked').value
     badge_provider = document.getElementById("badge-provider").value
     color_sort = document.querySelector(".sort-option.selected").dataset.sort
     reverse = document.getElementById("reverse-sort").checked
@@ -1225,7 +1302,7 @@ def update_yaml():
         output.textContent = "# Select badges to generate YAML"
         return
     
-    style = document.getElementById("badge-style").value
+    style = document.querySelector('input[name="badge-style"]:checked').value
     provider = document.getElementById("badge-provider").value
     sort_algo = document.querySelector(".sort-option.selected").dataset.sort
     output_format = document.getElementById("output-format").value
@@ -1454,11 +1531,25 @@ def detect_and_set_default_theme():
 # Setup event listeners
 def setup_event_listeners():
     """Setup all event listeners"""
-    # Badge style
-    document.getElementById("badge-style").addEventListener("change", create_proxy(lambda e: update_preview()))
+    # Badge style radio buttons
+    for radio in document.querySelectorAll('input[name="badge-style"]'):
+        radio.addEventListener("change", create_proxy(lambda e: update_preview()))
     
-    # Badge provider
-    document.getElementById("badge-provider").addEventListener("change", create_proxy(lambda e: update_preview()))
+    # Badge provider - also toggle badge style visibility
+    def on_provider_change(e):
+        provider = e.target.value
+        badge_style_group = document.getElementById("badge-style-group")
+        
+        if provider == "badgen":
+            # Hide badge styles for Badgen since it doesn't support them
+            badge_style_group.style.display = "none"
+        else:
+            # Show badge styles for Shields.io
+            badge_style_group.style.display = "block"
+        
+        update_preview()
+    
+    document.getElementById("badge-provider").addEventListener("change", create_proxy(on_provider_change))
     
     # Sort algorithm - also toggle hue rotate visibility
     def on_sort_change(e):
