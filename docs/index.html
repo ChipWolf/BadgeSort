@@ -396,6 +396,13 @@
             object-fit: cover;
             min-width: 0;
         }
+        .sort-dropdown-current img.sliding-image {
+            object-fit: none;
+            object-position: 0% center;
+            transition: object-position 0.3s ease;
+            background-repeat: repeat-x;
+            background-size: auto 100%;
+        }
         .sort-dropdown-current span {
             flex: 1;
             font-size: 0.875rem;
@@ -454,6 +461,13 @@
             border-radius: 0.25rem;
             object-fit: cover;
             min-width: 0;
+        }
+        .sort-option img.sliding-image {
+            object-fit: none;
+            object-position: 0% center;
+            transition: object-position 0.3s ease;
+            background-repeat: repeat-x;
+            background-size: auto 100%;
         }
         .sort-option-label {
             flex: 1;
@@ -688,20 +702,6 @@
 
 
 
-                <!-- Hue Rotate (conditional for step sort) -->
-                <div class="form-group" id="hue-rotate-group" style="display: none;">
-                    <label>Hue Rotate
-                        <span class="tooltip">
-                            <span class="tooltip-icon">?</span>
-                            <span class="tooltiptext">Rotate the hue values for step sorting algorithms (0-360 degrees).</span>
-                        </span>
-                    </label>
-                    <div class="slider-container">
-                        <input type="range" id="hue-rotate" value="0" min="0" max="360">
-                        <span class="slider-value" id="hue-rotate-value">0°</span>
-                    </div>
-                </div>
-
             </div>
 
             <!-- Right Panel: Preview & Output -->
@@ -732,11 +732,11 @@
                                 <div class="sort-option-label">HSV</div>
                             </div>
                             <div class="sort-option" data-sort="step">
-                                <img src="sort_step-800x20.png" alt="Step sort">
+                                <img src="sort_step-800x20.png" alt="Step sort" class="sliding-image">
                                 <div class="sort-option-label">Step</div>
                             </div>
                             <div class="sort-option" data-sort="step_invert">
-                                <img src="sort_step_invert-800x20.png" alt="Step invert sort">
+                                <img src="sort_step_invert-800x20.png" alt="Step invert sort" class="sliding-image">
                                 <div class="sort-option-label">Step Invert</div>
                             </div>
                             <div class="sort-option" data-sort="luminance">
@@ -748,6 +748,20 @@
                                 <div class="sort-option-label">Random</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Hue Rotate (conditional for step sort) -->
+                <div class="form-group" id="hue-rotate-group" style="display: none;">
+                    <label>Hue Rotate
+                        <span class="tooltip">
+                            <span class="tooltip-icon">?</span>
+                            <span class="tooltiptext">Rotate the hue values for step sorting algorithms (0-360 degrees).</span>
+                        </span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" id="hue-rotate" value="0" min="0" max="360">
+                        <span class="slider-value" id="hue-rotate-value">0°</span>
                     </div>
                 </div>
 
@@ -1371,10 +1385,22 @@ def toggle_hue_rotate():
 
 
 def update_hue_value():
-    """Update the displayed hue rotate value"""
+    """Update the displayed hue rotate value and sliding effect"""
     slider = document.getElementById("hue-rotate")
     value_display = document.getElementById("hue-rotate-value")
     value_display.textContent = f"{slider.value}°"
+    
+    # Update sliding effect for step sort images
+    hue_value = int(slider.value)
+    # Convert 0-360 range to 0-100% for object-position
+    position_percent = (hue_value / 360) * 100
+    
+    # Update all sliding images
+    sliding_images = document.querySelectorAll(".sliding-image")
+    for img in sliding_images:
+        img.style.objectPosition = f"{position_percent}% center"
+        img.style.backgroundPosition = f"{position_percent}% center"
+    
     update_preview()
 
 def set_preview_scale(scale):
@@ -1403,6 +1429,12 @@ def set_preview_background(bg_type):
         preview.style.background = '#0d1117'
     else:
         preview.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+
+def init_sliding_images():
+    """Initialize background images for sliding step sort images"""
+    sliding_images = document.querySelectorAll(".sliding-image")
+    for img in sliding_images:
+        img.style.backgroundImage = f'url("{img.src}")'
 
 def detect_and_set_default_theme():
     """Detect system theme and set default preview background"""
@@ -1445,6 +1477,23 @@ def setup_event_listeners():
         header_img.src = option_img.src
         header_img.alt = option_img.alt
         header_label.textContent = option_label.textContent
+        
+        # Copy sliding-image class if present
+        if option_img.classList.contains("sliding-image"):
+            header_img.classList.add("sliding-image")
+            # Set background image for tiling
+            header_img.style.backgroundImage = f'url("{option_img.src}")'
+            # Apply current hue rotation position
+            slider = document.getElementById("hue-rotate")
+            hue_value = int(slider.value)
+            position_percent = (hue_value / 360) * 100
+            header_img.style.objectPosition = f"{position_percent}% center"
+            header_img.style.backgroundPosition = f"{position_percent}% center"
+        else:
+            header_img.classList.remove("sliding-image")
+            header_img.style.objectPosition = ""
+            header_img.style.backgroundImage = ""
+            header_img.style.backgroundPosition = ""
         
         # Close dropdown
         close_sort_dropdown()
@@ -1553,6 +1602,9 @@ toggle_hue_rotate()
 
 set_preview_scale(1)  # Set default scale to 100%
 setup_event_listeners()
+
+# Initialize sliding images
+init_sliding_images()
 
 # Set default theme (with error handling)
 try:
