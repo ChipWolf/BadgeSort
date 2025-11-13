@@ -35,7 +35,8 @@ def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3550)
         max_url_length: Maximum data URI length before falling back to PNG rasterization.
                        Default 3550 chars ensures badge URLs stay under GitHub's camo proxy
                        8192 char limit (which hex-encodes URLs: 76 + url_len*2 <= 8192).
-                       Calculation: safe_url = (8192 - 76) / 2 - overhead ≈ 3949, with 10% margin = 3550
+                       Calculation: (8192 - 76 camo_overhead) / 2 hex_encoding - ~109 badge_url_overhead = 3949, with 10% margin = 3550
+                       (~109 char badge_url_overhead is the badge URL structure: domain, path, parameters, excluding the data URI payload)
     
     Uses scour-based SVG compression for optimal file size. For very large SVGs that would exceed
     URL length limits, falls back to PNG rasterization at 14x14px.

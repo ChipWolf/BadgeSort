@@ -33,6 +33,10 @@ jobs:
       uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
       with:
         python-version: '3.14'
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y librsvg2-bin
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
