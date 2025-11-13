@@ -350,3 +350,58 @@ def test_integration_append_preserves_newlines():
         
     finally:
         os.unlink(temp_file)
+
+
+def test_integration_create_output_file_if_not_exists():
+    """Integration test: create the output file if it doesn't exist."""
+    # Generate a path for a file that doesn't exist
+    temp_dir = tempfile.gettempdir()
+    temp_file = os.path.join(temp_dir, f'badgesort_test_nonexistent_{os.getpid()}.md')
+    
+    # Ensure the file doesn't exist
+    if os.path.exists(temp_file):
+        os.unlink(temp_file)
+    
+    try:
+        args = argparse.Namespace(
+            slugs=['github', 'python'],
+            random=1,
+            output=temp_file,
+            id='default',
+            format='markdown',
+            badge_style='flat',
+            color_sort='hilbert',
+            hue_rotate=0,
+            no_thanks=True,
+            reverse=False,
+            provider='shields',
+            verify=False,
+            embed_svg=False,
+            skip_logo_check=True
+        )
+        
+        # Run BadgeSort - should create the file
+        run(args)
+        
+        # Verify the file was created
+        assert os.path.exists(temp_file), "Output file should be created"
+        
+        # Read the result
+        with open(temp_file, 'r') as f:
+            result = f.read()
+        
+        # Verify badges were generated with markers
+        assert "<!-- start chipwolf/badgesort default -->" in result
+        assert "<!-- end chipwolf/badgesort default -->" in result
+        
+        # Verify badges were generated
+        assert 'github' in result.lower() or 'python' in result.lower(), "Badges should be generated"
+        
+        # Since the file was new, badges should be the only content
+        lines = result.strip().split('\n')
+        assert len(lines) >= 3, "Should have at least markers and badges"
+        
+    finally:
+        # Clean up
+        if os.path.exists(temp_file):
+            os.unlink(temp_file)
