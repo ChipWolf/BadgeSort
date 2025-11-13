@@ -47,9 +47,19 @@ The badges can be sorted by color _[as default]_ or left in the order specified.
 
 ### Comment Markers for Badge Interpolation
 
-When using BadgeSort to update a file (like `README.md`), you **must** include special HTML comment markers in your target file. These markers tell BadgeSort where to insert or update the badges.
+When using BadgeSort to update a file (like `README.md`), BadgeSort will automatically manage special HTML comment markers to define where badges should appear.
 
-#### Required Syntax:
+#### How It Works:
+
+**If markers already exist:**
+- BadgeSort will replace **everything between** the markers with the newly generated badges
+- The markers themselves are preserved and remain in your file
+
+**If markers don't exist:**
+- BadgeSort will **automatically append** the badges (with markers) to the end of your target file
+- On subsequent runs, BadgeSort will update the badges in place
+
+#### Marker Syntax:
 
 ```html
 <!-- start chipwolf/badgesort {id} -->
@@ -57,12 +67,9 @@ When using BadgeSort to update a file (like `README.md`), you **must** include s
 ```
 
 - **`{id}`**: A unique identifier that matches the `id` parameter in your GitHub Action or CLI command
-- BadgeSort will replace **everything between** these markers with the generated badges
-- The markers themselves are preserved and remain in your file
+- If you don't specify an `id`, the default value is `default`
 
 #### Default ID:
-
-If you don't specify an `id`, the default value is `default`:
 
 ```html
 <!-- start chipwolf/badgesort default -->
@@ -83,8 +90,8 @@ Some other content...
 <!-- end chipwolf/badgesort section2 -->
 ```
 
-> **Important**
-> Without these comment markers in your target file, BadgeSort will only output badges to stdout (or the console) rather than updating the file.
+> **Note**
+> When targeting a file with `-o` or `output:`, BadgeSort will always update the file. If no markers exist for the specified ID, they will be automatically added to the end of the file. If you want badges printed to stdout instead, don't specify an output file.
 
 ## Customizing Individual Badges:
 
