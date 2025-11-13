@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "BadgeSort"
-version = "3.1.5"
+version = "3.2.0"
 description = "Generate and sort branded Shields.io badges by color"
 authors = ["Chip Wolf <github@chipwolf.uk>"]
 license = "MIT"
@@ -9,7 +9,7 @@ packages = [{include = "badgesort"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-certifi = "2025.10.5"
+certifi = "2025.11.12"
 chardet = "5.2.0"
 idna = "3.11"
 poetry-core = "2.2.1"
