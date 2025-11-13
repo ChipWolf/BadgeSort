@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.3.0](https://github.com/ChipWolf/BadgeSort/compare/3.2.0...3.3.0) (2025-11-13)
+
+
+### Features
+
+* create output file if it doesn't exist ([#104](https://github.com/ChipWolf/BadgeSort/issues/104)) ([3295b0c](https://github.com/ChipWolf/BadgeSort/commit/3295b0c14642692eb5092c60a458df734835d7e1))
+
+
+### Bug Fixes
+
+* **deps:** update certifi to 2025.11.12 ([#84](https://github.com/ChipWolf/BadgeSort/issues/84)) ([fdcb241](https://github.com/ChipWolf/BadgeSort/commit/fdcb2418bf5a784d387743b2c5e6518cbfcd42f9))
+* **deps:** update pypi group (major) ([#93](https://github.com/ChipWolf/BadgeSort/issues/93)) ([423b1fc](https://github.com/ChipWolf/BadgeSort/commit/423b1fc610ffaf0c933b32727ecc3ac5d6d09556))
+
 ## [3.2.0](https://github.com/ChipWolf/BadgeSort/compare/3.1.5...3.2.0) (2025-11-13)
 
 
