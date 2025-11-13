@@ -62,10 +62,6 @@ End of file.
         # Verify badges were added to normal section
         assert 'github' in result.lower() or 'python' in result.lower(), "Badges should be generated"
         
-        # Count badge image occurrences (![...]) 
-        # Should appear in the normal section but NOT in the codeblock
-        badge_pattern_count = result.count('![')
-        
         # We expect badges + BadgeSort badge in the normal section only
         # The codeblock should still have the example text
         assert "Example markers for documentation" in result, "Codeblock content should be preserved"
@@ -211,9 +207,9 @@ HTML example content
         # Codeblock should preserve example content
         assert "HTML example content" in result, "Codeblock should be preserved"
         
-        # Count <p> tags - should appear once (for badges) not in codeblock
+        # Count <p> tags - should appear at least once (for badges) not in codeblock
         p_tag_count = result.count('<p>')
-        assert p_tag_count >= 1, "HTML format should include <p> tag"
+        assert p_tag_count >= 1, "HTML format should include at least one <p> tag"
         
     finally:
         os.unlink(temp_file)

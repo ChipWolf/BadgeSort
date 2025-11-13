@@ -7,8 +7,6 @@ This module tests that BadgeSort correctly handles markdown codeblocks
 and does not modify comment markers inside them.
 """
 
-import tempfile
-import os
 from badgesort.icons import _replace_badges_outside_codeblocks
 
 

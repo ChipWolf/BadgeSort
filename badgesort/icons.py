@@ -261,10 +261,17 @@ def _is_logo_missing_from_shields(icon_slug, icon_hex, badge_style):
 def _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges):
     """Replace badge markers with new badges, but skip markers inside markdown codeblocks.
     
+    Codeblocks are detected by triple backticks (```) at the start of a line.
+    If a codeblock is not closed, all content after the opening ``` is treated
+    as being inside the codeblock.
+    
+    Only line-starting triple backticks are recognized as codeblock delimiters,
+    per the markdown specification.
+    
     Args:
         content: The file content to process
-        badges_header: The header comment marker to search for
-        badges_footer: The footer comment marker to search for
+        badges_header: The header comment marker to search for (must include trailing newline)
+        badges_footer: The footer comment marker to search for (must include trailing newline)
         badges: The new badges to insert (including header and footer)
     
     Returns:
@@ -281,14 +288,15 @@ def _replace_badges_outside_codeblocks(content, badges_header, badges_footer, ba
         codeblock_positions.append((pos, in_codeblock))
     
     def is_in_codeblock(position):
-        """Check if a given position is inside a codeblock."""
-        inside = False
-        for pos, entering in codeblock_positions:
-            if pos <= position:
-                inside = entering
-            else:
-                break
-        return inside
+        """Check if a given position is inside a codeblock using binary search."""
+        import bisect
+        if not codeblock_positions:
+            return False
+        # Find the rightmost codeblock boundary at or before this position
+        idx = bisect.bisect_right([pos for pos, _ in codeblock_positions], position)
+        if idx == 0:
+            return False  # Before any codeblock
+        return codeblock_positions[idx - 1][1]  # Return the state after that boundary
     
     # Find all badge marker pairs
     pattern = fr"({re.escape(badges_header)}.*?{re.escape(badges_footer)})"
