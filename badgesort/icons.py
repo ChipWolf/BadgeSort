@@ -572,8 +572,15 @@ def run(args):
 
     # if output file is specified, write badges to file
     if args.output:
-        with open(args.output, 'r') as f:
-            output_content = f.read()
+        # Check if the output file exists
+        if os.path.exists(args.output):
+            with open(args.output, 'r') as f:
+                output_content = f.read()
+        else:
+            # File doesn't exist, create it with empty content
+            logger.info(f'Output file "{args.output}" does not exist. Creating new file.')
+            output_content = ''
+        
         # replace existing badges between the badge header and footer with the new ones
         # but skip any markers inside markdown codeblocks
         output_content, markers_found = _replace_badges_outside_codeblocks(output_content, badges_header, badges_footer, badges)
