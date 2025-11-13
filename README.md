@@ -136,10 +136,6 @@ $ python -m badgesort.icons -s \
 
 ```html
 <!-- start chipwolf/badgesort custom -->
-![osu!](https://img.shields.io/badge/osu%21-000000.svg?style=for-the-badge&logo=osu&logoColor=white)
-[![ChipWolf](https://img.shields.io/badge/ChipWolf-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ChipWolf)
-![Node-RED](https://img.shields.io/badge/-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)
-![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)
 <!-- end chipwolf/badgesort custom -->
 ```
 
