@@ -12,11 +12,11 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 COPY pyproject.toml poetry.lock ./
-RUN . $VENV_PATH/bin/activate && $POETRY_HOME/poetry install --no-root
+RUN . $VENV_PATH/bin/activate && $POETRY_HOME/poetry install --only main --no-root
 
 WORKDIR /app
 COPY . .
 
-RUN . $VENV_PATH/bin/activate && $POETRY_HOME/poetry install
+RUN . $VENV_PATH/bin/activate && $POETRY_HOME/poetry install --only main
 
 CMD ["/entrypoint.sh"]
