@@ -49,20 +49,14 @@ BadgeSort/
 ## Coding Standards and Conventions
 
 ### Commit Message Format (REQUIRED)
-**All commits MUST follow the Conventional Commits specification:**
+**All commits MUST follow semantic commit conventions with ONLY these allowed types:**
 
 Format: `<type>(<scope>): <description>`
 
-**Types:**
+**Allowed Types (ONLY these three):**
 - `feat`: A new feature (e.g., `feat(icons): add support for Badgen.net provider`)
 - `fix`: A bug fix (e.g., `fix(icons): prevent badge injection into codeblocks`)
-- `docs`: Documentation only changes (e.g., `docs(readme): update installation instructions`)
-- `style`: Code style changes that don't affect functionality (formatting, missing semicolons, etc.)
-- `refactor`: Code changes that neither fix a bug nor add a feature
-- `perf`: Performance improvements
-- `test`: Adding or updating tests (e.g., `test(icons): add codeblock handling tests`)
-- `chore`: Changes to build process, dependencies, or auxiliary tools (e.g., `chore(deps): update simpleicons to 7.21.0`)
-- `ci`: Changes to CI configuration files and scripts (e.g., `ci(workflow): add test job to build pipeline`)
+- `chore`: Changes to build process, dependencies, tests, docs, or auxiliary tools (e.g., `chore(deps): update simpleicons to 7.21.0`, `chore(tests): add codeblock handling tests`, `chore(docs): update README instructions`)
 
 **Scope (optional but recommended):**
 - `icons`: Badge generation and file manipulation
@@ -73,19 +67,24 @@ Format: `<type>(<scope>): <description>`
 - `workflow`: CI/CD workflows
 - `readme`: README documentation
 - `tests`: Test infrastructure
+- `docs`: Documentation updates
+- `copilot`: Copilot instructions
 
 **Examples:**
 - ✅ `feat(icons): add codeblock detection to skip documentation examples`
 - ✅ `fix(icons): handle unclosed codeblocks gracefully`
-- ✅ `test(icons): add integration tests for multiple badge IDs`
-- ✅ `docs(readme): clarify comment marker requirements`
+- ✅ `chore(tests): add integration tests for multiple badge IDs`
+- ✅ `chore(readme): clarify comment marker requirements`
 - ✅ `chore(deps): add pytest and pytest-cov dev dependencies`
+- ✅ `chore(copilot): update commit message guidelines`
 - ❌ `Fix bug` (too vague, missing type)
 - ❌ `Update icons.py` (missing type and description)
+- ❌ `docs(readme): update` (docs type not allowed, use chore)
+- ❌ `test(icons): add tests` (test type not allowed, use chore)
 - ❌ `Fixed the codeblock issue` (should be: `fix(icons): prevent...`)
 
 **Pull Request Titles:**
-PR titles MUST also follow the same semantic format and clearly describe the changes.
+PR titles MUST also follow the same semantic format with only feat, fix, or chore types.
 
 ### Testing Requirements (REQUIRED)
 **All new features and bug fixes MUST include tests:**
