@@ -542,7 +542,8 @@ def run(args):
                     # Use custom URL if provided
                     badges += f'[{md_badge}]({icon["custom_url"]})\n'
                 else:
-                    badges += md_badge + '\n'
+                    # Wrap badge with link to # so clicking doesn't open the image
+                    badges += f'[{md_badge}](#)\n'
             elif args.format == 'html':
                 if icon["slug"] == 'badgesort':
                     badges += '  <a href="https://github.com/ChipWolf/BadgeSort">'
