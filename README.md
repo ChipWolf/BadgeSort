@@ -6,7 +6,7 @@
 
 ## 🎨 Interactive Generator
 
-**New!** Try the [interactive web-based generator](./docs/) to visually configure and generate your BadgeSort YAML! No installation required - just select your badges, configure the options, and copy the generated GitHub Actions YAML.
+**New!** Try the [interactive web-based generator](https://chipwolf.github.io/BadgeSort/) to visually configure and generate your BadgeSort YAML! No installation required - just select your badges, configure the options, and copy the generated GitHub Actions YAML.
 
 ## Background:
 
