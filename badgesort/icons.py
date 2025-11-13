@@ -26,13 +26,16 @@ _logo_availability_cache = {}
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=6000):
+def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3700):
     """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
     
     Args:
         svg_content: SVG content as string
         fill_color: Fill color for the SVG paths ('white', 'black', or None)
-        max_url_length: Maximum URL length before falling back to PNG rasterization
+        max_url_length: Maximum data URI length before falling back to PNG rasterization.
+                       Default 3700 chars ensures badge URLs stay under GitHub's camo proxy
+                       8192 char limit (which hex-encodes URLs: 76 + url_len*2 <= 8192).
+                       Calculation: safe_url = (8192 - 76) / 2 - overhead ≈ 3850, with 150 char margin = 3700
     
     Uses scour-based SVG compression for optimal file size. For very large SVGs that would exceed
     URL length limits, falls back to PNG rasterization at 14x14px.
@@ -421,7 +424,8 @@ def run(args):
             if should_embed_svg:
                 logger.debug(f'Embedding SVG data URI for {icon.slug}')
                 # Convert SVG to base64 data URI for embedding
-                icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=6000)
+                # Use 3700 char limit to stay under GitHub camo's 8192 char limit
+                icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=3700)
                 icon_data_uri_encoded = quote(icon_data_uri, safe='')
                 icon_url = f'{icon_base}/{icon_title_safe}-{badge_color}.svg' if icon_title_safe else f'{icon_base}/-{badge_color}.svg'
                 icon_url += f'?style={args.badge_style}&logo={icon_data_uri_encoded}'
@@ -445,7 +449,7 @@ def run(args):
                 background_color = badge_color
             
             # Always use white icons for good contrast against any background
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=4000)
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=3700)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}' if icon_title_safe else f'{icon_base}/icon/?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
         else:
