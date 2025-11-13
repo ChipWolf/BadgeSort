@@ -258,6 +258,58 @@ def _is_logo_missing_from_shields(icon_slug, icon_hex, badge_style):
         _logo_availability_cache[cache_key] = True
         return True  # Assume missing on error
 
+def _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges):
+    """Replace badge markers with new badges, but skip markers inside markdown codeblocks.
+    
+    Args:
+        content: The file content to process
+        badges_header: The header comment marker to search for
+        badges_footer: The footer comment marker to search for
+        badges: The new badges to insert (including header and footer)
+    
+    Returns:
+        Modified content with badges replaced only outside codeblocks
+    """
+    # Find all codeblock boundaries (triple backticks)
+    codeblock_pattern = r'^```'
+    codeblock_positions = []
+    in_codeblock = False
+    
+    for match in re.finditer(codeblock_pattern, content, re.MULTILINE):
+        pos = match.start()
+        in_codeblock = not in_codeblock
+        codeblock_positions.append((pos, in_codeblock))
+    
+    def is_in_codeblock(position):
+        """Check if a given position is inside a codeblock."""
+        inside = False
+        for pos, entering in codeblock_positions:
+            if pos <= position:
+                inside = entering
+            else:
+                break
+        return inside
+    
+    # Find all badge marker pairs
+    pattern = fr"({re.escape(badges_header)}.*?{re.escape(badges_footer)})"
+    result = content
+    offset = 0
+    
+    for match in re.finditer(pattern, content, re.S):
+        # Check if this match is inside a codeblock
+        if not is_in_codeblock(match.start()):
+            # Calculate position with offset from previous replacements
+            start = match.start() + offset
+            end = match.end() + offset
+            
+            # Replace this occurrence
+            result = result[:start] + badges + result[end:]
+            
+            # Update offset for next iteration
+            offset += len(badges) - (match.end() - match.start())
+    
+    return result
+
 def run(args):
     # user provided slugs
     if len(args.slugs) > 0:
@@ -444,7 +496,8 @@ def run(args):
         with open(args.output, 'r') as f:
             output_content = f.read()
         # replace existing badges between the badge header and footer with the new ones
-        output_content = re.sub(fr"{badges_header}.*?{badges_footer}", f'{badges}', output_content, flags=re.S)
+        # but skip any markers inside markdown codeblocks
+        output_content = _replace_badges_outside_codeblocks(output_content, badges_header, badges_footer, badges)
         # write the output file
         with open(args.output, 'w') as f:
             f.write(output_content)
