@@ -41,10 +41,49 @@ BadgeSort/
 - **Dependencies**:
   - `requests`: HTTP requests to Shields.io
   - `simpleicons`: Access to Simple Icons database
+  - `scour`: SVG optimization for smaller badge URLs
+  - `librsvg2-bin`: SVG to PNG conversion (system package)
   - `pytest`, `pytest-cov`: Testing framework (dev dependencies)
   - Standard library: `argparse`, `colorsys`, `urllib`, etc.
 - **Container**: Docker (based on `duffn/python-poetry:3.11-slim`)
 - **Platform**: GitHub Actions
+
+## Development Setup
+
+### Building and Testing Locally
+
+1. **Install Poetry** (if not already installed):
+   ```bash
+   pip install poetry
+   ```
+
+2. **Install project dependencies**:
+   ```bash
+   cd /path/to/BadgeSort
+   poetry install
+   ```
+
+3. **Install system dependencies** (for SVG to PNG conversion):
+   ```bash
+   sudo apt-get install librsvg2-bin  # On Ubuntu/Debian
+   # or
+   brew install librsvg  # On macOS
+   ```
+
+4. **Run tests**:
+   ```bash
+   poetry run pytest tests/ -v
+   ```
+
+5. **Run tests with coverage**:
+   ```bash
+   poetry run pytest tests/ --cov=badgesort --cov-report=term-missing
+   ```
+
+6. **Run the CLI**:
+   ```bash
+   poetry run python -m badgesort.icons -s github python docker
+   ```
 
 ## Coding Standards and Conventions
 
