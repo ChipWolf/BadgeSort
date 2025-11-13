@@ -443,8 +443,17 @@ def run(args):
     if args.output:
         with open(args.output, 'r') as f:
             output_content = f.read()
-        # replace existing badges between the badge header and footer with the new ones
-        output_content = re.sub(fr"{badges_header}.*?{badges_footer}", f'{badges}', output_content, flags=re.S)
+        # check if markers exist in the file
+        marker_pattern = fr"{badges_header}.*?{badges_footer}"
+        if re.search(marker_pattern, output_content, flags=re.S):
+            # replace existing badges between the badge header and footer with the new ones
+            output_content = re.sub(marker_pattern, f'{badges}', output_content, flags=re.S)
+        else:
+            # markers don't exist, append badges to the end of the file
+            # add a newline before the badges if the file doesn't end with one
+            if output_content and not output_content.endswith('\n'):
+                output_content += '\n'
+            output_content += badges
         # write the output file
         with open(args.output, 'w') as f:
             f.write(output_content)
