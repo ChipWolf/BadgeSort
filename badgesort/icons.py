@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from urllib.parse import quote
+from urllib.parse import quote, parse_qs, urlparse
 from colorsys import rgb_to_hsv
 
 import argparse
@@ -258,24 +258,63 @@ def _is_logo_missing_from_shields(icon_slug, icon_hex, badge_style):
         _logo_availability_cache[cache_key] = True
         return True  # Assume missing on error
 
+def _parse_slug_with_params(slug_spec):
+    """Parse a slug specification with optional custom parameters using standard URL parsing.
+    
+    Format: slug?param=value&param2=value2
+    
+    Args:
+        slug_spec: String like "github" or "github?color=ff0000&text=MyText"
+    
+    Returns:
+        Tuple of (slug, params_dict) where params_dict contains custom parameters
+    """
+    # Use urlparse to parse the slug as if it were a URL path with query string
+    # We prepend a fake scheme to make urlparse work correctly
+    parsed = urlparse(f"fake://{slug_spec}")
+    
+    # The netloc will contain the slug (everything before ?)
+    slug = parsed.netloc
+    
+    # parse_qs returns dict with list values, we want single values
+    # keep_blank_values=True ensures we preserve empty values like "text="
+    params_raw = parse_qs(parsed.query, keep_blank_values=True)
+    params = {}
+    
+    # Convert lists to single values (take first value)
+    for key, value_list in params_raw.items():
+        if value_list:
+            params[key] = value_list[0]
+        else:
+            params[key] = ''
+    
+    return slug, params
+
 def run(args):
     # user provided slugs
     if len(args.slugs) > 0:
-        slugs = ','.join(args.slugs).split(',')
-        slugs[:] = [slug for slug in slugs if slug != '']
-        # check if slugs provided exist
-        for slug in list(set(slugs)):
-            if slug not in icons:
+        slugs_raw = ','.join(args.slugs).split(',')
+        slugs_raw[:] = [slug for slug in slugs_raw if slug != '']
+        
+        # Parse slugs and extract custom parameters
+        slug_configs = []
+        for slug_spec in slugs_raw:
+            slug, params = _parse_slug_with_params(slug_spec)
+            if slug in icons:
+                slug_configs.append({'slug': slug, 'params': params})
+            else:
                 logger.info(f'Slug %s not found in package simpleicons.' % slug)
-                slugs.remove(slug)
-        logger.info('Generating badges from slugs: %s...' % ', '.join(list(set(slugs))))
+        
+        logger.info('Generating badges from slugs: %s...' % ', '.join([sc['slug'] for sc in slug_configs]))
     # user requested a random list of slugs of length args.random
     elif args.random > 0:
         slugs = random.sample(list(icons), args.random)
+        slug_configs = [{'slug': slug, 'params': {}} for slug in slugs]
         logger.info('Generating %d random badges...' % args.random)
     # user requested all slugs
     elif args.random < 0:
         slugs = list(set(icons))
+        slug_configs = [{'slug': slug, 'params': {}} for slug in slugs]
         logger.info('Generating all badges...')
     # user did not provide a required argument
     else:
@@ -286,11 +325,24 @@ def run(args):
     icon_list = []
 
     # generate badge URLs for each slug
-    for slug in slugs:
-        logger.debug('slug: %s' % slug)
+    for slug_config in slug_configs:
+        slug = slug_config['slug']
+        custom_params = slug_config['params']
+        
+        logger.debug('slug: %s, custom_params: %s' % (slug, custom_params))
         icon = icons.get(slug)
-        icon_title_safe = quote(icon.title.encode('utf8'), safe='').replace('-', '--')
-        icon_rgb = [int(icon.hex[0:2], 16), int(icon.hex[2:4], 16), int(icon.hex[4:6], 16)]
+        
+        # Allow custom text parameter to override the icon title
+        display_text = custom_params.get('text', icon.title) if 'text' in custom_params else icon.title
+        icon_title_safe = quote(display_text.encode('utf8'), safe='').replace('-', '--') if display_text else ''
+        
+        # Allow custom color parameter to override the icon hex color
+        badge_color = custom_params.get('color', icon.hex)
+        # Ensure color starts without # symbol for consistency
+        if badge_color.startswith('#'):
+            badge_color = badge_color[1:]
+        
+        icon_rgb = [int(badge_color[0:2], 16), int(badge_color[2:4], 16), int(badge_color[4:6], 16)]
         icon_brightness = (icon_rgb[0] * 299 + icon_rgb[1] * 587 + icon_rgb[2] * 114) / 255000
         icon_hex_comp = 'white' if icon_brightness < 0.695 else 'black'
         
@@ -307,11 +359,11 @@ def run(args):
                 # Convert SVG to base64 data URI for embedding
                 icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=6000)
                 icon_data_uri_encoded = quote(icon_data_uri, safe='')
-                icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+                icon_url = f'{icon_base}/{icon_title_safe}-{badge_color}.svg' if icon_title_safe else f'{icon_base}/-{badge_color}.svg'
                 icon_url += f'?style={args.badge_style}&logo={icon_data_uri_encoded}'
             else:
                 # Use standard Shields.io logo parameter
-                icon_url = f'{icon_base}/{icon_title_safe}-{icon.hex}.svg'
+                icon_url = f'{icon_base}/{icon_title_safe}-{badge_color}.svg' if icon_title_safe else f'{icon_base}/-{badge_color}.svg'
                 icon_url += f'?style={args.badge_style}&logo={icon.slug}&logoColor={icon_hex_comp}'
         elif args.provider == 'badgen':
             # Badgen.net format
@@ -323,20 +375,28 @@ def run(args):
                 capped_rgb = [int(c * scale_factor) for c in icon_rgb]
                 capped_hex = f"{capped_rgb[0]:02x}{capped_rgb[1]:02x}{capped_rgb[2]:02x}"
                 background_color = capped_hex
-                logger.debug(f'Capping bright background {icon.slug} from #{icon.hex} (brightness {icon_brightness:.3f}) to #{background_color} (brightness 0.7) for Badgen visibility')
+                logger.debug(f'Capping bright background {icon.slug} from #{badge_color} (brightness {icon_brightness:.3f}) to #{background_color} (brightness 0.7) for Badgen visibility')
             else:
                 # Use original color for normal brightness backgrounds
-                background_color = icon.hex
+                background_color = badge_color
             
             # Always use white icons for good contrast against any background
             icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=4000)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
-            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
+            icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}' if icon_title_safe else f'{icon_base}/icon/?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
         else:
             logger.fatal(f'Unknown provider: {args.provider}. Supported providers are: shields, badgen')
             sys.exit(1)
         
-        icon_list.append({ 'rgb': icon_rgb, 'slug': icon.slug, 'title': icon.title, 'url': icon_url })
+        # Store custom URL if provided
+        custom_url = custom_params.get('url', None)
+        icon_list.append({ 
+            'rgb': icon_rgb, 
+            'slug': icon.slug, 
+            'title': display_text if display_text else icon.title, 
+            'url': icon_url,
+            'custom_url': custom_url
+        })
 
     if args.no_thanks is True:
         if args.provider == 'shields':
@@ -414,11 +474,17 @@ def run(args):
                 md_badge = f'![{icon["title"]}]({icon["url"]})'
                 if icon["slug"] == 'badgesort':
                     badges += f'[{md_badge}](https://github.com/ChipWolf/BadgeSort)\n'
+                elif icon.get('custom_url'):
+                    # Use custom URL if provided
+                    badges += f'[{md_badge}]({icon["custom_url"]})\n'
                 else:
                     badges += md_badge + '\n'
             elif args.format == 'html':
                 if icon["slug"] == 'badgesort':
                     badges += '  <a href="https://github.com/ChipWolf/BadgeSort">'
+                elif icon.get('custom_url'):
+                    # Use custom URL if provided
+                    badges += f'  <a href="{icon["custom_url"]}">'
                 else:
                     badges += '  <a href="#">'
                 badges += f'<img alt="{icon["title"]}" src="{icon["url"]}"></a>\n'
