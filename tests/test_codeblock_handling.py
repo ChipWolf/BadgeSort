@@ -30,10 +30,11 @@ Example content
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # The normal section should be updated
     assert "![Badge](http://example.com/badge.svg)" in result
+    assert markers_found is True, "Markers should be found"
     
     # Count occurrences - should appear only once (outside codeblock)
     badge_count = result.count("![Badge](http://example.com/badge.svg)")
@@ -75,14 +76,14 @@ Should not change 2
     badges_footer_1 = "<!-- end chipwolf/badgesort id1 -->\n"
     badges_1 = badges_header_1 + "![Badge1](http://example.com/badge1.svg)\n" + badges_footer_1
     
-    result = _replace_badges_outside_codeblocks(content, badges_header_1, badges_footer_1, badges_1)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header_1, badges_footer_1, badges_1)
     
     # Replace id2
     badges_header_2 = "<!-- start chipwolf/badgesort id2 -->\n"
     badges_footer_2 = "<!-- end chipwolf/badgesort id2 -->\n"
     badges_2 = badges_header_2 + "![Badge2](http://example.com/badge2.svg)\n" + badges_footer_2
     
-    result = _replace_badges_outside_codeblocks(result, badges_header_2, badges_footer_2, badges_2)
+    result, markers_found = _replace_badges_outside_codeblocks(result, badges_header_2, badges_footer_2, badges_2)
     
     # Both badges should appear once each
     assert result.count("![Badge1](http://example.com/badge1.svg)") == 1
@@ -122,7 +123,7 @@ End of example
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Only the first occurrence (at the top, outside any codeblock) should be replaced
     badge_count = result.count("![Badge](http://example.com/badge.svg)")
@@ -149,11 +150,12 @@ More content
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Both occurrences should be replaced
     badge_count = result.count("![Badge](http://example.com/badge.svg)")
     assert badge_count == 2, f"Expected 2 badges, found {badge_count}"
+    assert markers_found is True, "Markers should be found"
 
 
 def test_codeblock_with_language_specifier():
@@ -186,7 +188,7 @@ No language
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Only the first occurrence should be replaced
     badge_count = result.count("![Badge](http://example.com/badge.svg)")
@@ -210,7 +212,7 @@ def test_empty_badge_section():
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge1](http://example.com/badge1.svg)\n![Badge2](http://example.com/badge2.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Should contain both badges
     assert "![Badge1](http://example.com/badge1.svg)" in result
@@ -231,7 +233,7 @@ def test_existing_badges_replacement():
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![NewBadge](http://example.com/new.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Old badges should be gone
     assert "OldBadge1" not in result
@@ -259,7 +261,7 @@ Content
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Badge should appear only outside codeblock
     assert result.count("![Badge](http://example.com/badge.svg)") == 1
@@ -287,7 +289,7 @@ More content here
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # Only the first occurrence (before unclosed codeblock) should be replaced
     badge_count = result.count("![Badge](http://example.com/badge.svg)")
@@ -315,10 +317,35 @@ Example HTML badges
     badges_footer = "<!-- end chipwolf/badgesort test -->\n"
     badges = badges_header + '<p>\n  <a href="#"><img alt="Badge" src="http://example.com/badge.svg"></a>\n</p>\n' + badges_footer
     
-    result = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
     
     # HTML badge should appear once
     assert result.count('<img alt="Badge" src="http://example.com/badge.svg">') == 1
     
     # Codeblock example content preserved
     assert "Example HTML badges" in result
+
+
+def test_no_markers_found():
+    """Test that the function correctly reports when no markers are found."""
+    content = """# Test File
+
+Some content without any markers.
+
+More content here.
+"""
+    
+    badges_header = "<!-- start chipwolf/badgesort test -->\n"
+    badges_footer = "<!-- end chipwolf/badgesort test -->\n"
+    badges = badges_header + "![Badge](http://example.com/badge.svg)\n" + badges_footer
+    
+    result, markers_found = _replace_badges_outside_codeblocks(content, badges_header, badges_footer, badges)
+    
+    # No markers should be found
+    assert markers_found is False, "No markers should be found"
+    
+    # Content should be unchanged
+    assert result == content
+    
+    # Badges should not be in the content
+    assert "![Badge](http://example.com/badge.svg)" not in result

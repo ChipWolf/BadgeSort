@@ -307,7 +307,9 @@ def _replace_badges_outside_codeblocks(content, badges_header, badges_footer, ba
         badges: The new badges to insert (including header and footer)
     
     Returns:
-        Modified content with badges replaced only outside codeblocks
+        Tuple of (modified_content, markers_found) where:
+        - modified_content: Content with badges replaced only outside codeblocks
+        - markers_found: Boolean indicating if any markers were found outside codeblocks
     """
     # Find all codeblock boundaries (triple backticks)
     codeblock_pattern = r'^```'
@@ -334,10 +336,12 @@ def _replace_badges_outside_codeblocks(content, badges_header, badges_footer, ba
     pattern = fr"({re.escape(badges_header)}.*?{re.escape(badges_footer)})"
     result = content
     offset = 0
+    markers_found = False
     
     for match in re.finditer(pattern, content, re.S):
         # Check if this match is inside a codeblock
         if not is_in_codeblock(match.start()):
+            markers_found = True
             # Calculate position with offset from previous replacements
             start = match.start() + offset
             end = match.end() + offset
@@ -348,7 +352,7 @@ def _replace_badges_outside_codeblocks(content, badges_header, badges_footer, ba
             # Update offset for next iteration
             offset += len(badges) - (match.end() - match.start())
     
-    return result
+    return result, markers_found
 
 def run(args):
     # user provided slugs
@@ -571,7 +575,19 @@ def run(args):
             output_content = f.read()
         # replace existing badges between the badge header and footer with the new ones
         # but skip any markers inside markdown codeblocks
-        output_content = _replace_badges_outside_codeblocks(output_content, badges_header, badges_footer, badges)
+        output_content, markers_found = _replace_badges_outside_codeblocks(output_content, badges_header, badges_footer, badges)
+        
+        # if no markers were found, append badges to the end of the file
+        if not markers_found:
+            logger.info(f'No comment markers found for ID "{args.id}". Appending badges to end of file.')
+            # Ensure there's a newline before the badges if the file doesn't end with one
+            if output_content and not output_content.endswith('\n'):
+                output_content += '\n'
+            # Add a blank line before the badges for better readability
+            if output_content:
+                output_content += '\n'
+            output_content += badges
+        
         # write the output file
         with open(args.output, 'w') as f:
             f.write(output_content)

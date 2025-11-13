@@ -246,3 +246,107 @@ def test_integration_no_output_file():
     except Exception as e:
         # If there's an exception, it should not be related to file handling
         assert "output" not in str(e).lower(), f"Unexpected error: {e}"
+
+
+def test_integration_append_when_no_markers():
+    """Integration test: badges should be appended to file when no markers exist."""
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+        f.write("""# Test File
+
+This is a test file without any BadgeSort markers.
+
+Some content here.
+""")
+        temp_file = f.name
+    
+    try:
+        # Create args for BadgeSort
+        args = argparse.Namespace(
+            slugs=['github', 'python'],
+            random=1,
+            output=temp_file,
+            id='default',
+            format='markdown',
+            badge_style='flat',
+            color_sort='hilbert',
+            hue_rotate=0,
+            no_thanks=True,
+            reverse=False,
+            provider='shields',
+            verify=False,
+            embed_svg=False,
+            skip_logo_check=True
+        )
+        
+        # Run BadgeSort
+        run(args)
+        
+        # Read the result
+        with open(temp_file, 'r') as f:
+            result = f.read()
+        
+        # Verify original content is still there
+        assert "This is a test file without any BadgeSort markers." in result
+        
+        # Verify badges were appended with markers
+        assert "<!-- start chipwolf/badgesort default -->" in result
+        assert "<!-- end chipwolf/badgesort default -->" in result
+        
+        # Verify badges were generated
+        assert 'github' in result.lower() or 'python' in result.lower(), "Badges should be generated"
+        
+        # Verify badges are at the end of the file
+        marker_pos = result.find("<!-- start chipwolf/badgesort default -->")
+        assert marker_pos > 0, "Markers should be in the file"
+        
+        # Check that markers come after the original content
+        original_content_pos = result.find("This is a test file without any BadgeSort markers.")
+        assert marker_pos > original_content_pos, "Badges should be after original content"
+        
+    finally:
+        # Clean up
+        os.unlink(temp_file)
+
+
+def test_integration_append_preserves_newlines():
+    """Integration test: appending badges should handle newlines correctly."""
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+        # File without trailing newline
+        f.write("# Test File\n\nContent without trailing newline")
+        temp_file = f.name
+    
+    try:
+        args = argparse.Namespace(
+            slugs=['docker'],
+            random=1,
+            output=temp_file,
+            id='test',
+            format='markdown',
+            badge_style='flat',
+            color_sort='hilbert',
+            hue_rotate=0,
+            no_thanks=True,
+            reverse=False,
+            provider='shields',
+            verify=False,
+            embed_svg=False,
+            skip_logo_check=True
+        )
+        
+        run(args)
+        
+        with open(temp_file, 'r') as f:
+            result = f.read()
+        
+        # Verify original content is preserved
+        assert "Content without trailing newline" in result
+        
+        # Verify badges were added with proper spacing
+        assert "<!-- start chipwolf/badgesort test -->" in result
+        
+        # Should have proper line breaks between content and badges
+        lines = result.split('\n')
+        assert len(lines) > 3, "Should have multiple lines"
+        
+    finally:
+        os.unlink(temp_file)
