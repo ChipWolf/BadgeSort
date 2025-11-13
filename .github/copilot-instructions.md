@@ -35,7 +35,7 @@ BadgeSort/
 
 ## Technology Stack
 
-- **Language**: Python 3.9+
+- **Language**: Python 3.10+
 - **Package Manager**: Poetry
 - **Testing**: pytest with pytest-cov for coverage
 - **Dependencies**:
@@ -129,7 +129,7 @@ PR titles MUST also follow the same semantic format with only feat, fix, or chor
    - Coverage reports are generated for each test run
 
 ### Python Style
-- Use Python 3.9+ syntax and features
+- Use Python 3.10+ syntax and features
 - Follow PEP 8 style guidelines
 - Use meaningful variable names (e.g., `icon_list`, `badge_style`)
 - Include type hints where it improves clarity
@@ -303,7 +303,7 @@ docker run -e INPUT_SLUGS="github python docker" badgesort
 ### Poetry
 - Use `poetry add` to add new dependencies
 - Keep `pyproject.toml` and `poetry.lock` in sync
-- Specify Python version constraints: `^3.9`
+- Specify Python version constraints: `^3.10`
 
 ### Docker
 - Base image: `duffn/python-poetry:3.11-slim`
