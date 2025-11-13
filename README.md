@@ -92,6 +92,62 @@ Some other content...
 > **Important**
 > Without these comment markers in your target file, BadgeSort will only output badges to stdout (or the console) rather than updating the file.
 
+## Customizing Individual Badges:
+
+BadgeSort allows you to customize individual badges using URL query string syntax. You can override the color, text, and hyperlink URL for any badge.
+
+### Syntax:
+
+```
+slug?param=value&param2=value2
+```
+
+### Supported Parameters:
+
+- **`color`**: Override the badge background color (hex color without `#`)
+- **`text`**: Override the badge label text (use empty value `text=` to remove text)
+- **`url`**: Add a custom hyperlink URL (for Markdown/HTML output)
+
+### Examples:
+
+#### _GitHub Action:_
+
+```yaml
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
+        with:
+          format: markdown
+          id: custom
+          output: README.md
+          slugs: |
+            osu?color=000000
+            github?text=ChipWolf&url=https://github.com/ChipWolf
+            nodered?text=
+            opensea
+          sort: hilbert
+          style: for-the-badge
+```
+
+#### _CLI:_
+
+```bash
+$ python -m badgesort.icons -s \
+    "osu?color=000000" \
+    "github?text=ChipWolf&url=https://github.com/ChipWolf" \
+    "nodered?text=" \
+    opensea \
+    -o README.md
+```
+
+#### _Output:_
+
+- **osu**: Black background color instead of default pink
+- **github**: Custom text "ChipWolf" and hyperlinked to the GitHub profile
+- **nodered**: Text removed, showing only the icon
+- **opensea**: Default appearance
+
+> **Note**
+> Parameters are parsed using Python's standard `urllib.parse` library, following standard URL query string conventions.
+
 ## Examples:
 
 ### Generate five specific badges ordered by color:
