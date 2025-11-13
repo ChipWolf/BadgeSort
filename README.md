@@ -244,11 +244,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="data.ai" src="https://img.shields.io/badge/data.ai-000000.svg?style=flat-square&logo=datadotai&logoColor=white"></a>
-  <a href="#"><img alt="Google" src="https://img.shields.io/badge/Google-4285F4.svg?style=flat-square&logo=google&logoColor=white"></a>
-  <a href="#"><img alt="dm" src="https://img.shields.io/badge/dm-002878.svg?style=flat-square&logo=dm&logoColor=white"></a>
-  <a href="#"><img alt="SCP Foundation" src="https://img.shields.io/badge/SCP%20Foundation-FFFFFF.svg?style=flat-square&logo=scpfoundation&logoColor=black"></a>
-  <a href="#"><img alt="Google Hangouts" src="https://img.shields.io/badge/Google%20Hangouts-0C9D58.svg?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMEM2LjIgMCAxLjUgNC43IDEuNSAxMC41YzAgNS41IDUgMTAgMTAuNSAxMFYyNGM2LjM1LTMuMSAxMC41LTguMiAxMC41LTEzLjVDMjIuNSA0LjcgMTcuOCAwIDEyIDB6bS0uNSAxMmMwIDEuNC0uOSAyLjUtMiAyLjVWMTJIN1Y3LjVoNC41VjEyem02IDBjMCAxLjQtLjkgMi41LTIgMi41VjEySDEzVjcuNWg0LjVWMTJ6IiBmaWxsPSIjZmZmIi8%2BPC9zdmc%2B"></a>
+  <a href="#"><img alt="D-Wave Systems" src="https://img.shields.io/badge/D--Wave%20Systems-008CD7.svg?style=flat-square&logo=dwavesystems&logoColor=white"></a>
+  <a href="#"><img alt="EditorConfig" src="https://img.shields.io/badge/EditorConfig-FEFEFE.svg?style=flat-square&logo=editorconfig&logoColor=black"></a>
+  <a href="#"><img alt="Pusher" src="https://img.shields.io/badge/Pusher-300D4F.svg?style=flat-square&logo=pusher&logoColor=white"></a>
+  <a href="#"><img alt="ORCID" src="https://img.shields.io/badge/ORCID-A6CE39.svg?style=flat-square&logo=orcid&logoColor=white"></a>
+  <a href="#"><img alt="Clojure" src="https://img.shields.io/badge/Clojure-5881D8.svg?style=flat-square&logo=clojure&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
