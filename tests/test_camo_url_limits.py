@@ -33,14 +33,14 @@ def calculate_camo_url_length(badge_url):
 
 def test_svg_data_uri_max_length_default():
     """Test that default max_url_length respects camo limits."""
-    # The default max_url_length should be 3700 to stay under camo's 8192 limit
+    # The default max_url_length should be 3550 to stay under camo's 8192 limit
     # This test verifies the function signature has the correct default
     import inspect
     sig = inspect.signature(svg_to_base64_data_uri)
     max_url_length_default = sig.parameters['max_url_length'].default
     
-    assert max_url_length_default == 3700, \
-        f"Default max_url_length should be 3700 (found {max_url_length_default})"
+    assert max_url_length_default == 3550, \
+        f"Default max_url_length should be 3550 (found {max_url_length_default})"
 
 
 def test_shields_embedded_svg_urls_under_camo_limit():

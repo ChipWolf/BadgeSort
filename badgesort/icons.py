@@ -23,19 +23,31 @@ from .hilbert import Hilbert_to_int
 # Cache for logo availability checks to avoid repeated requests
 _logo_availability_cache = {}
 
+# GitHub camo proxy constants
+CAMO_URL_LIMIT = 8192
+CAMO_OVERHEAD = 76  # base URL (35) + digest (40) + slash (1)
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3700):
+def _calculate_camo_url_length(badge_url):
+    """Calculate the approximate camo URL length for a badge URL.
+    
+    GitHub's camo proxy format: https://camo.githubusercontent.com/<digest>/<hex-encoded-url>
+    """
+    return CAMO_OVERHEAD + (len(badge_url.encode('utf-8')) * 2)
+
+def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3550):
     """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
     
     Args:
         svg_content: SVG content as string
         fill_color: Fill color for the SVG paths ('white', 'black', or None)
         max_url_length: Maximum data URI length before falling back to PNG rasterization.
-                       Default 3700 chars ensures badge URLs stay under GitHub's camo proxy
+                       Default 3550 chars ensures badge URLs stay under GitHub's camo proxy
                        8192 char limit (which hex-encodes URLs: 76 + url_len*2 <= 8192).
-                       Calculation: safe_url = (8192 - 76) / 2 - overhead ≈ 3850, with 150 char margin = 3700
+                       Calculation: (8192 - 76 camo_overhead) / 2 hex_encoding - ~109 badge_url_overhead = 3949, with 10% margin = 3550
+                       (~109 char badge_url_overhead is the badge URL structure: domain, path, parameters, excluding the data URI payload)
     
     Uses scour-based SVG compression for optimal file size. For very large SVGs that would exceed
     URL length limits, falls back to PNG rasterization at 14x14px.
@@ -63,7 +75,8 @@ def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3700)
         if png_data_uri:
             return png_data_uri
         else:
-            logger.debug('PNG fallback failed, using original SVG despite size')
+            logger.warning(f'PNG fallback failed for oversized SVG ({len(svg_data_uri)} chars > {max_url_length} limit). '
+                          f'Using original SVG despite size. Badge may exceed GitHub camo URL limit.')
             # For now, return the original SVG data URI even if it's too long
             # This is better than skipping the icon entirely
     
@@ -424,8 +437,8 @@ def run(args):
             if should_embed_svg:
                 logger.debug(f'Embedding SVG data URI for {icon.slug}')
                 # Convert SVG to base64 data URI for embedding
-                # Use 3700 char limit to stay under GitHub camo's 8192 char limit
-                icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=3700)
+                # Use 3550 char limit to stay under GitHub camo's 8192 char limit
+                icon_data_uri = svg_to_base64_data_uri(icon.svg, icon_hex_comp, max_url_length=3550)
                 icon_data_uri_encoded = quote(icon_data_uri, safe='')
                 icon_url = f'{icon_base}/{icon_title_safe}-{badge_color}.svg' if icon_title_safe else f'{icon_base}/-{badge_color}.svg'
                 icon_url += f'?style={args.badge_style}&logo={icon_data_uri_encoded}'
@@ -449,7 +462,7 @@ def run(args):
                 background_color = badge_color
             
             # Always use white icons for good contrast against any background
-            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=3700)
+            icon_data_uri = svg_to_base64_data_uri(icon.svg, 'white', max_url_length=3550)
             icon_data_uri_encoded = quote(icon_data_uri, safe='')
             icon_url = f'{icon_base}/icon/{icon_title_safe}?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}' if icon_title_safe else f'{icon_base}/icon/?icon={icon_data_uri_encoded}&label&color={background_color}&labelColor={background_color}'
         else:
@@ -458,6 +471,13 @@ def run(args):
         
         # Store custom URL if provided
         custom_url = custom_params.get('url', None)
+        
+        # Check if badge URL would exceed GitHub's camo proxy limit and warn
+        camo_length = _calculate_camo_url_length(icon_url)
+        if camo_length > CAMO_URL_LIMIT:
+            logger.warning(f'Badge URL for {icon.slug} exceeds GitHub camo limit: {camo_length} > {CAMO_URL_LIMIT} chars. '
+                          f'Badge may not render correctly on GitHub. Consider using a simpler icon or badge style.')
+        
         icon_list.append({ 
             'rgb': icon_rgb, 
             'slug': icon.slug, 
