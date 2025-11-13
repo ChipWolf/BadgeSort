@@ -201,11 +201,11 @@ $ python -m badgesort.icons -s osu github americanexpress nodered opensea -o REA
 
 <!-- start chipwolf/badgesort default -->
 [![BadgeSort](https://img.shields.io/badge/BadgeSort-000000.svg?style=for-the-badge&logo=githubsponsors)](https://github.com/ChipWolf/BadgeSort)
-![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)
-![Node-RED](https://img.shields.io/badge/Node--RED-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)
-![osu!](https://img.shields.io/badge/osu%21-FF66AA.svg?style=for-the-badge&logo=osu&logoColor=white)
-![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)
-![American Express](https://img.shields.io/badge/American%20Express-2E77BC.svg?style=for-the-badge&logo=americanexpress&logoColor=white)
+[![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)](#)
+[![Node-RED](https://img.shields.io/badge/Node--RED-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)](#)
+[![osu!](https://img.shields.io/badge/osu%21-FF66AA.svg?style=for-the-badge&logo=osu&logoColor=white)](#)
+[![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)](#)
+[![American Express](https://img.shields.io/badge/American%20Express-2E77BC.svg?style=for-the-badge&logo=americanexpress&logoColor=white)](#)
 <!-- end chipwolf/badgesort default -->
 
 ---
@@ -244,11 +244,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="OpsLevel" src="https://img.shields.io/badge/OpsLevel-1890FF.svg?style=flat-square&logo=opslevel&logoColor=white"></a>
-  <a href="#"><img alt="Emby" src="https://img.shields.io/badge/Emby-52B54B.svg?style=flat-square&logo=emby&logoColor=white"></a>
-  <a href="#"><img alt="HTML5" src="https://img.shields.io/badge/HTML5-E34F26.svg?style=flat-square&logo=html5&logoColor=white"></a>
-  <a href="#"><img alt="Kyocera" src="https://img.shields.io/badge/Kyocera-DF0522.svg?style=flat-square&logo=kyocera&logoColor=white"></a>
-  <a href="#"><img alt="CrateDB" src="https://img.shields.io/badge/CrateDB-009DC7.svg?style=flat-square&logo=cratedb&logoColor=white"></a>
+  <a href="#"><img alt="data.ai" src="https://img.shields.io/badge/data.ai-000000.svg?style=flat-square&logo=datadotai&logoColor=white"></a>
+  <a href="#"><img alt="Google" src="https://img.shields.io/badge/Google-4285F4.svg?style=flat-square&logo=google&logoColor=white"></a>
+  <a href="#"><img alt="dm" src="https://img.shields.io/badge/dm-002878.svg?style=flat-square&logo=dm&logoColor=white"></a>
+  <a href="#"><img alt="SCP Foundation" src="https://img.shields.io/badge/SCP%20Foundation-FFFFFF.svg?style=flat-square&logo=scpfoundation&logoColor=black"></a>
+  <a href="#"><img alt="Google Hangouts" src="https://img.shields.io/badge/Google%20Hangouts-0C9D58.svg?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMEM2LjIgMCAxLjUgNC43IDEuNSAxMC41YzAgNS41IDUgMTAgMTAuNSAxMFYyNGM2LjM1LTMuMSAxMC41LTguMiAxMC41LTEzLjVDMjIuNSA0LjcgMTcuOCAwIDEyIDB6bS0uNSAxMmMwIDEuNC0uOSAyLjUtMiAyLjVWMTJIN1Y3LjVoNC41VjEyem02IDBjMCAxLjQtLjkgMi41LTIgMi41VjEySDEzVjcuNWg0LjVWMTJ6IiBmaWxsPSIjZmZmIi8%2BPC9zdmc%2B"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
