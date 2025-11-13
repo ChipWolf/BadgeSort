@@ -21,10 +21,15 @@ BadgeSort/
 │   ├── icons.py            # Main badge generation and sorting logic
 │   ├── hilbert.py          # Hilbert curve implementation for color sorting
 │   └── gh_actions_entrypoint.py  # GitHub Actions integration
+├── tests/
+│   ├── __init__.py         # Test package initialization
+│   ├── test_codeblock_handling.py  # Unit tests for codeblock detection
+│   └── test_integration.py # Integration tests for full workflow
 ├── action.yml              # GitHub Action definition
 ├── Dockerfile              # Docker container configuration
 ├── entrypoint.sh           # Container entrypoint script
 ├── pyproject.toml          # Poetry dependencies and project metadata
+├── pytest.ini              # Pytest configuration
 └── README.md               # Project documentation with examples
 ```
 
@@ -32,14 +37,97 @@ BadgeSort/
 
 - **Language**: Python 3.9+
 - **Package Manager**: Poetry
+- **Testing**: pytest with pytest-cov for coverage
 - **Dependencies**:
   - `requests`: HTTP requests to Shields.io
   - `simpleicons`: Access to Simple Icons database
+  - `pytest`, `pytest-cov`: Testing framework (dev dependencies)
   - Standard library: `argparse`, `colorsys`, `urllib`, etc.
 - **Container**: Docker (based on `duffn/python-poetry:3.11-slim`)
 - **Platform**: GitHub Actions
 
 ## Coding Standards and Conventions
+
+### Commit Message Format (REQUIRED)
+**All commits MUST follow the Conventional Commits specification:**
+
+Format: `<type>(<scope>): <description>`
+
+**Types:**
+- `feat`: A new feature (e.g., `feat(icons): add support for Badgen.net provider`)
+- `fix`: A bug fix (e.g., `fix(icons): prevent badge injection into codeblocks`)
+- `docs`: Documentation only changes (e.g., `docs(readme): update installation instructions`)
+- `style`: Code style changes that don't affect functionality (formatting, missing semicolons, etc.)
+- `refactor`: Code changes that neither fix a bug nor add a feature
+- `perf`: Performance improvements
+- `test`: Adding or updating tests (e.g., `test(icons): add codeblock handling tests`)
+- `chore`: Changes to build process, dependencies, or auxiliary tools (e.g., `chore(deps): update simpleicons to 7.21.0`)
+- `ci`: Changes to CI configuration files and scripts (e.g., `ci(workflow): add test job to build pipeline`)
+
+**Scope (optional but recommended):**
+- `icons`: Badge generation and file manipulation
+- `hilbert`: Hilbert curve sorting
+- `actions`: GitHub Actions integration
+- `docker`: Docker/container changes
+- `deps`: Dependency updates
+- `workflow`: CI/CD workflows
+- `readme`: README documentation
+- `tests`: Test infrastructure
+
+**Examples:**
+- ✅ `feat(icons): add codeblock detection to skip documentation examples`
+- ✅ `fix(icons): handle unclosed codeblocks gracefully`
+- ✅ `test(icons): add integration tests for multiple badge IDs`
+- ✅ `docs(readme): clarify comment marker requirements`
+- ✅ `chore(deps): add pytest and pytest-cov dev dependencies`
+- ❌ `Fix bug` (too vague, missing type)
+- ❌ `Update icons.py` (missing type and description)
+- ❌ `Fixed the codeblock issue` (should be: `fix(icons): prevent...`)
+
+**Pull Request Titles:**
+PR titles MUST also follow the same semantic format and clearly describe the changes.
+
+### Testing Requirements (REQUIRED)
+**All new features and bug fixes MUST include tests:**
+
+1. **New Features**: 
+   - Add unit tests covering the new functionality
+   - Add integration tests if the feature affects the full workflow
+   - Minimum 80% code coverage for new code
+
+2. **Bug Fixes**:
+   - Add a test that reproduces the bug (should fail before the fix)
+   - Verify the test passes after the fix
+   - Add regression tests to prevent the bug from reoccurring
+
+3. **Test Location**:
+   - Unit tests: `tests/test_<module_name>.py`
+   - Integration tests: `tests/test_integration.py`
+   - Test fixtures: `tests/fixtures/` (if needed)
+
+4. **Running Tests**:
+   ```bash
+   # Run all tests
+   pytest tests/ -v
+   
+   # Run with coverage
+   pytest tests/ --cov=badgesort --cov-report=term-missing
+   
+   # Run specific test file
+   pytest tests/test_codeblock_handling.py -v
+   ```
+
+5. **Test Guidelines**:
+   - Use descriptive test names: `test_<what>_<condition>_<expected_result>`
+   - Each test should test one specific behavior
+   - Use meaningful assertions with custom error messages
+   - Clean up any temporary files/resources in tests
+   - Mock external dependencies (HTTP requests, file I/O when appropriate)
+
+6. **CI Integration**:
+   - All tests run automatically in the CI pipeline
+   - PRs cannot be merged if tests fail
+   - Coverage reports are generated for each test run
 
 ### Python Style
 - Use Python 3.9+ syntax and features
@@ -89,15 +177,36 @@ BadgeSort/
 ## Development Guidelines
 
 ### Adding New Features
-1. **New Sorting Algorithm**: Add to the `if/elif` chain in `run()` function
-2. **New Output Format**: Add case in badge generation section
-3. **New Options**: Add to argparse in `main()` and update `action.yml`
+1. **Design**: Plan the minimal changes needed
+2. **Write Tests First** (TDD approach recommended):
+   - Write failing tests that describe the expected behavior
+   - Implement the feature to make tests pass
+   - Refactor while keeping tests green
+3. **Implementation**:
+   - **New Sorting Algorithm**: Add to the `if/elif` chain in `run()` function
+   - **New Output Format**: Add case in badge generation section
+   - **New Options**: Add to argparse in `main()` and update `action.yml`
+4. **Testing**: Ensure all tests pass and coverage is adequate
+5. **Documentation**: Update README.md if user-facing changes
+6. **Commit**: Use semantic commit messages (see Coding Standards)
 
 ### Testing Approach
-- Manual testing through the build-and-test workflow
-- Verify badge generation with multiple scenarios (see `.github/workflows/build-and-test.yaml`)
+- **Primary**: pytest-based unit and integration tests
+- **Location**: All tests in `tests/` directory
+- **Coverage**: Aim for 80%+ coverage on new code
+- **CI Pipeline**: Tests run automatically on every push
 - Test both CLI and GitHub Actions interfaces
 - Validate output in both Markdown and HTML formats
+- Include edge cases and error conditions
+
+### Test File Organization
+```
+tests/
+├── __init__.py                    # Test package
+├── test_codeblock_handling.py    # Codeblock detection tests
+├── test_integration.py            # Full workflow integration tests
+└── fixtures/                      # Test data files (if needed)
+```
 
 ### Building and Testing
 
@@ -158,7 +267,25 @@ docker run -e INPUT_SLUGS="github python docker" badgesort
 2. Update `args` handling in `run()` function
 3. If for GitHub Actions, add mapping in `gh_actions_entrypoint.py`
 4. Update `action.yml` inputs section
-5. Document in README.md
+5. **Add tests** to verify the option works correctly
+6. Document in README.md
+7. Commit with semantic message: `feat(icons): add <option-name> option`
+
+### Fixing a Bug
+1. **Write a failing test** that reproduces the bug
+2. Implement the fix in the appropriate module
+3. **Verify the test now passes**
+4. Add additional tests for edge cases
+5. Update documentation if behavior changed
+6. Commit with semantic message: `fix(<scope>): <description of what was fixed>`
+
+### Adding a New Feature
+1. **Plan and document** the feature requirements
+2. **Write tests** describing expected behavior (TDD)
+3. Implement the feature incrementally
+4. Ensure all tests pass with good coverage
+5. Update README.md with examples and usage
+6. Commit with semantic message: `feat(<scope>): <feature description>`
 
 ### Modifying Badge Output
 - Markdown format: `![{title}]({url})`
@@ -192,10 +319,22 @@ docker run -e INPUT_SLUGS="github python docker" badgesort
 
 1. **Understand the Change**: Review issue/feature request thoroughly
 2. **Plan Minimal Changes**: Identify the smallest change needed
-3. **Test Locally**: Run CLI with various options before committing
-4. **Update Documentation**: Modify README.md examples if adding features
-5. **Verify GitHub Action**: Test action interface if changing inputs/outputs
-6. **Check Workflows**: Ensure build-and-test workflow passes
+3. **Write Tests First**: Create tests that define expected behavior (TDD recommended)
+4. **Implement Changes**: Make the minimal code changes to pass tests
+5. **Run Tests Locally**: `pytest tests/ -v --cov=badgesort`
+6. **Update Documentation**: Modify README.md examples if adding user-facing features
+7. **Commit with Semantic Messages**: Follow Conventional Commits format
+   - Example: `feat(icons): add badgen.net provider support`
+8. **Verify GitHub Action**: Test action interface if changing inputs/outputs
+9. **Check CI Pipeline**: Ensure all workflow tests pass
+
+### Commit Checklist
+- [ ] All tests pass locally
+- [ ] New code has test coverage (80%+ for new features)
+- [ ] Commit message follows semantic format: `<type>(<scope>): <description>`
+- [ ] PR title follows semantic format
+- [ ] Documentation updated (if user-facing changes)
+- [ ] No security vulnerabilities introduced
 
 ## Security Considerations
 
