@@ -444,8 +444,7 @@ def run(args):
         with open(args.output, 'r') as f:
             output_content = f.read()
         # try to replace existing badges between the badge header and footer with the new ones
-        marker_pattern = fr"{badges_header}.*?{badges_footer}"
-        new_content, replacements = re.subn(marker_pattern, f'{badges}', output_content, flags=re.S)
+        new_content, replacements = re.subn(fr"{badges_header}.*?{badges_footer}", badges, output_content, flags=re.S)
         if replacements > 0:
             # markers existed and were replaced
             output_content = new_content
