@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "badgesort"}]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 certifi = "2025.10.5"
 chardet = "5.2.0"
 idna = "3.11"
