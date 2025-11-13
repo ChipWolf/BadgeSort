@@ -18,6 +18,10 @@ simpleicons = "7.21.0"
 urllib3 = "2.5.0"
 scour = "^0.38.2"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

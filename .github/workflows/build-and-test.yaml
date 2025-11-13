@@ -3,6 +3,7 @@ name: Build and Test
 
 "on":
   workflow_dispatch:
+  pull_request:
   push:
     branches:
       - main
@@ -20,9 +21,31 @@ env:
   IMAGE_NAME: chipwolf/badgesort
 
 jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      with:
+        fetch-depth: 1
+    - name: Set up Python
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      with:
+        python-version: '3.14'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install pytest pytest-cov
+    - name: Run tests
+      run: |
+        python -m pytest tests/ -v --cov=badgesort --cov-report=term-missing
   image:
     name: Build Image
+    needs: [test]
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
     - name: Checkout
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
@@ -48,6 +71,7 @@ jobs:
     name: Run BadgeSort
     needs: [image]
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5

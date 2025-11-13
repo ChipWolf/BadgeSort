@@ -1,3 +1,7 @@
 __pycache__
 .vscode
 dist/
+.coverage
+.pytest_cache
+*.pyc
+*.egg-info
