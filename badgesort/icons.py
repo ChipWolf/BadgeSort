@@ -23,8 +23,19 @@ from .hilbert import Hilbert_to_int
 # Cache for logo availability checks to avoid repeated requests
 _logo_availability_cache = {}
 
+# GitHub camo proxy constants
+CAMO_URL_LIMIT = 8192
+CAMO_OVERHEAD = 76  # base URL (35) + digest (40) + slash (1)
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+def _calculate_camo_url_length(badge_url):
+    """Calculate the approximate camo URL length for a badge URL.
+    
+    GitHub's camo proxy format: https://camo.githubusercontent.com/<digest>/<hex-encoded-url>
+    """
+    return CAMO_OVERHEAD + (len(badge_url.encode('utf-8')) * 2)
 
 def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3550):
     """Convert an SVG to a compressed base64-encoded data URI with specified fill color optimized for 14x14px badges.
@@ -64,7 +75,8 @@ def svg_to_base64_data_uri(svg_content, fill_color='white', max_url_length=3550)
         if png_data_uri:
             return png_data_uri
         else:
-            logger.debug('PNG fallback failed, using original SVG despite size')
+            logger.warning(f'PNG fallback failed for oversized SVG ({len(svg_data_uri)} chars > {max_url_length} limit). '
+                          f'Using original SVG despite size. Badge may exceed GitHub camo URL limit.')
             # For now, return the original SVG data URI even if it's too long
             # This is better than skipping the icon entirely
     
@@ -459,6 +471,13 @@ def run(args):
         
         # Store custom URL if provided
         custom_url = custom_params.get('url', None)
+        
+        # Check if badge URL would exceed GitHub's camo proxy limit and warn
+        camo_length = _calculate_camo_url_length(icon_url)
+        if camo_length > CAMO_URL_LIMIT:
+            logger.warning(f'Badge URL for {icon.slug} exceeds GitHub camo limit: {camo_length} > {CAMO_URL_LIMIT} chars. '
+                          f'Badge may not render correctly on GitHub. Consider using a simpler icon or badge style.')
+        
         icon_list.append({ 
             'rgb': icon_rgb, 
             'slug': icon.slug, 

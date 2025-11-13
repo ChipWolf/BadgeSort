@@ -29,22 +29,19 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       with:
         fetch-depth: 1
-    - name: Set up Python
-      uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
+    - name: Build BadgeSort container
+      uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
       with:
-        python-version: '3.14'
-    - name: Install system dependencies
+        context: .
+        load: true
+        tags: badgesort:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    - name: Run tests in container
       run: |
-        sudo apt-get update
-        sudo apt-get install -y librsvg2-bin
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -e .
-        pip install pytest pytest-cov
-    - name: Run tests
-      run: |
-        python -m pytest tests/ -v --cov=badgesort --cov-report=term-missing
+        docker run --rm badgesort:test sh -c ". \$VENV_PATH/bin/activate && pip install pytest pytest-cov && pytest tests/ -v --cov=badgesort --cov-report=term-missing"
   image:
     name: Build Image
     needs: [test]
