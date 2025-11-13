@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "BadgeSort"
-version = "3.2.0"
+version = "3.3.0"
 description = "Generate and sort branded Shields.io badges by color"
 authors = ["Chip Wolf <github@chipwolf.uk>"]
 license = "MIT"
