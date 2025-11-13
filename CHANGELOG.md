@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.3.1](https://github.com/ChipWolf/BadgeSort/compare/3.3.0...3.3.1) (2025-11-13)
+
+
+### Bug Fixes
+
+* **icons:** reduce max_url_length to 3550 and add camo limit warnings ([#109](https://github.com/ChipWolf/BadgeSort/issues/109)) ([abc9f1a](https://github.com/ChipWolf/BadgeSort/commit/abc9f1a52518781d37f61b1a81dee2d309ece736))
+* **icons:** reduce SVG data URI limit to prevent GitHub camo URL truncation ([#106](https://github.com/ChipWolf/BadgeSort/issues/106)) ([c120cb0](https://github.com/ChipWolf/BadgeSort/commit/c120cb046b74719c8fa9141357d224bae0468dc6))
+
 ## [3.3.0](https://github.com/ChipWolf/BadgeSort/compare/3.2.0...3.3.0) (2025-11-13)
 
 
