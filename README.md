@@ -86,6 +86,73 @@ Some other content...
 > **Important**
 > Without these comment markers in your target file, BadgeSort will only output badges to stdout (or the console) rather than updating the file.
 
+## Customizing Individual Badges:
+
+BadgeSort allows you to customize individual badges using URL query string syntax. You can override the color, text, and hyperlink URL for any badge.
+
+### Syntax:
+
+```
+slug?param=value&param2=value2
+```
+
+### Supported Parameters:
+
+- **`color`**: Override the badge background color (hex color without `#`)
+- **`text`**: Override the badge label text (use empty value `text=` to remove text)
+- **`url`**: Add a custom hyperlink URL (for Markdown/HTML output)
+
+### Examples:
+
+#### _GitHub Action:_
+
+```yaml
+      - uses: docker://ghcr.io/chipwolf/badgesort:latest
+        with:
+          format: markdown
+          id: custom
+          output: README.md
+          slugs: |
+            osu?color=000000
+            github?text=ChipWolf&url=https://github.com/ChipWolf
+            nodered?text=
+            opensea
+          sort: hilbert
+          style: for-the-badge
+```
+
+#### _CLI:_
+
+```bash
+$ python -m badgesort.icons -s \
+    "osu?color=000000" \
+    "github?text=ChipWolf&url=https://github.com/ChipWolf" \
+    "nodered?text=" \
+    opensea \
+    -o README.md
+```
+
+#### _Required comment markers in README.md:_
+
+```html
+<!-- start chipwolf/badgesort custom -->
+<!-- end chipwolf/badgesort custom -->
+```
+
+> **Note**: The `id` value `custom` in the comment markers matches the `id` parameter in the GitHub Action (or the `-i` parameter in CLI).
+
+#### _Output:_
+
+<!-- start chipwolf/badgesort custom -->
+![osu!](https://img.shields.io/badge/osu%21-000000.svg?style=for-the-badge&logo=osu&logoColor=white)
+[![ChipWolf](https://img.shields.io/badge/ChipWolf-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ChipWolf)
+![Node-RED](https://img.shields.io/badge/-8F0000.svg?style=for-the-badge&logo=nodered&logoColor=white)
+![OpenSea](https://img.shields.io/badge/OpenSea-2081E2.svg?style=for-the-badge&logo=opensea&logoColor=white)
+<!-- end chipwolf/badgesort custom -->
+
+> **Note**
+> Parameters are parsed using Python's standard `urllib.parse` library, following standard URL query string conventions.
+
 ## Examples:
 
 ### Generate five specific badges ordered by color:
