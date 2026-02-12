@@ -12,10 +12,10 @@ python = "^3.10"
 certifi = "2025.11.12"
 chardet = "5.2.0"
 idna = "3.11"
-poetry-core = "2.2.1"
+poetry-core = "2.3.1"
 requests = "2.32.5"
 simpleicons = "7.21.0"
-urllib3 = "2.5.0"
+urllib3 = "2.6.3"
 scour = "^0.38.2"
 
 [tool.poetry.group.dev.dependencies]
