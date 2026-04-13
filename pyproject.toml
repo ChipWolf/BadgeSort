@@ -9,8 +9,8 @@ packages = [{include = "badgesort"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-certifi = "2025.11.12"
-chardet = "5.2.0"
+certifi = "2026.2.25"
+chardet = "7.4.3"
 idna = "3.11"
 poetry-core = "2.2.1"
 requests = "2.32.5"
