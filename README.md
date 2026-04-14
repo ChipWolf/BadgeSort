@@ -244,11 +244,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Plex" src="https://img.shields.io/badge/Plex-EBAF00.svg?style=flat-square&logo=plex&logoColor=white"></a>
-  <a href="#"><img alt="SVG" src="https://img.shields.io/badge/SVG-FFB13B.svg?style=flat-square&logo=svg&logoColor=black"></a>
-  <a href="#"><img alt="Testin" src="https://img.shields.io/badge/Testin-007DD7.svg?style=flat-square&logo=testin&logoColor=white"></a>
-  <a href="#"><img alt="Amul" src="https://img.shields.io/badge/Amul-ED1D24.svg?style=flat-square&logo=amul&logoColor=white"></a>
-  <a href="#"><img alt="Workplace" src="https://img.shields.io/badge/Workplace-4326C4.svg?style=flat-square&logo=workplace&logoColor=white"></a>
+  <a href="#"><img alt="Astro" src="https://img.shields.io/badge/Astro-FF5D01.svg?style=flat-square&logo=astro&logoColor=white"></a>
+  <a href="#"><img alt="Eleventy" src="https://img.shields.io/badge/Eleventy-000000.svg?style=flat-square&logo=eleventy&logoColor=white"></a>
+  <a href="#"><img alt="Relay" src="https://img.shields.io/badge/Relay-F26B00.svg?style=flat-square&logo=relay&logoColor=white"></a>
+  <a href="#"><img alt="SCP Foundation" src="https://img.shields.io/badge/SCP%20Foundation-FFFFFF.svg?style=flat-square&logo=scpfoundation&logoColor=black"></a>
+  <a href="#"><img alt="Firefox" src="https://img.shields.io/badge/Firefox-FF7139.svg?style=flat-square&logo=firefox&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
@@ -312,7 +312,7 @@ $ python -m badgesort.icons -i example -c step_invert -o README.md -f html -b fl
   <a href="#"><img alt="Redux" src="https://img.shields.io/badge/Redux-764ABC.svg?style=flat&logo=redux&logoColor=white"></a>
   <a href="#"><img alt="Apollo GraphQL" src="https://img.shields.io/badge/Apollo%20GraphQL-311C87.svg?style=flat&logo=apollographql&logoColor=white"></a>
   <a href="#"><img alt="Insomnia" src="https://img.shields.io/badge/Insomnia-4000BF.svg?style=flat&logo=insomnia&logoColor=white"></a>
-  <a href="#"><img alt="Heroku" src="https://img.shields.io/badge/Heroku-430098.svg?style=flat&logo=heroku&logoColor=white"></a>
+  <a href="#"><img alt="Heroku" src="https://img.shields.io/badge/Heroku-430098.svg?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjAuNjEgMEgzLjM5QzIuMTg5IDAgMS4yMy45NiAxLjIzIDIuMTZ2MTkuNjgxYzAgMS4xOTguOTU5IDIuMTU5IDIuMTYgMi4xNTloMTcuMjJjMS4yIDAgMi4xNTktLjk2MSAyLjE1OS0yLjE1OVYyLjE2QzIyLjc3Ljk2IDIxLjgxMSAwIDIwLjYxIDB6bS45NiAyMS44NDFjMCAuNTM5LS40MjEuOTYtLjk2Ljk2SDMuMzljLS41NCAwLS45Ni0uNDIxLS45Ni0uOTZWMi4xNmMwLS41NC40Mi0uOTYxLjk2LS45NjFoMTcuMjJjLjUzOSAwIC45Ni40MjEuOTYuOTYxdjE5LjY4MXpNNi42MyAyMC4zOTlMOS4zMyAxOGwtMi43LTIuNHY0Ljc5OXptOS43Mi05LjcxOWMtLjQ3OS0uNDgtMS4zNzktMS4wOC0yLjg3OS0xLjA4LTEuNjIxIDAtMy4zMDEuNDIxLTQuNS44NFYzLjZoLTIuNHYxMC4zOGwxLjY4LS43OHMyLjc2LTEuMjYgNS4xNi0xLjI2YzEuMiAwIDEuNS42NiAxLjUgMS4yNnY3LjJoMi40di03LjJjLjA1OS0uMTc5LjA1OS0xLjUwMS0uOTYxLTIuNTJ6TTEzLjE3IDcuNWgyLjRjMS4wOC0xLjI2IDEuNjItMi41MjEgMS44LTMuOWgtMi4zOTljLS4yNDEgMS4zNzktLjg0MSAyLjY0LTEuODAxIDMuOXoiIGZpbGw9IiNmZmYiLz48L3N2Zz4%3D"></a>
   <a href="#"><img alt="GraphQL" src="https://img.shields.io/badge/GraphQL-E10098.svg?style=flat&logo=graphql&logoColor=white"></a>
   <a href="#"><img alt="ReactiveX" src="https://img.shields.io/badge/ReactiveX-B7178C.svg?style=flat&logo=reactivex&logoColor=white"></a>
   <a href="#"><img alt="Sass" src="https://img.shields.io/badge/Sass-CC6699.svg?style=flat&logo=sass&logoColor=white"></a>
