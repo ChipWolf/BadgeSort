@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.3.2](https://github.com/ChipWolf/BadgeSort/compare/3.3.1...3.3.2) (2026-04-14)
+
+
+### Bug Fixes
+
+* **deps:** update pypi group ([#111](https://github.com/ChipWolf/BadgeSort/issues/111)) ([a4ac94e](https://github.com/ChipWolf/BadgeSort/commit/a4ac94e1a923f03891fa6480d64c92f5e904bea1))
+* **deps:** update pypi group (major) ([#112](https://github.com/ChipWolf/BadgeSort/issues/112)) ([aae7e87](https://github.com/ChipWolf/BadgeSort/commit/aae7e87600e6969c2dc3638136519957b83e7131))
+
 ## [3.3.1](https://github.com/ChipWolf/BadgeSort/compare/3.3.0...3.3.1) (2025-11-13)
 
 
