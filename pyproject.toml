@@ -9,13 +9,13 @@ packages = [{include = "badgesort"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-certifi = "2026.2.25"
+certifi = "2026.4.22"
 chardet = "7.4.3"
-idna = "3.11"
-poetry-core = "2.3.2"
+idna = "3.13"
+poetry-core = "2.4.0"
 requests = "2.33.1"
 simpleicons = "7.21.0"
-urllib3 = "2.6.3"
+urllib3 = "2.7.0"
 scour = "^0.38.2"
 
 [tool.poetry.group.dev.dependencies]
