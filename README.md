@@ -244,11 +244,11 @@ $ python -m badgesort.icons -i foobar -c false -r 5 -f html -b flat-square -o RE
 
 <!-- start chipwolf/badgesort foobar -->
 <p>
-  <a href="#"><img alt="Cirrus CI" src="https://img.shields.io/badge/Cirrus%20CI-4051B5.svg?style=flat-square&logo=cirrusci&logoColor=white"></a>
-  <a href="#"><img alt="Audible" src="https://img.shields.io/badge/Audible-F8991C.svg?style=flat-square&logo=audible&logoColor=white"></a>
-  <a href="#"><img alt="ŠKODA" src="https://img.shields.io/badge/%C5%A0KODA-4BA82E.svg?style=flat-square&logo=skoda&logoColor=white"></a>
-  <a href="#"><img alt="XFCE" src="https://img.shields.io/badge/XFCE-2284F2.svg?style=flat-square&logo=xfce&logoColor=white"></a>
-  <a href="#"><img alt="Vaadin" src="https://img.shields.io/badge/Vaadin-00B4F0.svg?style=flat-square&logo=vaadin&logoColor=white"></a>
+  <a href="#"><img alt="Steelseries" src="https://img.shields.io/badge/Steelseries-FF5200.svg?style=flat-square&logo=steelseries&logoColor=white"></a>
+  <a href="#"><img alt="Consul" src="https://img.shields.io/badge/Consul-F24C53.svg?style=flat-square&logo=consul&logoColor=white"></a>
+  <a href="#"><img alt="Cloudways" src="https://img.shields.io/badge/Cloudways-2C39BD.svg?style=flat-square&logo=cloudways&logoColor=white"></a>
+  <a href="#"><img alt="FARFETCH" src="https://img.shields.io/badge/FARFETCH-000000.svg?style=flat-square&logo=farfetch&logoColor=white"></a>
+  <a href="#"><img alt="XRP" src="https://img.shields.io/badge/XRP-25A768.svg?style=flat-square&logo=xrp&logoColor=white"></a>
   <a href="https://github.com/ChipWolf/BadgeSort"><img alt="BadgeSort" src="https://img.shields.io/badge/BadgeSort-000000.svg?style=flat-square&logo=githubsponsors"></a>
 </p>
 <!-- end chipwolf/badgesort foobar -->
